@@ -1,0 +1,63 @@
+/* astro-ink design tokens. Override any of these to re-skin the library.
+   Component-level tokens (--ink-<component>-*) fall back to these. */
+:root {
+  color-scheme: light;
+
+  /* surfaces & text */
+  --ink-bg: #faf7f2;
+  --ink-surface: #ffffff;
+  --ink-ink: #1c1917;
+  --ink-muted: #57534e;
+  --ink-border: #e7e0d8;
+  --ink-border-strong: #d6cec3;
+
+  /* accent & semantics */
+  --ink-accent: #c2410c;
+  --ink-accent-ink: #ffffff;
+  --ink-success: #15803d;
+  --ink-warning: #b45309;
+  --ink-danger: #b91c1c;
+  --ink-info: #0369a1;
+
+  /* typography */
+  --ink-font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ink-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --ink-text-xs: 0.75rem;
+  --ink-text-sm: 0.875rem;
+  --ink-text-base: 1rem;
+  --ink-text-lg: 1.125rem;
+  --ink-text-xl: 1.25rem;
+  --ink-text-2xl: 1.5rem;
+  --ink-leading: 1.55;
+  --ink-font-weight-normal: 400;
+  --ink-font-weight-medium: 500;
+  --ink-font-weight-semibold: 600;
+  --ink-font-weight-bold: 700;
+
+  /* spacing (4px base scale) */
+  --ink-space-1: 0.25rem;
+  --ink-space-2: 0.5rem;
+  --ink-space-3: 0.75rem;
+  --ink-space-4: 1rem;
+  --ink-space-5: 1.5rem;
+  --ink-space-6: 2rem;
+  --ink-space-7: 3rem;
+  --ink-space-8: 4rem;
+
+  /* radius */
+  --ink-radius-sm: 0.25rem;
+  --ink-radius-md: 0.375rem;
+  --ink-radius-lg: 0.625rem;
+
+  /* elevation (use sparingly: elements that truly float) */
+  --ink-shadow-1: 0 1px 2px rgb(28 25 23 / 0.06), 0 1px 3px rgb(28 25 23 / 0.08);
+  --ink-shadow-2: 0 4px 12px rgb(28 25 23 / 0.14);
+
+  /* motion */
+  --ink-duration-fast: 120ms;
+  --ink-duration-base: 200ms;
+  --ink-ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* focus */
+  --ink-focus-color: var(--ink-accent);
+}

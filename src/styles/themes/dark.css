@@ -1,0 +1,23 @@
+/* astro-ink dark theme. Activate: <html data-theme="dark"> */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ink-bg: #171412;
+  --ink-surface: #201c19;
+  --ink-ink: #f2ede7;
+  --ink-muted: #a8a29e;
+  --ink-border: #322c27;
+  --ink-border-strong: #453c35;
+
+  --ink-accent: #ea580c;
+  --ink-accent-ink: #171412;
+  --ink-success: #4ade80;
+  --ink-warning: #fbbf24;
+  --ink-danger: #f87171;
+  --ink-info: #38bdf8;
+
+  --ink-shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --ink-shadow-2: 0 4px 12px rgb(0 0 0 / 0.5);
+
+  --ink-focus-color: var(--ink-accent);
+}

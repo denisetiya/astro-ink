@@ -1,0 +1,64 @@
+/* astro-ink base: light reset + element defaults driven by tokens */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--ink-font-sans);
+  font-size: var(--ink-text-base);
+  line-height: var(--ink-leading);
+  color: var(--ink-ink);
+  background: var(--ink-bg);
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink-focus-color);
+  outline-offset: 2px;
+}
+
+/* Deliberate !important: reduced-motion users get near-zero motion regardless
+   of any duration token or inline animation duration. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
