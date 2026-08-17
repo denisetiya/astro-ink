@@ -1,0 +1,74 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base title="Theming">
+  <div class="docs-page">
+    <h1>Theming</h1>
+    <p class="docs-lede">
+      Everything visual in astro-ink reads from CSS custom properties. Re-skin
+      the whole library without touching a component file.
+    </p>
+
+    <h2>Import order</h2>
+    <p>Add these imports to your layout frontmatter:</p>
+    <pre class="docs-code"><code>import "astro-ink/styles/tokens.css";
+import "astro-ink/styles/base.css";
+// optional:
+import "astro-ink/styles/themes/dark.css";</code></pre>
+
+    <h2>Global tokens</h2>
+    <p>
+      Set any token on <code>:root</code> (or any container) to change the
+      library. One change re-skins every component that reads it.
+    </p>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-accent: #0f766e;      /* teal instead of vermillion */
+  --ink-radius-md: 0.5rem;    /* a bit rounder */
+  --ink-font-sans: "Atkinson Hyperlegible", sans-serif;
+&#125;</code></pre>
+
+    <h2>Component tokens</h2>
+    <p>
+      Each component reads its own token first, falling back to the global
+      one. Change only what you need.
+    </p>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-button-radius: 999px;  /* pill buttons, everything else unchanged */
+&#125;</code></pre>
+
+    <h2>Dark mode</h2>
+    <p>
+      Import <code>astro-ink/styles/themes/dark.css</code> and set the theme
+      with an attribute. The toggle logic belongs to your app; this site's
+      toggle is a working example (view source of the header).
+    </p>
+    <pre class="docs-code"><code>document.documentElement.dataset.theme = "dark";</code></pre>
+
+    <h2>Custom theme template</h2>
+    <p>
+      A theme is one CSS file of token overrides. Copy this template, adjust
+      the values, import it after the tokens file.
+    </p>
+    <pre class="docs-code"><code>/* my-theme.css */
+:root &#123;
+  --ink-bg: #f5f5f4;
+  --ink-surface: #ffffff;
+  --ink-ink: #1c1917;
+  --ink-muted: #57534e;
+  --ink-accent: #7c2d12;
+  --ink-accent-ink: #ffffff;
+  --ink-focus-color: var(--ink-accent);
+&#125;
+
+/* Required for AA contrast: verify every color pair you change
+   reaches 4.5:1 for normal text, 3:1 for large text. */</code></pre>
+
+    <h2>Presets</h2>
+    <p>
+      The default theme is Paper &amp; Ink and the dark theme ships today.
+      Additional preset themes (midnight, brutal) are planned for a later
+      release; until then, the template above is the supported way to build
+      your own.
+    </p>
+  </div>
+</Base>

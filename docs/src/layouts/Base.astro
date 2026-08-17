@@ -1,0 +1,61 @@
+---
+import "astro-ink/styles/tokens.css";
+import "astro-ink/styles/base.css";
+import "astro-ink/styles/themes/dark.css";
+import "../styles/docs.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "astro-ink: lightweight, token-driven UI components for Astro" } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · astro-ink</title>
+    <meta name="description" content={description} />
+    <script is:inline>
+      const stored = localStorage.getItem("ink-theme");
+      const theme = stored === "dark" || stored === "light"
+        ? stored
+        : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = theme;
+    </script>
+  </head>
+  <body>
+    <header class="docs-header">
+      <nav aria-label="Main">
+        <a href="/" class="docs-brand">astro-ink</a>
+        <div class="docs-nav-links">
+          <a href="/components/button">Button</a>
+          <a href="/components/badge">Badge</a>
+          <a href="/components/alert">Alert</a>
+          <a href="/guides/theming">Theming</a>
+        </div>
+        <button id="theme-toggle" type="button" class="docs-theme-toggle" aria-label="Toggle dark mode">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </button>
+      </nav>
+    </header>
+    <main class="docs-main">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<script>
+  const toggle = document.getElementById("theme-toggle");
+  toggle?.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("ink-theme", next);
+  });
+</script>

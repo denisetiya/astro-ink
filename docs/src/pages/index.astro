@@ -1,13 +1,25 @@
 ---
+import Base from "../layouts/Base.astro";
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>astro-ink</title>
-  </head>
-  <body>
+<Base title="Home">
+  <div class="docs-page">
     <h1>astro-ink</h1>
-    <p>Docs under construction.</p>
-  </body>
-</html>
+    <p class="docs-lede">
+      Lightweight, token-driven UI components for Astro. Server-rendered, zero
+      dependencies, fully themeable through CSS custom properties. Components
+      only ship the CSS and script they need.
+    </p>
+
+    <h2>Components</h2>
+    <ul class="docs-list">
+      <li><a href="/components/button">Button</a></li>
+      <li><a href="/components/badge">Badge</a></li>
+      <li><a href="/components/alert">Alert</a></li>
+    </ul>
+
+    <h2>Guides</h2>
+    <ul class="docs-list">
+      <li><a href="/guides/theming">Theming</a></li>
+    </ul>
+  </div>
+</Base>

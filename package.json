@@ -8,7 +8,7 @@
     ".": "./src/index.ts",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./styles/base.css": "./src/styles/base.css",
-    "./themes/*": "./src/styles/themes/*"
+    "./styles/themes/*": "./src/styles/themes/*"
   },
   "files": [
     "src",

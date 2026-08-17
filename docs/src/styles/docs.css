@@ -1,0 +1,148 @@
+/* docs site chrome. Built on astro-ink tokens. */
+
+.docs-header {
+  border-bottom: 1px solid var(--ink-border);
+  background: var(--ink-bg);
+}
+
+.docs-header nav {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: var(--ink-space-3) var(--ink-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--ink-space-5);
+}
+
+.docs-brand {
+  font-weight: var(--ink-font-weight-bold);
+  font-size: var(--ink-text-lg);
+  color: var(--ink-ink);
+  text-decoration: none;
+}
+
+.docs-brand::before {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-inline-end: var(--ink-space-2);
+  background: var(--ink-accent);
+  border-radius: var(--ink-radius-sm);
+}
+
+.docs-nav-links {
+  display: flex;
+  gap: var(--ink-space-4);
+  flex-wrap: wrap;
+}
+
+.docs-nav-links a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  font-size: var(--ink-text-sm);
+}
+
+.docs-nav-links a:hover {
+  color: var(--ink-ink);
+}
+
+.docs-theme-toggle {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--ink-border-strong);
+  border-radius: var(--ink-radius-md);
+  background: var(--ink-surface);
+  color: var(--ink-ink);
+}
+
+.docs-main {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: var(--ink-space-6) var(--ink-space-4) var(--ink-space-8);
+}
+
+.docs-page > h1 {
+  font-size: var(--ink-text-2xl);
+  font-weight: var(--ink-font-weight-bold);
+  margin-bottom: var(--ink-space-2);
+}
+
+.docs-lede {
+  color: var(--ink-muted);
+  margin-bottom: var(--ink-space-6);
+  max-width: 60ch;
+}
+
+.docs-page h2 {
+  font-size: var(--ink-text-xl);
+  font-weight: var(--ink-font-weight-semibold);
+  margin-block: var(--ink-space-6) var(--ink-space-3);
+}
+
+.docs-page h3 {
+  font-size: var(--ink-text-lg);
+  font-weight: var(--ink-font-weight-semibold);
+  margin-block: var(--ink-space-5) var(--ink-space-2);
+}
+
+.docs-page p,
+.docs-page li {
+  max-width: 70ch;
+}
+
+.docs-example {
+  border: 1px solid var(--ink-border);
+  border-radius: var(--ink-radius-lg);
+  background: var(--ink-surface);
+  padding: var(--ink-space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ink-space-3);
+  align-items: center;
+  margin-bottom: var(--ink-space-3);
+}
+
+.docs-code {
+  background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));
+  border: 1px solid var(--ink-border);
+  border-radius: var(--ink-radius-md);
+  padding: var(--ink-space-3) var(--ink-space-4);
+  overflow-x: auto;
+  font-family: var(--ink-font-mono);
+  font-size: var(--ink-text-sm);
+  line-height: 1.6;
+  margin-bottom: var(--ink-space-4);
+}
+
+.docs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ink-text-sm);
+}
+
+.docs-table th,
+.docs-table td {
+  text-align: left;
+  padding: var(--ink-space-2) var(--ink-space-3);
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.docs-table th {
+  font-weight: var(--ink-font-weight-semibold);
+}
+
+.docs-table code {
+  font-family: var(--ink-font-mono);
+  font-size: var(--ink-text-xs);
+}
+
+.docs-list {
+  padding-left: var(--ink-space-5);
+  display: grid;
+  gap: var(--ink-space-2);
+}
