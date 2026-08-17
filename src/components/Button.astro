@@ -1,0 +1,111 @@
+---
+interface Props {
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  class?: string;
+  "aria-label"?: string;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  type = "button",
+  disabled = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+---
+<Tag
+  class:list={["ink-button", `ink-button--${variant}`, `ink-button--${size}`, className]}
+  href={href}
+  type={href ? undefined : type}
+  disabled={href ? undefined : disabled || undefined}
+  aria-disabled={href && disabled ? "true" : undefined}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .ink-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ink-space-2);
+    font-weight: var(--ink-font-weight-medium);
+    border: 1px solid transparent;
+    border-radius: var(--ink-button-radius, var(--ink-radius-md));
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background-color var(--ink-duration-fast) var(--ink-ease),
+      border-color var(--ink-duration-fast) var(--ink-ease),
+      color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-button--sm {
+    padding: var(--ink-space-1) var(--ink-space-3);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-button--md {
+    padding: var(--ink-button-pad-y, var(--ink-space-2)) var(--ink-button-pad-x, var(--ink-space-4));
+    font-size: var(--ink-text-base);
+  }
+
+  .ink-button--lg {
+    padding: var(--ink-space-3) var(--ink-button-pad-x, var(--ink-space-5));
+    font-size: var(--ink-text-lg);
+  }
+
+  .ink-button--primary {
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+  }
+
+  .ink-button--primary:hover {
+    background: var(--ink-button-primary-hover, color-mix(in srgb, var(--ink-accent) 85%, black));
+  }
+
+  .ink-button--secondary {
+    background: transparent;
+    color: var(--ink-ink);
+    border-color: var(--ink-border-strong);
+  }
+
+  .ink-button--secondary:hover {
+    background: var(--ink-surface);
+    border-color: var(--ink-ink);
+  }
+
+  .ink-button--ghost {
+    background: transparent;
+    color: var(--ink-accent);
+  }
+
+  .ink-button--ghost:hover {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+  }
+
+  .ink-button--danger {
+    background: var(--ink-danger);
+    color: var(--ink-danger-ink, #ffffff);
+  }
+
+  .ink-button--danger:hover {
+    background: color-mix(in srgb, var(--ink-danger) 85%, black);
+  }
+
+  .ink-button:disabled,
+  .ink-button[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>

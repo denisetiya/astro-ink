@@ -1,0 +1,78 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button } from "astro-ink";
+---
+<Base title="Button">
+  <div class="docs-page">
+    <h1>Button</h1>
+    <p class="docs-lede">
+      Triggers an action. Renders a <code>&lt;button&gt;</code> by default, or
+      an <code>&lt;a&gt;</code> when you pass <code>href</code>.
+    </p>
+
+    <h2>Variants</h2>
+    <div class="docs-example">
+      <Button>Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="danger">Danger</Button>
+    </div>
+    <pre class="docs-code"><code>&lt;Button&gt;Primary&lt;/Button&gt;
+&lt;Button variant="secondary"&gt;Secondary&lt;/Button&gt;
+&lt;Button variant="ghost"&gt;Ghost&lt;/Button&gt;
+&lt;Button variant="danger"&gt;Danger&lt;/Button&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <div class="docs-example">
+      <Button size="sm">Small</Button>
+      <Button size="md">Medium</Button>
+      <Button size="lg">Large</Button>
+    </div>
+    <pre class="docs-code"><code>&lt;Button size="sm"&gt;Small&lt;/Button&gt;
+&lt;Button size="md"&gt;Medium&lt;/Button&gt;
+&lt;Button size="lg"&gt;Large&lt;/Button&gt;</code></pre>
+
+    <h2>As a link</h2>
+    <div class="docs-example">
+      <Button href="/">Home</Button>
+      <Button href="/" variant="secondary" disabled>Disabled link</Button>
+    </div>
+    <pre class="docs-code"><code>&lt;Button href="/"&gt;Home&lt;/Button&gt;
+&lt;Button href="/" variant="secondary" disabled&gt;Disabled link&lt;/Button&gt;</code></pre>
+
+    <h2>Disabled</h2>
+    <div class="docs-example">
+      <Button disabled>Disabled</Button>
+    </div>
+    <pre class="docs-code"><code>&lt;Button disabled&gt;Disabled&lt;/Button&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>variant</code></td><td><code>primary | secondary | ghost | danger</code></td><td><code>primary</code></td><td>Visual style.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Padding and font size.</td></tr>
+        <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Renders an anchor with button styling.</td></tr>
+        <tr><td><code>type</code></td><td><code>button | submit | reset</code></td><td><code>button</code></td><td>Native type, button element only.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Blocks interaction.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-button-radius: 999px;      /* pill buttons */
+  --ink-button-pad-x: 1.25rem;     /* wider buttons */
+  --ink-button-primary-hover: #9a3412;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Renders a native <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>, so keyboard activation works without script.</li>
+      <li>Disabled anchors get <code>aria-disabled="true"</code> plus <code>pointer-events: none</code>.</li>
+      <li>Pass <code>aria-label</code> when the label is only an icon.</li>
+      <li>Focus ring comes from <code>--ink-focus-color</code>, visible in both themes.</li>
+    </ul>
+  </div>
+</Base>
