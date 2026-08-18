@@ -1,0 +1,113 @@
+---
+interface Props {
+  variant?: "info" | "success" | "warning" | "danger";
+  dismissible?: boolean;
+  role?: string;
+  class?: string;
+}
+
+const {
+  variant = "info",
+  dismissible = false,
+  role = "alert",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+<div
+  class:list={["ink-alert", `ink-alert--${variant}`, className]}
+  role={role}
+  data-ink-alert
+  {...rest}
+>
+  <div class="ink-alert__body">
+    <slot />
+  </div>
+  {dismissible && (
+    <button class="ink-alert__close" type="button" aria-label="Dismiss alert">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  )}
+</div>
+
+<style>
+  .ink-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ink-space-3);
+    padding: var(--ink-alert-pad-y, var(--ink-space-3)) var(--ink-alert-pad-x, var(--ink-space-4));
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-alert-radius, var(--ink-radius-md));
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-alert__body {
+    flex: 1;
+    color: var(--ink-ink);
+  }
+
+  .ink-alert__close {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+  }
+
+  .ink-alert__close:hover {
+    opacity: 1;
+  }
+
+  .ink-alert--info {
+    background: color-mix(in srgb, var(--ink-info) 8%, var(--ink-surface));
+    border-color: color-mix(in srgb, var(--ink-info) 30%, transparent);
+  }
+
+  .ink-alert--success {
+    background: color-mix(in srgb, var(--ink-success) 8%, var(--ink-surface));
+    border-color: color-mix(in srgb, var(--ink-success) 30%, transparent);
+  }
+
+  .ink-alert--warning {
+    background: color-mix(in srgb, var(--ink-warning) 10%, var(--ink-surface));
+    border-color: color-mix(in srgb, var(--ink-warning) 35%, transparent);
+  }
+
+  .ink-alert--danger {
+    background: color-mix(in srgb, var(--ink-danger) 8%, var(--ink-surface));
+    border-color: color-mix(in srgb, var(--ink-danger) 30%, transparent);
+  }
+</style>
+
+<script>
+  function initAlerts(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>(".ink-alert__close").forEach((button) => {
+      if (button.dataset.inkBound) return;
+      button.dataset.inkBound = "true";
+      button.addEventListener("click", () => {
+        const alert = button.closest<HTMLElement>(".ink-alert");
+        if (!alert) return;
+        alert.dispatchEvent(
+          new CustomEvent("ink:alert:dismiss", { bubbles: true }),
+        );
+        alert.remove();
+      });
+    });
+  }
+
+  initAlerts();
+
+  const w = window as unknown as {
+    Ink?: { init: (root?: ParentNode) => void };
+  };
+  w.Ink = Object.assign(w.Ink ?? {}, { init: initAlerts });
+</script>
