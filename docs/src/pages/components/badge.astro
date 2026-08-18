@@ -1,0 +1,59 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Badge } from "astro-ink";
+---
+<Base title="Badge">
+  <div class="docs-page">
+    <h1>Badge</h1>
+    <p class="docs-lede">
+      Small status or count label. Use it when the label carries real
+      information, not as decoration.
+    </p>
+
+    <h2>Variants</h2>
+    <div class="docs-example">
+      <Badge>Neutral</Badge>
+      <Badge variant="accent">Accent</Badge>
+      <Badge variant="success">Success</Badge>
+      <Badge variant="warning">Warning</Badge>
+      <Badge variant="danger">Danger</Badge>
+      <Badge variant="info">Info</Badge>
+    </div>
+    <pre class="docs-code"><code>&lt;Badge&gt;Neutral&lt;/Badge&gt;
+&lt;Badge variant="accent"&gt;Accent&lt;/Badge&gt;
+&lt;Badge variant="success"&gt;Success&lt;/Badge&gt;
+&lt;Badge variant="warning"&gt;Warning&lt;/Badge&gt;
+&lt;Badge variant="danger"&gt;Danger&lt;/Badge&gt;
+&lt;Badge variant="info"&gt;Info&lt;/Badge&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <div class="docs-example">
+      <Badge size="sm">Small</Badge>
+      <Badge size="md">Medium</Badge>
+    </div>
+    <pre class="docs-code"><code>&lt;Badge size="sm"&gt;Small&lt;/Badge&gt;
+&lt;Badge size="md"&gt;Medium&lt;/Badge&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>variant</code></td><td><code>neutral | accent | success | warning | danger | info</code></td><td><code>neutral</code></td><td>Semantic color.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md</code></td><td><code>md</code></td><td>Padding and font size.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-badge-radius: 999px;   /* pill badges */
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>A badge is text: make sure the label alone carries the meaning.</li>
+      <li>Do not rely on color alone for status. Pair the color with the word.</li>
+    </ul>
+  </div>
+</Base>

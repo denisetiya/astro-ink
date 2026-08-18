@@ -1,0 +1,64 @@
+---
+interface Props {
+  variant?: "neutral" | "accent" | "success" | "warning" | "danger" | "info";
+  size?: "sm" | "md";
+  class?: string;
+}
+
+const { variant = "neutral", size = "md", class: className, ...rest } = Astro.props;
+---
+<span class:list={["ink-badge", `ink-badge--${variant}`, `ink-badge--${size}`, className]} {...rest}>
+  <slot />
+</span>
+
+<style>
+  .ink-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+    font-weight: var(--ink-font-weight-medium);
+    line-height: 1;
+    border-radius: var(--ink-badge-radius, var(--ink-radius-sm));
+    white-space: nowrap;
+  }
+
+  .ink-badge--sm {
+    padding: 0.125rem var(--ink-space-2);
+    font-size: var(--ink-text-xs);
+  }
+
+  .ink-badge--md {
+    padding: var(--ink-space-1) var(--ink-space-2);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-badge--neutral {
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+    color: var(--ink-ink);
+  }
+
+  .ink-badge--accent {
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+  }
+
+  .ink-badge--success {
+    background: color-mix(in srgb, var(--ink-success) 14%, transparent);
+    color: var(--ink-success-text, var(--ink-success));
+  }
+
+  .ink-badge--warning {
+    background: color-mix(in srgb, var(--ink-warning) 14%, transparent);
+    color: var(--ink-warning-text, var(--ink-warning));
+  }
+
+  .ink-badge--danger {
+    background: color-mix(in srgb, var(--ink-danger) 14%, transparent);
+    color: var(--ink-danger-text, var(--ink-danger));
+  }
+
+  .ink-badge--info {
+    background: color-mix(in srgb, var(--ink-info) 14%, transparent);
+    color: var(--ink-info-text, var(--ink-info));
+  }
+</style>
