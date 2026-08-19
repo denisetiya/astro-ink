@@ -34,6 +34,7 @@ const Tag = href ? "a" : "button";
 
 <style>
   .ink-button {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +55,16 @@ const Tag = href ? "a" : "button";
     font-size: var(--ink-text-sm);
   }
 
+  /* Keep the 44px touch target for the visually small size: the pseudo
+     element extends the hit area without enlarging the visual button. */
+  .ink-button--sm::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+  }
+
   .ink-button--md {
+    min-height: 2.75rem;
     padding: var(--ink-button-pad-y, var(--ink-space-2)) var(--ink-button-pad-x, var(--ink-space-4));
     font-size: var(--ink-text-base);
   }

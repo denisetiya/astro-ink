@@ -120,7 +120,9 @@
 }
 
 .docs-table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   font-size: var(--ink-text-sm);
 }
