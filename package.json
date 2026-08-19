@@ -23,7 +23,8 @@
     "docs:dev": "npm run dev --workspace docs",
     "docs:build": "npm run build --workspace docs",
     "docs:preview": "npm run preview --workspace docs",
-    "check": "npm run check --workspace docs"
+    "check": "npm run check --workspace docs",
+    "e2e": "playwright test"
   },
   "peerDependencies": {
     "astro": "^7.0.0"
