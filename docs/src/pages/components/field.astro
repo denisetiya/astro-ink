@@ -1,0 +1,43 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Field, TextField } from "astro-ink";
+---
+<Base title="Field">
+  <div class="docs-page">
+    <h1>Field</h1>
+    <p class="docs-lede">
+      Label, hint, and error wrapper for any control, including ones you
+      compose yourself. All astro-ink inputs render one internally.
+    </p>
+
+    <h2>Wrapping a custom control</h2>
+    <div class="docs-example">
+      <Field id="color" label="Brand color" hint="Shown on your invoices.">
+        <input id="color" name="color" type="color" value="#c2410c" style="height: 2.75rem; border: 1px solid var(--ink-border-strong); border-radius: var(--ink-radius-md); background: var(--ink-surface); padding: 2px;" />
+      </Field>
+    </div>
+    <pre class="docs-code"><code>&lt;Field id="color" label="Brand color" hint="Shown on your invoices."&gt;
+  &lt;input id="color" name="color" type="color" value="#c2410c" /&gt;
+&lt;/Field&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required; message ids derive from it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Label text, wired with <code>for</code>.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Renders <code>#&#123;id&#125;-hint</code>.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Renders <code>#&#123;id&#125;-error</code>.</td></tr>
+        <tr><td><code>hideLabel</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Label present for AT, visually hidden.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Wire <code>aria-describedby="&#123;id&#125;-hint &#123;id&#125;-error"</code> on your control (input components do this automatically).</li>
+      <li><code>hideLabel</code> still announces: it is clipped, not removed.</li>
+    </ul>
+  </div>
+</Base>

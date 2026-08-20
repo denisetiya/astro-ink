@@ -1,0 +1,98 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  hideLabel?: boolean;
+  class?: string;
+}
+
+const { id, label, hint, error, required = false, hideLabel = false, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-field", error && "ink-field--error", className]} {...rest}>
+  <label class:list={["ink-field__label", hideLabel && "ink-visually-hidden"]} for={id}>
+    {label}{required && <span class="ink-field__required" aria-hidden="true"> *</span>}
+  </label>
+  <slot />
+  {hint && <p class="ink-field__hint" id={`${id}-hint`}>{hint}</p>}
+  {error && <p class="ink-field__error" id={`${id}-error`}>{error}</p>}
+</div>
+
+<style>
+  .ink-field {
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-field__label {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-field__required { color: var(--ink-danger); }
+
+  .ink-field__hint {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-field__error {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-danger);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  /* Shared control styles. Input components all import Field, so these ship
+     once. Focus uses border + soft ring instead of removing the outline. */
+  :global(.ink-input),
+  :global(.ink-select),
+  :global(.ink-textarea) {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    font-size: var(--ink-text-base);
+    color: var(--ink-ink);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-input-radius, var(--ink-radius-md));
+    transition:
+      border-color var(--ink-duration-fast) var(--ink-ease),
+      box-shadow var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  :global(.ink-input:hover),
+  :global(.ink-select:hover),
+  :global(.ink-textarea:hover) {
+    border-color: var(--ink-ink);
+  }
+
+  :global(.ink-input:focus),
+  :global(.ink-select:focus),
+  :global(.ink-textarea:focus) {
+    outline: none;
+    border-color: var(--ink-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-accent) 25%, transparent);
+  }
+
+  :global(.ink-input:disabled),
+  :global(.ink-select:disabled),
+  :global(.ink-textarea:disabled) {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));
+  }
+
+  :global(.ink-input[aria-invalid="true"]),
+  :global(.ink-textarea[aria-invalid="true"]),
+  :global(.ink-select[aria-invalid="true"]) {
+    border-color: var(--ink-danger);
+  }
+
+  :global(.ink-input[aria-invalid="true"]:focus),
+  :global(.ink-textarea[aria-invalid="true"]:focus),
+  :global(.ink-select[aria-invalid="true"]:focus) {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-danger) 25%, transparent);
+  }
+</style>

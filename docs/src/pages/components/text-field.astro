@@ -1,0 +1,71 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TextField } from "astro-ink";
+---
+<Base title="TextField">
+  <div class="docs-page">
+    <h1>TextField</h1>
+    <p class="docs-lede">
+      Single-line text input with label, hint, and error wiring handled for
+      you. Every other text-like input in astro-ink builds on this pattern.
+    </p>
+
+    <h2>Basic with hint</h2>
+    <div class="docs-example">
+      <TextField id="email" label="Email" type="email" hint="We only use it for the receipt." placeholder="you@example.com" />
+    </div>
+    <pre class="docs-code"><code>&lt;TextField
+  id="email"
+  label="Email"
+  type="email"
+  hint="We only use it for the receipt."
+  placeholder="you@example.com"
+/&gt;</code></pre>
+
+    <h2>Error state</h2>
+    <div class="docs-example">
+      <TextField id="username" label="Username" error="That username is taken." value="denis" />
+    </div>
+    <pre class="docs-code"><code>&lt;TextField id="username" label="Username" error="That username is taken." /&gt;</code></pre>
+
+    <h2>Disabled and readonly</h2>
+    <div class="docs-example">
+      <TextField id="plan" label="Plan" value="Team" disabled />
+      <TextField id="ref" label="Reference" value="INK-0117" readonly />
+    </div>
+    <pre class="docs-code"><code>&lt;TextField id="plan" label="Plan" value="Team" disabled /&gt;
+&lt;TextField id="ref" label="Reference" value="INK-0117" readonly /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Wires label and messages.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label text.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Form field name.</td></tr>
+        <tr><td><code>type</code></td><td><code>string</code></td><td><code>text</code></td><td>Native input type.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the input.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code>.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks and enforces required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive.</td></tr>
+        <tr><td><code>readonly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Read-only.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-input-radius: 0.25rem;
+  --ink-input-border: #d6cec3;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Label is a real <code>&lt;label for&gt;</code>, hint and error connect via <code>aria-describedby</code>.</li>
+      <li>Error state sets <code>aria-invalid="true"</code>.</li>
+      <li>Focus shows a border + soft ring; the outline is replaced, not removed.</li>
+      <li>Disabled inputs keep 3:1 contrast on their border.</li>
+    </ul>
+  </div>
+</Base>
