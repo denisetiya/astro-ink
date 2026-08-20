@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, VisuallyHidden } from "astro-ink";
+---
+<Base title="VisuallyHidden">
+  <div class="docs-page">
+    <h1>VisuallyHidden</h1>
+    <p class="docs-lede">
+      Hides content from sight while keeping it available to screen readers.
+      Never use <code>display: none</code> for labels you want announced.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button>
+        <VisuallyHidden>Open settings for</VisuallyHidden>
+        Account
+      </Button>
+    </div>
+    <p>Screen readers announce "Open settings for Account"; sighted users see only "Account".</p>
+    <pre class="docs-code"><code>&lt;Button&gt;
+  &lt;VisuallyHidden&gt;Open settings for&lt;/VisuallyHidden&gt;
+  Account
+&lt;/Button&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Uses the clip pattern, so the element stays in the accessibility tree and focusable descendants still work.</li>
+      <li>Prefer an explicit visible label whenever space allows.</li>
+    </ul>
+  </div>
+</Base>

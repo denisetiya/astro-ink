@@ -1,0 +1,23 @@
+---
+interface Props {
+  size?: "md" | "lg" | "full";
+  class?: string;
+}
+
+const { size = "lg", class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-container", `ink-container--${size}`, className]} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .ink-container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--ink-space-4);
+  }
+
+  .ink-container--md { max-width: 48rem; }
+  .ink-container--lg { max-width: 72rem; }
+  .ink-container--full { max-width: none; }
+</style>

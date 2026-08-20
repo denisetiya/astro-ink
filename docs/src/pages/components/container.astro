@@ -1,0 +1,43 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Container } from "astro-ink";
+---
+<Base title="Container">
+  <div class="docs-page">
+    <h1>Container</h1>
+    <p class="docs-lede">
+      Centers content and caps its width. Use one per page section, not one
+      per page.
+    </p>
+
+    <h2>Sizes</h2>
+    <div class="docs-example" style="display: grid;">
+      <Container size="md" style="outline: 1px dashed var(--ink-border-strong); padding: var(--ink-space-2);">Medium (48rem max)</Container>
+      <Container size="lg" style="outline: 1px dashed var(--ink-border-strong); padding: var(--ink-space-2);">Large (72rem max)</Container>
+    </div>
+    <pre class="docs-code"><code>&lt;Container size="md"&gt;Medium (48rem max)&lt;/Container&gt;
+&lt;Container size="lg"&gt;Large (72rem max)&lt;/Container&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>size</code></td><td><code>md | lg | full</code></td><td><code>lg</code></td><td>Max width cap.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-container-md: 48rem;
+  --ink-container-lg: 72rem;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Pure layout, no semantics: content inside stays as-is.</li>
+      <li>Padding never removes content below 375px.</li>
+    </ul>
+  </div>
+</Base>
