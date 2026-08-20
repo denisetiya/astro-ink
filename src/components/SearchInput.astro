@@ -1,0 +1,98 @@
+---
+import Field from "./Field.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  hint?: string;
+  error?: string;
+  disabled?: boolean;
+  placeholder?: string;
+  class?: string;
+}
+
+const { id, label, name = id, hint, error, disabled = false, placeholder = "Search", class: className, ...rest } = Astro.props;
+---
+<Field id={id} label={label} hint={hint} error={error} hideLabel class={className}>
+  <div class="ink-search">
+    <input
+      id={id}
+      name={name}
+      type="search"
+      class="ink-input"
+      placeholder={placeholder}
+      disabled={disabled || undefined}
+      data-ink-search
+      {...rest}
+    />
+    <button type="button" class="ink-search__clear" data-ink-search-clear aria-label="Clear search" hidden>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</Field>
+
+<style>
+  .ink-search {
+    position: relative;
+  }
+
+  .ink-search input {
+    padding-right: 2.75rem;
+  }
+
+  .ink-search__clear {
+    position: absolute;
+    right: var(--ink-space-2);
+    top: 50%;
+    translate: 0 -50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: none;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-muted);
+  }
+
+  .ink-search__clear:hover {
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+    color: var(--ink-ink);
+  }
+
+  .ink-search__clear[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  function initSearch(root: ParentNode = document) {
+    root.querySelectorAll<HTMLInputElement>("[data-ink-search]").forEach((input) => {
+      if (input.dataset.inkBound) return;
+      input.dataset.inkBound = "true";
+      const clear = input.parentElement?.querySelector<HTMLButtonElement>("[data-ink-search-clear]");
+      if (!clear) return;
+      const sync = () => {
+        clear.hidden = input.value.length === 0;
+      };
+      input.addEventListener("input", sync);
+      input.addEventListener("change", sync);
+      clear.addEventListener("click", () => {
+        input.value = "";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.focus();
+      });
+      sync();
+    });
+  }
+
+  initSearch();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initSearch(root ?? document); } };
+</script>

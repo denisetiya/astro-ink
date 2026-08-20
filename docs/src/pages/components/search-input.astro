@@ -1,0 +1,36 @@
+---
+import Base from "../../layouts/Base.astro";
+import { SearchInput } from "astro-ink";
+---
+<Base title="SearchInput">
+  <div class="docs-page">
+    <h1>SearchInput</h1>
+    <p class="docs-lede">
+      Search field with a clear button that appears only when there is
+      something to clear.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <SearchInput id="docs-search" label="Search docs" placeholder="Search docs" />
+    </div>
+    <pre class="docs-code"><code>&lt;SearchInput id="docs-search" label="Search docs" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search</code></td><td>Hint text.</td></tr>
+        <tr><td colspan="4">Label is visually hidden by default; the placeholder carries the visible cue.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Renders <code>type="search"</code> (announced as search box).</li>
+      <li>Clear button has <code>aria-label="Clear search"</code> and returns focus to the field.</li>
+    </ul>
+  </div>
+</Base>

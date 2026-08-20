@@ -1,0 +1,43 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Textarea } from "astro-ink";
+---
+<Base title="Textarea">
+  <div class="docs-page">
+    <h1>Textarea</h1>
+    <p class="docs-lede">
+      Multi-line input. Optional autosize grows the box with content instead
+      of forcing a scrollbar.
+    </p>
+
+    <h2>Autosize</h2>
+    <div class="docs-example">
+      <Textarea id="bio" label="Bio" autosize placeholder="Type a few lines..." />
+    </div>
+    <pre class="docs-code"><code>&lt;Textarea id="bio" label="Bio" autosize /&gt;</code></pre>
+
+    <h2>Fixed height</h2>
+    <div class="docs-example">
+      <Textarea id="msg" label="Message" rows="5" placeholder="Your message..." />
+    </div>
+    <pre class="docs-code"><code>&lt;Textarea id="msg" label="Message" rows="5" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>rows</code></td><td><code>number</code></td><td><code>4</code></td><td>Initial height.</td></tr>
+        <tr><td><code>autosize</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Grows with content.</td></tr>
+        <tr><td colspan="4">Plus the full TextField API.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Label wired; error sets <code>aria-invalid</code>.</li>
+      <li>Autosize never removes manual resize; it adjusts height on input only.</li>
+    </ul>
+  </div>
+</Base>

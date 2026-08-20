@@ -5,3 +5,7 @@ export { default as Container } from "./components/Container.astro";
 export { default as VisuallyHidden } from "./components/VisuallyHidden.astro";
 export { default as Field } from "./components/Field.astro";
 export { default as TextField } from "./components/TextField.astro";
+export { default as NumberInput } from "./components/NumberInput.astro";
+export { default as PasswordInput } from "./components/PasswordInput.astro";
+export { default as SearchInput } from "./components/SearchInput.astro";
+export { default as Textarea } from "./components/Textarea.astro";
