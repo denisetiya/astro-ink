@@ -9,3 +9,4 @@ export { default as NumberInput } from "./components/NumberInput.astro";
 export { default as PasswordInput } from "./components/PasswordInput.astro";
 export { default as SearchInput } from "./components/SearchInput.astro";
 export { default as Textarea } from "./components/Textarea.astro";
+export { default as Select } from "./components/Select.astro";

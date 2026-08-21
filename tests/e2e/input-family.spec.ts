@@ -29,3 +29,10 @@ test("textarea with autosize grows on input", async ({ page }) => {
   const after = await el.evaluate((n) => n.getBoundingClientRect().height);
   expect(after).toBeGreaterThan(before);
 });
+
+test("select changes value", async ({ page }) => {
+  await page.goto("/components/select");
+  const select = page.getByLabel("Country");
+  await select.selectOption("id");
+  await expect(select).toHaveValue("id");
+});

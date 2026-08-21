@@ -1,0 +1,67 @@
+---
+import Field from "./Field.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  multiple?: boolean;
+  size?: number;
+  class?: string;
+}
+
+const {
+  id, label, name = id, hint, error, required = false,
+  disabled = false, multiple = false, size, class: className, ...rest
+} = Astro.props;
+
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
+  .filter(Boolean)
+  .join(" ") || undefined;
+---
+<Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
+  <div class="ink-select-wrap">
+    <select
+      id={id}
+      name={name}
+      class="ink-select"
+      multiple={multiple || undefined}
+      size={size}
+      required={required || undefined}
+      disabled={disabled || undefined}
+      aria-invalid={error ? "true" : undefined}
+      aria-describedby={describedBy}
+      {...rest}
+    >
+      <slot />
+    </select>
+    <svg class="ink-select__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </div>
+</Field>
+
+<style>
+  .ink-select-wrap {
+    position: relative;
+  }
+
+  .ink-select-wrap select {
+    appearance: none;
+    padding-right: var(--ink-space-6);
+    cursor: pointer;
+  }
+
+  .ink-select__chevron {
+    position: absolute;
+    right: var(--ink-space-3);
+    top: 50%;
+    translate: 0 -50%;
+    pointer-events: none;
+    color: var(--ink-muted);
+  }
+</style>

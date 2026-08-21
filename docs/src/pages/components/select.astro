@@ -1,0 +1,65 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Select } from "astro-ink";
+---
+<Base title="Select">
+  <div class="docs-page">
+    <h1>Select</h1>
+    <p class="docs-lede">
+      Native select, styled. Options come as plain <code>&lt;option&gt;</code>
+      elements in the default slot, so optgroups and values work like always.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Select id="country" label="Country" hint="Used for tax purposes.">
+        <option value="" disabled selected>Choose a country</option>
+        <option value="id">Indonesia</option>
+        <option value="my">Malaysia</option>
+        <option value="sg">Singapore</option>
+      </Select>
+    </div>
+    <pre class="docs-code"><code>&lt;Select id="country" label="Country"&gt;
+  &lt;option value="" disabled selected&gt;Choose a country&lt;/option&gt;
+  &lt;option value="id"&gt;Indonesia&lt;/option&gt;
+  &lt;option value="my"&gt;Malaysia&lt;/option&gt;
+  &lt;option value="sg"&gt;Singapore&lt;/option&gt;
+&lt;/Select&gt;</code></pre>
+
+    <h2>With groups</h2>
+    <div class="docs-example">
+      <Select id="tz" label="Time zone">
+        <optgroup label="Asia">
+          <option value="jakarta">Asia/Jakarta</option>
+          <option value="tokyo">Asia/Tokyo</option>
+        </optgroup>
+        <optgroup label="Europe">
+          <option value="berlin">Europe/Berlin</option>
+        </optgroup>
+      </Select>
+    </div>
+    <pre class="docs-code"><code>&lt;Select id="tz" label="Time zone"&gt;
+  &lt;optgroup label="Asia"&gt;
+    &lt;option value="jakarta"&gt;Asia/Jakarta&lt;/option&gt;
+  &lt;/optgroup&gt;
+&lt;/Select&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>multiple</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Multi-select list.</td></tr>
+        <tr><td><code>size</code></td><td><code>number</code></td><td>-</td><td>Visible rows for multi.</td></tr>
+        <tr><td colspan="4">Plus the Field API (label, hint, error, required, disabled).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Native select: full keyboard and screen reader support for free.</li>
+      <li>Chevron is decorative (<code>aria-hidden</code>).</li>
+    </ul>
+  </div>
+</Base>
