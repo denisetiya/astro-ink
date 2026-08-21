@@ -12,10 +12,9 @@ test("checkbox toggles and reports indeterminate", async ({ page }) => {
 
 test("switch exposes role=switch and toggles", async ({ page }) => {
   await page.goto("/components/switch");
-  const sw = page.getByRole("switch", { name: "Email notifications" });
-  await page.locator("label.ink-switch", { hasText: "Email notifications" }).click();
+  const sw = page.getByRole("switch", { name: "Dark mode" });
+  await page.locator("label.ink-switch", { hasText: "Dark mode" }).click();
   await expect(sw).toBeChecked();
-  await page.keyboard.press("Tab");
 });
 
 test("radio group selects one option with arrow keys", async ({ page }) => {
