@@ -1,0 +1,50 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Checkbox } from "astro-ink";
+---
+<Base title="Checkbox">
+  <div class="docs-page">
+    <h1>Checkbox</h1>
+    <p class="docs-lede">
+      Single boolean choice, with an indeterminate state for "select all"
+      patterns.
+    </p>
+
+    <h2>States</h2>
+    <div class="docs-example">
+      <Checkbox name="news" label="Newsletter" checked />
+      <Checkbox name="terms" label="Terms" />
+      <Checkbox name="locked" label="Locked" disabled />
+    </div>
+    <pre class="docs-code"><code>&lt;Checkbox name="news" label="Newsletter" checked /&gt;
+&lt;Checkbox name="terms" label="Terms" /&gt;
+&lt;Checkbox name="locked" label="Locked" disabled /&gt;</code></pre>
+
+    <h2>Indeterminate (select all)</h2>
+    <div class="docs-example">
+      <Checkbox name="all" label="Select all" indeterminate />
+    </div>
+    <pre class="docs-code"><code>&lt;Checkbox name="all" label="Select all" indeterminate /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Form field name.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code></td><td>-</td><td>Submitted value.</td></tr>
+        <tr><td><code>checked</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Initial state.</td></tr>
+        <tr><td><code>indeterminate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Dash state (visual + <code>.indeterminate</code>).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Or use the default slot.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Native input styled with <code>appearance: none</code>: full keyboard and AT support.</li>
+      <li>Focus ring via <code>:focus-visible</code>.</li>
+      <li>Space toggles, label click toggles.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,64 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  class?: string;
+}
+
+const { name, label, hint, error, required = false, class: className, ...rest } = Astro.props;
+
+const describedBy = [hint && `${name}-hint`, error && `${name}-error`]
+  .filter(Boolean)
+  .join(" ") || undefined;
+---
+<fieldset
+  class:list={["ink-radio-group", error && "ink-radio-group--error", className]}
+  aria-describedby={describedBy}
+  {...rest}
+>
+  <legend class="ink-radio-group__legend">
+    {label}{required && <span class="ink-radio-group__required" aria-hidden="true"> *</span>}
+  </legend>
+  <div class="ink-radio-group__options">
+    <slot />
+  </div>
+  {hint && <p class="ink-radio-group__hint" id={`${name}-hint`}>{hint}</p>}
+  {error && <p class="ink-radio-group__error" id={`${name}-error`}>{error}</p>}
+</fieldset>
+
+<style>
+  .ink-radio-group {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-radio-group__legend {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    padding: 0;
+  }
+
+  .ink-radio-group__required { color: var(--ink-danger); }
+
+  .ink-radio-group__options {
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-radio-group__hint {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-radio-group__error {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-danger);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>

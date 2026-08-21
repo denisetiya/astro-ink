@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Switch } from "astro-ink";
+---
+<Base title="Switch">
+  <div class="docs-page">
+    <h1>Switch</h1>
+    <p class="docs-lede">
+      Immediate on/off setting. Use for instant effects, not for form
+      submission choices (those are checkboxes).
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Switch name="notifications" label="Email notifications" checked />
+      <Switch name="dark" label="Dark mode" />
+      <Switch name="locked" label="Locked" disabled />
+    </div>
+    <pre class="docs-code"><code>&lt;Switch name="notifications" label="Email notifications" checked /&gt;
+&lt;Switch name="dark" label="Dark mode" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Form field name.</td></tr>
+        <tr><td><code>checked</code></td><td><code>boolean</code></td><td><code>false</code></td><td>On state.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Or use the default slot.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-switch-track-width: 2.5rem;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Input carries <code>role="switch"</code> so AT announces on/off.</li>
+      <li>Focus outline renders on the track, thumb animates on toggle.</li>
+    </ul>
+  </div>
+</Base>

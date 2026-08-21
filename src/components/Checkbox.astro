@@ -1,0 +1,104 @@
+---
+interface Props {
+  name: string;
+  value?: string;
+  label?: string;
+  checked?: boolean;
+  disabled?: boolean;
+  indeterminate?: boolean;
+  class?: string;
+}
+
+const { name, value, label, checked = false, disabled = false, indeterminate = false, class: className, ...rest } = Astro.props;
+---
+<label class:list={["ink-checkbox", className]}>
+  <input
+    type="checkbox"
+    class="ink-checkbox__input"
+    name={name}
+    value={value}
+    checked={checked || undefined}
+    disabled={disabled || undefined}
+    data-ink-indeterminate={indeterminate ? "" : undefined}
+    {...rest}
+  />
+  <span class="ink-checkbox__label"><slot>{label}</slot></span>
+</label>
+
+<style>
+  .ink-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    cursor: pointer;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-checkbox__input {
+    appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    margin: 0;
+    border: 1.5px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-sm);
+    background: var(--ink-surface);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition:
+      background-color var(--ink-duration-fast) var(--ink-ease),
+      border-color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-checkbox__input::before {
+    content: "";
+    width: 0.625rem;
+    height: 0.625rem;
+    scale: 0;
+    background: var(--ink-accent-ink);
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transition: scale var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-checkbox__input:checked,
+  .ink-checkbox__input:indeterminate {
+    background: var(--ink-accent);
+    border-color: var(--ink-accent);
+  }
+
+  .ink-checkbox__input:checked::before { scale: 1; }
+
+  .ink-checkbox__input:indeterminate::before {
+    scale: 1;
+    clip-path: inset(40% 0 40% 0);
+  }
+
+  .ink-checkbox__input:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-checkbox__input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .ink-checkbox:has(.ink-checkbox__input:disabled) {
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  function initIndeterminate(root: ParentNode = document) {
+    root.querySelectorAll<HTMLInputElement>("[data-ink-indeterminate]").forEach((el) => {
+      el.indeterminate = true;
+    });
+  }
+
+  initIndeterminate();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initIndeterminate(root ?? document); } };
+</script>

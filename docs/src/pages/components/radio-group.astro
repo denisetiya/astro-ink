@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Radio, RadioGroup } from "astro-ink";
+---
+<Base title="RadioGroup">
+  <div class="docs-page">
+    <h1>RadioGroup</h1>
+    <p class="docs-lede">
+      One choice out of many. The group wraps <code>Radio</code> items in a
+      fieldset with a real legend.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <RadioGroup name="frequency" label="Email frequency" hint="You can change this anytime.">
+        <Radio name="frequency" value="daily" label="Daily" />
+        <Radio name="frequency" value="weekly" label="Weekly" />
+        <Radio name="frequency" value="monthly" label="Monthly" checked />
+      </RadioGroup>
+    </div>
+    <pre class="docs-code"><code>&lt;RadioGroup name="frequency" label="Email frequency"&gt;
+  &lt;Radio name="frequency" value="daily" label="Daily" /&gt;
+  &lt;Radio name="frequency" value="weekly" label="Weekly" /&gt;
+  &lt;Radio name="frequency" value="monthly" label="Monthly" checked /&gt;
+&lt;/RadioGroup&gt;</code></pre>
+
+    <h2>Props (RadioGroup)</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Shared radio name; message ids derive from it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Legend text.</td></tr>
+        <tr><td><code>hint / error</code></td><td><code>string</code></td><td>-</td><td>Wired via <code>aria-describedby</code> on the fieldset.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Arrow keys move between options natively; Tab enters and leaves the group once.</li>
+      <li><code>fieldset</code> + <code>legend</code> gives each radio its group context.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,72 @@
+---
+interface Props {
+  name: string;
+  value: string;
+  label?: string;
+  checked?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const { name, value, label, checked = false, disabled = false, class: className, ...rest } = Astro.props;
+---
+<label class:list={["ink-radio", className]}>
+  <input
+    type="radio"
+    class="ink-radio__input"
+    name={name}
+    value={value}
+    checked={checked || undefined}
+    disabled={disabled || undefined}
+    {...rest}
+  />
+  <span class="ink-radio__label"><slot>{label}</slot></span>
+</label>
+
+<style>
+  .ink-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    cursor: pointer;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-radio__input {
+    appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    margin: 0;
+    border: 1.5px solid var(--ink-border-strong);
+    border-radius: 50%;
+    background: var(--ink-surface);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition: border-color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-radio__input::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    scale: 0;
+    background: var(--ink-accent);
+    transition: scale var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-radio__input:checked { border-color: var(--ink-accent); }
+  .ink-radio__input:checked::before { scale: 1; }
+
+  .ink-radio__input:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-radio__input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
