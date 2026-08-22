@@ -35,3 +35,14 @@ test("radio group selects one option with arrow keys", async ({ page }) => {
   await first.press("ArrowDown");
   await expect(page.getByRole("radio", { name: "Monthly" })).toBeChecked();
 });
+
+test("file upload lists selected files and allows removal", async ({ page }) => {
+  await page.goto("/components/file");
+  await page.locator('input[type="file"]').first().setInputFiles([
+    { name: "a.txt", mimeType: "text/plain", buffer: Buffer.from("hello") },
+    { name: "b.txt", mimeType: "text/plain", buffer: Buffer.from("world") },
+  ]);
+  await expect(page.locator(".ink-file__list li")).toHaveCount(2);
+  await page.locator(".ink-file__remove").first().click();
+  await expect(page.locator(".ink-file__list li")).toHaveCount(1);
+});

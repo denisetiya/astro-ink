@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { File } from "astro-ink";
+---
+<Base title="File">
+  <div class="docs-page">
+    <h1>File</h1>
+    <p class="docs-lede">
+      File attachment with a real file list: names, sizes, remove buttons. A
+      dropzone variant adds drag and drop.
+    </p>
+
+    <h2>Single file</h2>
+    <div class="docs-example" style="display: grid;">
+      <File id="receipt" name="receipt" label="Receipt" accept=".pdf,.png,.jpg" hint="PDF or image, up to 5 MB." />
+    </div>
+    <pre class="docs-code"><code>&lt;File
+  id="receipt"
+  name="receipt"
+  label="Receipt"
+  accept=".pdf,.png,.jpg"
+  hint="PDF or image, up to 5 MB."
+/&gt;</code></pre>
+
+    <h2>Dropzone</h2>
+    <div class="docs-example" style="display: grid;">
+      <File id="gallery" name="gallery" label="Gallery images" multiple dropzone accept="image/*" />
+    </div>
+    <pre class="docs-code"><code>&lt;File id="gallery" name="gallery" label="Gallery images" multiple dropzone accept="image/*" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>accept</code></td><td><code>string</code></td><td>-</td><td>Native accept filter.</td></tr>
+        <tr><td><code>multiple</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Allow several files.</td></tr>
+        <tr><td><code>dropzone</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Drag &amp; drop area instead of a button.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:file:change", (event) =&gt; &#123;
+  console.log(event.detail.files);
+&#125;);</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The visible button/dropzone is a <code>&lt;label for&gt;</code>; the real input stays keyboard operable.</li>
+      <li>Remove buttons carry <code>aria-label="Remove [filename]"</code>.</li>
+      <li>Drag and drop is an enhancement; everything works without it.</li>
+    </ul>
+  </div>
+</Base>

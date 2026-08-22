@@ -15,3 +15,4 @@ export { default as Radio } from "./components/Radio.astro";
 export { default as RadioGroup } from "./components/RadioGroup.astro";
 export { default as Switch } from "./components/Switch.astro";
 export { default as Slider } from "./components/Slider.astro";
+export { default as File } from "./components/File.astro";

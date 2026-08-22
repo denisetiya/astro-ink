@@ -1,0 +1,220 @@
+---
+import Field from "./Field.astro";
+
+interface Props {
+  id: string;
+  name?: string;
+  label?: string;
+  hint?: string;
+  error?: string;
+  accept?: string;
+  multiple?: boolean;
+  dropzone?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, name = id, label, hint, error, accept, multiple = false,
+  dropzone = false, disabled = false, class: className, ...rest
+} = Astro.props;
+---
+<Field id={id} label={label ?? "Attach files"} hint={hint} error={error} class={className}>
+  {dropzone ? (
+    <label class="ink-file__drop" data-ink-drop for={id}>
+      <span class="ink-file__drop-text">Drag &amp; drop files here, or <span class="ink-file__browse">browse</span></span>
+    </label>
+  ) : (
+    <span class="ink-file__button-wrap">
+      <label class="ink-file__button" for={id}>Choose files</label>
+    </span>
+  )}
+  <input
+    id={id}
+    name={name}
+    type="file"
+    class="ink-visually-hidden"
+    accept={accept}
+    multiple={multiple || undefined}
+    disabled={disabled || undefined}
+    data-ink-file
+    {...rest}
+  />
+  <ul class="ink-file__list" data-ink-file-list hidden></ul>
+</Field>
+
+<style>
+  .ink-file__button-wrap {
+    display: inline-flex;
+  }
+
+  .ink-file__button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-4);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-base);
+    font-weight: var(--ink-font-weight-medium);
+    cursor: pointer;
+    transition:
+      border-color var(--ink-duration-fast) var(--ink-ease),
+      background-color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-file__button:hover {
+    border-color: var(--ink-ink);
+    background: var(--ink-surface);
+  }
+
+  .ink-file__drop {
+    display: grid;
+    place-content: center;
+    gap: var(--ink-space-1);
+    min-height: 8rem;
+    padding: var(--ink-space-5);
+    border: 1.5px dashed var(--ink-border-strong);
+    border-radius: var(--ink-radius-lg);
+    background: color-mix(in srgb, var(--ink-ink) 3%, var(--ink-bg));
+    text-align: center;
+    cursor: pointer;
+    transition:
+      border-color var(--ink-duration-fast) var(--ink-ease),
+      background-color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-file__drop:hover,
+  .ink-file__drop--over {
+    border-color: var(--ink-accent);
+    background: color-mix(in srgb, var(--ink-accent) 6%, var(--ink-bg));
+  }
+
+  .ink-file__drop-text {
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+
+  .ink-file__browse {
+    color: var(--ink-accent);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-file__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-file__item {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-radius-md);
+    background: var(--ink-surface);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-file__size {
+    color: var(--ink-muted);
+    font-size: var(--ink-text-xs);
+  }
+
+  .ink-file__remove {
+    margin-inline-start: auto;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    padding: var(--ink-space-1);
+    border-radius: var(--ink-radius-sm);
+    font-size: var(--ink-text-base);
+    line-height: 1;
+  }
+
+  .ink-file__remove:hover { color: var(--ink-danger); }
+</style>
+
+<script>
+  function formatSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  function renderList(input: HTMLInputElement, list: HTMLUListElement) {
+    const files = Array.from(input.files ?? []);
+    list.innerHTML = "";
+    for (const [index, file] of files.entries()) {
+      const li = document.createElement("li");
+      li.className = "ink-file__item";
+      const name = document.createElement("span");
+      name.textContent = file.name;
+      const size = document.createElement("span");
+      size.className = "ink-file__size";
+      size.textContent = formatSize(file.size);
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "ink-file__remove";
+      remove.setAttribute("aria-label", `Remove ${file.name}`);
+      remove.textContent = "×";
+      remove.addEventListener("click", () => {
+        const dt = new DataTransfer();
+        Array.from(input.files ?? []).forEach((f, i) => {
+          if (i !== index) dt.items.add(f);
+        });
+        input.files = dt.files;
+        renderList(input, list);
+      });
+      li.appendChild(name);
+      li.appendChild(size);
+      li.appendChild(remove);
+      list.appendChild(li);
+    }
+    list.hidden = files.length === 0;
+  }
+
+  function initFiles(root: ParentNode = document) {
+    root.querySelectorAll<HTMLInputElement>("[data-ink-file]").forEach((input) => {
+      if (input.dataset.inkBound) return;
+      input.dataset.inkBound = "true";
+      const field = input.closest(".ink-field");
+      const list = field?.querySelector<HTMLUListElement>("[data-ink-file-list]");
+      if (!list) return;
+      input.addEventListener("change", () => {
+        renderList(input, list);
+        input.dispatchEvent(
+          new CustomEvent("ink:file:change", { bubbles: true, detail: { files: input.files } }),
+        );
+      });
+      const drop = field?.querySelector<HTMLElement>("[data-ink-drop]");
+      if (drop) {
+        drop.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          drop.classList.add("ink-file__drop--over");
+        });
+        drop.addEventListener("dragleave", () => drop.classList.remove("ink-file__drop--over"));
+        drop.addEventListener("drop", (e) => {
+          e.preventDefault();
+          drop.classList.remove("ink-file__drop--over");
+          const transfer = (e as DragEvent).dataTransfer;
+          if (transfer?.files.length) {
+            input.files = transfer.files;
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+        });
+      }
+    });
+  }
+
+  initFiles();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initFiles(root ?? document); } };
+</script>
