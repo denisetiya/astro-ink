@@ -38,7 +38,7 @@ test("radio group selects one option with arrow keys", async ({ page }) => {
 
 test("file upload lists selected files and allows removal", async ({ page }) => {
   await page.goto("/components/file");
-  await page.locator('input[type="file"]').first().setInputFiles([
+  await page.locator('input[type="file"]').last().setInputFiles([
     { name: "a.txt", mimeType: "text/plain", buffer: Buffer.from("hello") },
     { name: "b.txt", mimeType: "text/plain", buffer: Buffer.from("world") },
   ]);
