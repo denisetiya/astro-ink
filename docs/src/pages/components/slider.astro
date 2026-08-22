@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Slider } from "astro-ink";
+---
+<Base title="Slider">
+  <div class="docs-page">
+    <h1>Slider</h1>
+    <p class="docs-lede">
+      Native range input with a filled track and optional live value. Keyboard
+      support comes from the browser.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Slider id="volume" label="Volume" value="40" showValue />
+    </div>
+    <pre class="docs-code"><code>&lt;Slider id="volume" label="Volume" value="40" showValue /&gt;</code></pre>
+
+    <h2>Custom range</h2>
+    <div class="docs-example">
+      <Slider id="price" label="Max price" min="10" max="1000" step="10" value="250" showValue />
+    </div>
+    <pre class="docs-code"><code>&lt;Slider id="price" label="Max price" min="10" max="1000" step="10" value="250" showValue /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>min / max / step</code></td><td><code>number</code></td><td><code>0 / 100 / 1</code></td><td>Range constraints.</td></tr>
+        <tr><td><code>value</code></td><td><code>number</code></td><td><code>50</code></td><td>Initial value.</td></tr>
+        <tr><td><code>showValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Live <code>&lt;output&gt;</code> next to the track.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-slider-fill: 40%;   /* set by script on input */
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Arrow keys, Home/End, PageUp/PageDown work natively.</li>
+      <li>Output is linked with <code>for</code> so AT can announce the value.</li>
+    </ul>
+  </div>
+</Base>

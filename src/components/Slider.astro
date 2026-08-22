@@ -1,0 +1,150 @@
+---
+import { computeFill } from "../scripts/slider";
+
+interface Props {
+  id: string;
+  name?: string;
+  label?: string;
+  min?: number;
+  max?: number;
+  value?: number;
+  step?: number;
+  showValue?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, name = id, label, min = 0, max = 100, value = 50, step = 1,
+  showValue = false, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const fill = computeFill(min, max, value);
+---
+<div class:list={["ink-slider", className]}>
+  {label && <label class="ink-slider__label" for={id}>{label}</label>}
+  <div class="ink-slider__row">
+    <input
+      type="range"
+      id={id}
+      name={name}
+      class="ink-range"
+      min={min}
+      max={max}
+      value={value}
+      step={step}
+      disabled={disabled || undefined}
+      data-ink-slider
+      style={`--ink-slider-fill: ${fill}%`}
+      {...rest}
+    />
+    {showValue && <output class="ink-slider__output" for={id}>{value}</output>}
+  </div>
+</div>
+
+<style>
+  .ink-slider {
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-slider__label {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-slider__row {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-3);
+  }
+
+  .ink-range {
+    appearance: none;
+    width: 100%;
+    height: 1.25rem;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .ink-range::-webkit-slider-runnable-track {
+    height: 0.375rem;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--ink-accent) var(--ink-slider-fill, 50%),
+      color-mix(in srgb, var(--ink-ink) 15%, var(--ink-bg)) var(--ink-slider-fill, 50%)
+    );
+  }
+
+  .ink-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: -0.375rem;
+    border-radius: 50%;
+    background: var(--ink-accent);
+    border: 2px solid var(--ink-surface);
+    box-shadow: var(--ink-shadow-1);
+  }
+
+  .ink-range::-moz-range-track {
+    height: 0.375rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ink-ink) 15%, var(--ink-bg));
+  }
+
+  .ink-range::-moz-range-progress {
+    height: 0.375rem;
+    border-radius: 999px;
+    background: var(--ink-accent);
+  }
+
+  .ink-range::-moz-range-thumb {
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    background: var(--ink-accent);
+    border: 2px solid var(--ink-surface);
+    box-shadow: var(--ink-shadow-1);
+  }
+
+  .ink-range:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-slider__output {
+    min-width: 2.5rem;
+    text-align: right;
+    font-size: var(--ink-text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-muted);
+  }
+</style>
+
+<script>
+  import { computeFill } from "../scripts/slider";
+
+  function initSliders(root: ParentNode = document) {
+    root.querySelectorAll<HTMLInputElement>("[data-ink-slider]").forEach((el) => {
+      if (el.dataset.inkBound) return;
+      el.dataset.inkBound = "true";
+      const update = () => {
+        const min = Number(el.min) || 0;
+        const max = Number(el.max) || 100;
+        el.style.setProperty("--ink-slider-fill", `${computeFill(min, max, Number(el.value))}%`);
+        const output = el.parentElement?.querySelector("output");
+        if (output) output.textContent = el.value;
+      };
+      el.addEventListener("input", update);
+      update();
+    });
+  }
+
+  initSliders();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initSliders(root ?? document); } };
+</script>

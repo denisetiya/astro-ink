@@ -17,6 +17,16 @@ test("switch exposes role=switch and toggles", async ({ page }) => {
   await expect(sw).toBeChecked();
 });
 
+test("slider updates fill and output", async ({ page }) => {
+  await page.goto("/components/slider");
+  const slider = page.getByRole("slider", { name: "Volume" });
+  await slider.focus();
+  await slider.press("ArrowRight");
+  const fill = await slider.evaluate((el) => el.style.getPropertyValue("--ink-slider-fill"));
+  expect(fill).not.toBe("");
+  await expect(page.locator(".ink-slider", { has: slider }).locator(".ink-slider__output")).toHaveText(/\d+/);
+});
+
 test("radio group selects one option with arrow keys", async ({ page }) => {
   await page.goto("/components/radio-group");
   const first = page.getByRole("radio", { name: "Weekly" });
