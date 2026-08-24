@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ToggleButton } from "astro-ink";
+---
+<Base title="ToggleButton">
+  <div class="docs-page">
+    <h1>ToggleButton</h1>
+    <p class="docs-lede">
+      A button with an on/off state, or one option of an exclusive group that
+      behaves like radio (without a form).
+    </p>
+
+    <h2>Independent</h2>
+    <div class="docs-example">
+      <ToggleButton>Bold</ToggleButton>
+      <ToggleButton>Italic</ToggleButton>
+    </div>
+    <pre class="docs-code"><code>&lt;ToggleButton&gt;Bold&lt;/ToggleButton&gt;
+&lt;ToggleButton&gt;Italic&lt;/ToggleButton&gt;</code></pre>
+
+    <h2>Exclusive group</h2>
+    <div class="docs-example">
+      <ToggleButton exclusiveGroup="range">Day</ToggleButton>
+      <ToggleButton exclusiveGroup="range" pressed>Week</ToggleButton>
+      <ToggleButton exclusiveGroup="range">Month</ToggleButton>
+    </div>
+    <pre class="docs-code"><code>&lt;ToggleButton exclusiveGroup="range"&gt;Day&lt;/ToggleButton&gt;
+&lt;ToggleButton exclusiveGroup="range" pressed&gt;Week&lt;/ToggleButton&gt;
+&lt;ToggleButton exclusiveGroup="range"&gt;Month&lt;/ToggleButton&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>pressed</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Initial on state.</td></tr>
+        <tr><td><code>exclusiveGroup</code></td><td><code>string</code></td><td>-</td><td>One on at a time within the same group name.</td></tr>
+        <tr><td><code>variant / size</code></td><td><code>secondary | ghost / sm | md | lg</code></td><td><code>secondary / md</code></td><td>Button styling.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:toggle:change", (event) =&gt; &#123;
+  console.log(event.target.textContent);
+&#125;);</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>State lives in <code>aria-pressed</code>: real buttons, keyboard free.</li>
+      <li>Exclusive groups mirror radio semantics; for form submission prefer <code>RadioGroup</code>.</li>
+    </ul>
+  </div>
+</Base>

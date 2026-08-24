@@ -18,3 +18,5 @@ export { default as Slider } from "./components/Slider.astro";
 export { default as File } from "./components/File.astro";
 export { default as InputGroup } from "./components/InputGroup.astro";
 export { default as Form } from "./components/Form.astro";
+export { default as ButtonGroup } from "./components/ButtonGroup.astro";
+export { default as ToggleButton } from "./components/ToggleButton.astro";

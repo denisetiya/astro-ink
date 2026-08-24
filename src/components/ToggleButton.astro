@@ -1,0 +1,63 @@
+---
+interface Props {
+  pressed?: boolean;
+  exclusiveGroup?: string;
+  variant?: "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  pressed = false, exclusiveGroup, variant = "secondary", size = "md",
+  disabled = false, class: className, ...rest
+} = Astro.props;
+---
+<button
+  type="button"
+  class:list={["ink-button", `ink-button--${variant}`, `ink-button--${size}`, "ink-toggle", className]}
+  aria-pressed={pressed ? "true" : "false"}
+  data-ink-toggle
+  data-ink-toggle-group={exclusiveGroup}
+  disabled={disabled || undefined}
+  {...rest}
+>
+  <slot />
+</button>
+
+<style>
+  .ink-toggle[aria-pressed="true"] {
+    background: color-mix(in srgb, var(--ink-accent) 15%, transparent);
+    border-color: color-mix(in srgb, var(--ink-accent) 45%, transparent);
+    color: var(--ink-accent);
+  }
+</style>
+
+<script>
+  function initToggles(root: ParentNode = document) {
+    root.querySelectorAll<HTMLButtonElement>("[data-ink-toggle]").forEach((btn) => {
+      if (btn.dataset.inkBound) return;
+      btn.dataset.inkBound = "true";
+      btn.addEventListener("click", () => {
+        const group = btn.dataset.inkToggleGroup;
+        if (group !== undefined) {
+          document
+            .querySelectorAll<HTMLButtonElement>(`[data-ink-toggle-group="${group}"]`)
+            .forEach((other) =>
+              other.setAttribute("aria-pressed", other === btn ? "true" : "false"),
+            );
+        } else {
+          const current = btn.getAttribute("aria-pressed") === "true";
+          btn.setAttribute("aria-pressed", String(!current));
+        }
+        btn.dispatchEvent(new CustomEvent("ink:toggle:change", { bubbles: true }));
+      });
+    });
+  }
+
+  initToggles();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initToggles(root ?? document); } };
+</script>

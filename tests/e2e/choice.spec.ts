@@ -17,6 +17,24 @@ test("switch exposes role=switch and toggles", async ({ page }) => {
   await expect(sw).toBeChecked();
 });
 
+test("toggle button flips pressed state", async ({ page }) => {
+  await page.goto("/components/toggle-button");
+  const btn = page.getByRole("button", { name: "Bold" });
+  await btn.click();
+  await expect(btn).toHaveAttribute("aria-pressed", "true");
+});
+
+test("exclusive toggle group behaves like radio", async ({ page }) => {
+  await page.goto("/components/toggle-button");
+  const day = page.getByRole("button", { name: "Day" });
+  const week = page.getByRole("button", { name: "Week" });
+  const month = page.getByRole("button", { name: "Month" });
+  await day.click();
+  await week.click();
+  await expect(week).toHaveAttribute("aria-pressed", "true");
+  await expect(day).toHaveAttribute("aria-pressed", "false");
+  await expect(month).toHaveAttribute("aria-pressed", "false");
+});
 test("slider updates fill and output", async ({ page }) => {
   await page.goto("/components/slider");
   const slider = page.getByRole("slider", { name: "Volume" });

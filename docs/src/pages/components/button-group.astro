@@ -1,0 +1,58 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, ButtonGroup } from "astro-ink";
+---
+<Base title="ButtonGroup">
+  <div class="docs-page">
+    <h1>ButtonGroup</h1>
+    <p class="docs-lede">
+      Related actions grouped together, either spaced or joined as one
+      segmented control.
+    </p>
+
+    <h2>Spaced</h2>
+    <div class="docs-example">
+      <ButtonGroup label="Editor actions">
+        <Button variant="secondary">Save</Button>
+        <Button variant="secondary">Preview</Button>
+        <Button variant="secondary">Publish</Button>
+      </ButtonGroup>
+    </div>
+    <pre class="docs-code"><code>&lt;ButtonGroup label="Editor actions"&gt;
+  &lt;Button variant="secondary"&gt;Save&lt;/Button&gt;
+  &lt;Button variant="secondary"&gt;Preview&lt;/Button&gt;
+  &lt;Button variant="secondary"&gt;Publish&lt;/Button&gt;
+&lt;/ButtonGroup&gt;</code></pre>
+
+    <h2>Segmented</h2>
+    <div class="docs-example">
+      <ButtonGroup label="View mode" segmented>
+        <Button variant="secondary">List</Button>
+        <Button variant="secondary">Grid</Button>
+        <Button variant="secondary">Board</Button>
+      </ButtonGroup>
+    </div>
+    <pre class="docs-code"><code>&lt;ButtonGroup label="View mode" segmented&gt;
+  &lt;Button variant="secondary"&gt;List&lt;/Button&gt;
+  &lt;Button variant="secondary"&gt;Grid&lt;/Button&gt;
+  &lt;Button variant="secondary"&gt;Board&lt;/Button&gt;
+&lt;/ButtonGroup&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Required; announced as the group name.</td></tr>
+        <tr><td><code>segmented</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Joined single-control look.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>role="group"</code> plus label gives every button shared context.</li>
+      <li>For toggles that show on/off state, use <code>ToggleButton</code> inside instead.</li>
+    </ul>
+  </div>
+</Base>

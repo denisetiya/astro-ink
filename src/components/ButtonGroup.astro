@@ -1,0 +1,51 @@
+---
+interface Props {
+  label: string;
+  segmented?: boolean;
+  class?: string;
+}
+
+const { label, segmented = false, class: className, ...rest } = Astro.props;
+---
+<div
+  class:list={["ink-button-group", segmented && "ink-button-group--segmented", className]}
+  role="group"
+  aria-label={label}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-button-group {
+    display: inline-flex;
+    gap: var(--ink-space-2);
+    flex-wrap: wrap;
+  }
+
+  .ink-button-group--segmented {
+    gap: 0;
+  }
+
+  .ink-button-group--segmented > :global(*) {
+    border-radius: 0;
+  }
+
+  .ink-button-group--segmented > :global(:first-child) {
+    border-top-left-radius: var(--ink-radius-md);
+    border-bottom-left-radius: var(--ink-radius-md);
+  }
+
+  .ink-button-group--segmented > :global(:last-child) {
+    border-top-right-radius: var(--ink-radius-md);
+    border-bottom-right-radius: var(--ink-radius-md);
+  }
+
+  .ink-button-group--segmented > :global(* + *) {
+    margin-inline-start: -1px;
+  }
+
+  .ink-button-group--segmented > :global(:focus) {
+    z-index: 1;
+  }
+</style>
