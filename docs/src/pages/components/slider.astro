@@ -12,13 +12,13 @@ import { Slider } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
-      <Slider id="volume" label="Volume" value="40" showValue />
+      <Slider id="volume" label="Volume" value={40} showValue />
     </div>
     <pre class="docs-code"><code>&lt;Slider id="volume" label="Volume" value="40" showValue /&gt;</code></pre>
 
     <h2>Custom range</h2>
     <div class="docs-example">
-      <Slider id="price" label="Max price" min="10" max="1000" step="10" value="250" showValue />
+      <Slider id="price" label="Max price" min={10} max={1000} step={10} value={250} showValue />
     </div>
     <pre class="docs-code"><code>&lt;Slider id="price" label="Max price" min="10" max="1000" step="10" value="250" showValue /&gt;</code></pre>
 

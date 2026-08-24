@@ -55,9 +55,14 @@ and a custom theme template.
 
 ## Status
 
-Phase 1 (foundation): tokens, dark theme, Button, Badge, Alert, docs site.
-The remaining component catalog (~40 components: forms, navigation, overlay,
-feedback) lands in subsequent phases per the roadmap.
+21 components shipped: Button, Badge, Alert, Container, VisuallyHidden,
+Field, TextField, NumberInput, PasswordInput, SearchInput, Textarea, Select,
+Checkbox, Radio, RadioGroup, Switch, Slider, File, InputGroup, Form,
+ButtonGroup, ToggleButton.
+
+Upcoming: navigation (Tabs, Breadcrumbs, Pagination, Menu, Stepper, ...),
+overlay (Dialog, Toast, Tooltip, Popover, ...), data display, advanced inputs,
+Data Grid, pickers, and charts — 99 more on the roadmap.
 
 ## License
 

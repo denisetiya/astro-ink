@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { NumberInput, PasswordInput, SearchInput, Textarea } from "astro-ink";
+import { NumberInput } from "astro-ink";
 ---
 <Base title="NumberInput">
   <div class="docs-page">
@@ -12,7 +12,7 @@ import { NumberInput, PasswordInput, SearchInput, Textarea } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
-      <NumberInput id="seats" label="Seats" min="1" max="99" step="1" value="5" hint="1 to 99 seats." />
+      <NumberInput id="seats" label="Seats" min={1} max={99} step={1} value="5" hint="1 to 99 seats." />
     </div>
     <pre class="docs-code"><code>&lt;NumberInput id="seats" label="Seats" min="1" max="99" step="1" value="5" /&gt;</code></pre>
 

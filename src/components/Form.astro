@@ -1,11 +1,12 @@
 ---
 interface Props {
+  id?: string;
   class?: string;
 }
 
-const { class: className, ...rest } = Astro.props;
+const { id, class: className, ...rest } = Astro.props;
 ---
-<form class:list={["ink-form", className]} novalidate data-ink-form {...rest}>
+<form id={id} class:list={["ink-form", className]} novalidate data-ink-form {...rest}>
   <slot />
 </form>
 

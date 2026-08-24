@@ -1,12 +1,13 @@
 ---
 interface Props {
   size?: "md" | "lg" | "full";
+  style?: string;
   class?: string;
 }
 
-const { size = "lg", class: className, ...rest } = Astro.props;
+const { size = "lg", style, class: className, ...rest } = Astro.props;
 ---
-<div class:list={["ink-container", `ink-container--${size}`, className]} {...rest}>
+<div class:list={["ink-container", `ink-container--${size}`, className]} style={style} {...rest}>
   <slot />
 </div>
 
