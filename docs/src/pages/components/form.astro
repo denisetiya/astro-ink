@@ -1,0 +1,50 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Form, TextField } from "astro-ink";
+---
+<Base title="Form">
+  <div class="docs-page">
+    <h1>Form</h1>
+    <p class="docs-lede">
+      A form that asks the browser for validity, never submits bad data, and
+      tells your script what happened through events.
+    </p>
+
+    <h2>Signup form</h2>
+    <div class="docs-example" style="display: grid;">
+      <Form id="signup">
+        <TextField id="signup-name" label="Full name" required placeholder="Your name" />
+        <TextField id="signup-email" label="Email" type="email" required placeholder="you@example.com" />
+        <Button type="submit">Submit</Button>
+      </Form>
+    </div>
+    <pre class="docs-code"><code>&lt;Form id="signup"&gt;
+  &lt;TextField id="signup-name" label="Full name" required /&gt;
+  &lt;TextField id="signup-email" label="Email" type="email" required /&gt;
+  &lt;Button type="submit"&gt;Submit&lt;/Button&gt;
+&lt;/Form&gt;</code></pre>
+
+    <h2>Events</h2>
+    <p>On submit the form asks the browser (<code>checkValidity</code>), blocks the submit when invalid, moves focus to the first bad control, and fires one of:</p>
+    <pre class="docs-code"><code>document.addEventListener("ink:form:invalid", () =&gt; &#123;
+  // show a summary, log, etc.
+&#125;);
+
+document.addEventListener("ink:form:valid", () =&gt; &#123;
+  // send via fetch, then reset
+&#125;);</code></pre>
+
+    <h2>Why novalidate</h2>
+    <p>
+      The form sets <code>novalidate</code> so duplicate browser bubbles do not
+      fight your design; validation still uses the same native engine through
+      <code>checkValidity</code>, and error text remains yours.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Invalid submit moves focus to the first invalid control automatically.</li>
+      <li>Error messages stay attached to their fields via <code>aria-describedby</code>.</li>
+    </ul>
+  </div>
+</Base>

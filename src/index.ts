@@ -16,3 +16,5 @@ export { default as RadioGroup } from "./components/RadioGroup.astro";
 export { default as Switch } from "./components/Switch.astro";
 export { default as Slider } from "./components/Slider.astro";
 export { default as File } from "./components/File.astro";
+export { default as InputGroup } from "./components/InputGroup.astro";
+export { default as Form } from "./components/Form.astro";

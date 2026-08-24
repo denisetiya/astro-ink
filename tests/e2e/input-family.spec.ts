@@ -21,8 +21,7 @@ test("search clear empties the field and hides itself", async ({ page }) => {
   await expect(clear).toBeHidden();
 });
 
-test("textarea with autosize grows on input", async ({ page }) => {
-  await page.goto("/components/textarea");
+test("textarea with autosize grows on input", async ({ page }) => {  await page.goto("/components/textarea");
   const el = page.locator("textarea").first();
   const before = await el.evaluate((n) => n.getBoundingClientRect().height);
   await el.fill("line1\nline2\nline3\nline4\nline5\nline6");
@@ -35,4 +34,18 @@ test("select changes value", async ({ page }) => {
   const select = page.getByLabel("Country");
   await select.selectOption("id");
   await expect(select).toHaveValue("id");
+});
+
+test("form blocks invalid submit, fires event, focuses first invalid", async ({ page }) => {
+  await page.goto("/components/form");
+  await page.evaluate(() => {
+    document.addEventListener("ink:form:invalid", () => {
+      (document.documentElement.dataset as any).formInvalid = "true";
+    });
+  });
+  await page.getByRole("button", { name: "Submit" }).click();
+  const focused = await page.evaluate(() => document.activeElement?.getAttribute("id"));
+  expect(focused).toBe("signup-name");
+  const flagged = await page.evaluate(() => document.documentElement.dataset.formInvalid);
+  expect(flagged).toBe("true");
 });

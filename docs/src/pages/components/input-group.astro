@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Field, InputGroup, TextField } from "astro-ink";
+---
+<Base title="InputGroup">
+  <div class="docs-page">
+    <h1>InputGroup</h1>
+    <p class="docs-lede">
+      Joins addons and controls into one unit with flat inner edges: prefix
+      labels, suffix units, attached buttons.
+    </p>
+
+    <h2>Price with unit</h2>
+    <div class="docs-example" style="display: grid;">
+      <Field id="price" label="Price">
+        <InputGroup>
+          <span class="ink-input" style="flex: 0 0 auto; width: auto; background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));">$</span>
+          <TextField id="price" label="Price" hideLabel />
+          <span class="ink-input" style="flex: 0 0 auto; width: auto; background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));">/mo</span>
+        </InputGroup>
+      </Field>
+    </div>
+    <pre class="docs-code"><code>&lt;Field id="price" label="Price"&gt;
+  &lt;InputGroup&gt;
+    &lt;span class="ink-input"&gt;$&lt;/span&gt;
+    &lt;TextField id="price" label="Price" hideLabel /&gt;
+    &lt;span class="ink-input"&gt;/mo&lt;/span&gt;
+  &lt;/InputGroup&gt;
+&lt;/Field&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Addons are text, not inputs: keep them short and decorative.</li>
+      <li>The <code>Field</code> wrapper outside still wires label and messages.</li>
+    </ul>
+  </div>
+</Base>

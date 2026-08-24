@@ -1,0 +1,44 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+<form class:list={["ink-form", className]} novalidate data-ink-form {...rest}>
+  <slot />
+</form>
+
+<style>
+  .ink-form {
+    display: grid;
+    gap: var(--ink-space-4);
+  }
+</style>
+
+<script>
+  function initForms(root: ParentNode = document) {
+    root.querySelectorAll<HTMLFormElement>("[data-ink-form]").forEach((form) => {
+      if (form.dataset.inkBound) return;
+      form.dataset.inkBound = "true";
+      form.addEventListener("submit", (event) => {
+        const valid = form.checkValidity();
+        if (!valid) {
+          event.preventDefault();
+          form.querySelector<HTMLElement>(":invalid")?.focus();
+        }
+        form.dispatchEvent(
+          new CustomEvent(valid ? "ink:form:valid" : "ink:form:invalid", {
+            bubbles: true,
+          }),
+        );
+      });
+    });
+  }
+
+  initForms();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initForms(root ?? document); } };
+</script>
