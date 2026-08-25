@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Link } from "astro-ink";
+---
+<Base title="Link">
+  <div class="docs-page">
+    <h1>Link</h1>
+    <p class="docs-lede">
+      A styled anchor with sensible defaults: underline on hover, and honest
+      new-tab behavior for external links.
+    </p>
+
+    <h2>Internal</h2>
+    <div class="docs-example">
+      <Link href="/guides/theming">Theming guide</Link>
+    </div>
+    <pre class="docs-code"><code>&lt;Link href="/guides/theming"&gt;Theming guide&lt;/Link&gt;</code></pre>
+
+    <h2>External</h2>
+    <div class="docs-example">
+      <Link href="https://astro.build" external>Astro docs</Link>
+    </div>
+    <pre class="docs-code"><code>&lt;Link href="https://astro.build" external&gt;Astro docs&lt;/Link&gt;</code></pre>
+
+    <h2>Underline</h2>
+    <div class="docs-example">
+      <Link href="/" underline="always">Always</Link>
+      <Link href="/" underline="hover">Hover</Link>
+      <Link href="/" underline="none">None</Link>
+    </div>
+    <pre class="docs-code"><code>&lt;Link href="/" underline="always"&gt;Always&lt;/Link&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Destination.</td></tr>
+        <tr><td><code>external</code></td><td><code>boolean</code></td><td><code>false</code></td><td>New tab + icon + hidden warning.</td></tr>
+        <tr><td><code>underline</code></td><td><code>always | hover | none</code></td><td><code>hover</code></td><td>Underline policy.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>External links add <code>target + rel</code> AND announce "opens in new tab" to screen readers.</li>
+      <li>Underline on hover keeps body text calm; <code>always</code> is better inside dense prose.</li>
+    </ul>
+  </div>
+</Base>

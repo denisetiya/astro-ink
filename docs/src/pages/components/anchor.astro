@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Anchor } from "astro-ink";
+---
+<Base title="Anchor">
+  <div class="docs-page">
+    <h1>Anchor</h1>
+    <p class="docs-lede">
+      Table of contents for the page. Clicking marks the section current, and
+      scrolling follows along.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Anchor
+        sections={[
+          { id: "section-1", label: "First section" },
+          { id: "section-2", label: "Second section" },
+        ]}
+      />
+      <section id="section-1" style="min-height: 24rem; padding: var(--ink-space-4); border: 1px solid var(--ink-border); border-radius: var(--ink-radius-md);">
+        <h3>First section</h3>
+        <p>Scroll down to see the marker follow.</p>
+      </section>
+      <section id="section-2" style="min-height: 24rem; padding: var(--ink-space-4); border: 1px solid var(--ink-border); border-radius: var(--ink-radius-md);">
+        <h3>Second section</h3>
+        <p>You are here.</p>
+      </section>
+    </div>
+    <pre class="docs-code"><code>&lt;Anchor
+  sections=&#123;[
+    &#123; id: "section-1", label: "First section" &#125;,
+    &#123; id: "section-2", label: "Second section" &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>sections</code></td><td><code>Array&lt;&#123; id, label &#125;&gt;</code></td><td>-</td><td>Targets by element id.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>On this page</code></td><td>Nav landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Links are real anchors: middle-click, open-in-tab, and keyboard all work.</li>
+      <li>Current section is announced via <code>aria-current</code>.</li>
+      <li>IntersectionObserver only flips the marker; it never moves focus.</li>
+    </ul>
+  </div>
+</Base>

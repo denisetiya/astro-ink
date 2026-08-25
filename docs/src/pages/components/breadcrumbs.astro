@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Breadcrumbs } from "astro-ink";
+---
+<Base title="Breadcrumbs">
+  <div class="docs-page">
+    <h1>Breadcrumbs</h1>
+    <p class="docs-lede">
+      Where am I, and how do I go back up. The last item is the current page,
+      never a link.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Components", href: "/components" },
+          { label: "Reports" },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Breadcrumbs
+  items=&#123;[
+    &#123; label: "Home", href: "/" &#125;,
+    &#123; label: "Components", href: "/components" &#125;,
+    &#123; label: "Reports" &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>items</code></td><td><code>Array&lt;&#123; label, href? &#125;&gt;</code></td><td>-</td><td>Trail; items without <code>href</code> render as text.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Breadcrumb</code></td><td>Nav landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Wrapped in <code>&lt;nav&gt;</code> with an ordered list.</li>
+      <li>Current page carries <code>aria-current="page"</code> and is not clickable.</li>
+    </ul>
+  </div>
+</Base>

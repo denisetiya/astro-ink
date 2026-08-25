@@ -1,0 +1,56 @@
+---
+interface Props {
+  href: string;
+  external?: boolean;
+  underline?: "always" | "hover" | "none";
+  class?: string;
+}
+
+const { href, external = false, underline = "hover", class: className, ...rest } = Astro.props;
+---
+<a
+  class:list={["ink-link", `ink-link--underline-${underline}`, external && "ink-link--external", className]}
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  {...rest}
+>
+  <slot />
+  {external && (
+    <>
+      <svg class="ink-link__external" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M4 2h6v6M10 2L5.5 6.5M9 7v3.5H2.5V4H6" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span class="ink-visually-hidden"> (opens in new tab)</span>
+    </>
+  )}
+</a>
+
+<style>
+  .ink-link {
+    color: var(--ink-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .ink-link--underline-always { text-decoration-line: underline; }
+  .ink-link--underline-hover { text-decoration-line: none; }
+  .ink-link--underline-hover:hover { text-decoration-line: underline; }
+  .ink-link--underline-none { text-decoration-line: none; }
+
+  .ink-link__external {
+    display: inline-block;
+    vertical-align: baseline;
+    margin-inline-start: 2px;
+  }
+
+  .ink-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

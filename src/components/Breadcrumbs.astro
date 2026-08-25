@@ -1,0 +1,62 @@
+---
+interface Props {
+  items: Array<{ label: string; href?: string }>;
+  label?: string;
+  class?: string;
+}
+
+const { items, label = "Breadcrumb", class: className, ...rest } = Astro.props;
+const last = items.length - 1;
+---
+<nav aria-label={label} class:list={["ink-breadcrumbs", className]} {...rest}>
+  <ol class="ink-breadcrumbs__list">
+    {items.map((item, i) => (
+      <li class="ink-breadcrumbs__item">
+        {i === last || !item.href ? (
+          <span class="ink-breadcrumbs__current" aria-current={i === last ? "page" : undefined}>
+            {item.label}
+          </span>
+        ) : (
+          <a class="ink-breadcrumbs__link" href={item.href}>{item.label}</a>
+        )}
+        {i < last && <span class="ink-breadcrumbs__sep" aria-hidden="true">/</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .ink-breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ink-space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-breadcrumbs__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-breadcrumbs__link {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .ink-breadcrumbs__link:hover {
+    color: var(--ink-ink);
+    text-decoration: underline;
+  }
+
+  .ink-breadcrumbs__current {
+    color: var(--ink-ink);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-breadcrumbs__sep { color: var(--ink-border-strong); }
+</style>

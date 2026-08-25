@@ -1,0 +1,63 @@
+---
+interface Props {
+  sections: Array<{ id: string; label: string }>;
+  label?: string;
+  class?: string;
+}
+
+const { sections, label = "On this page", class: className, ...rest } = Astro.props;
+---
+<nav aria-label={label} class:list={["ink-anchor", className]} data-ink-scrollspy {...rest}>
+  <ul class="ink-anchor__list">
+    {sections.map((s) => (
+      <li class="ink-anchor__item">
+        <a class="ink-anchor__link" href={`#${s.id}`}>{s.label}</a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .ink-anchor__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--ink-space-1);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-anchor__link {
+    display: block;
+    padding-inline-start: var(--ink-space-2);
+    border-inline-start: 2px solid var(--ink-border);
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .ink-anchor__link:hover { color: var(--ink-ink); }
+
+  .ink-anchor__link[aria-current="true"] {
+    border-inline-start-color: var(--ink-accent);
+    color: var(--ink-ink);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>
+
+<script>
+  import { initScrollspy } from "../scripts/scrollspy";
+
+  function initAnchors(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-scrollspy]").forEach((nav) => {
+      if (nav.dataset.inkBound) return;
+      nav.dataset.inkBound = "true";
+      initScrollspy(nav);
+    });
+  }
+
+  initAnchors();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initAnchors(root ?? document); } };
+</script>
