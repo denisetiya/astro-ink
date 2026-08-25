@@ -1,0 +1,119 @@
+---
+interface Props {
+  items: Array<{
+    label: string;
+    href?: string;
+    children?: Array<{ label: string; href: string }>;
+  }>;
+  current?: string;
+  label?: string;
+  class?: string;
+}
+
+const { items, current, label = "Section", class: className, ...rest } = Astro.props;
+
+function isCurrent(href?: string): boolean {
+  return !!href && href === current;
+}
+---
+<nav aria-label={label} class:list={["ink-sidebar", className]} {...rest}>
+  <ul class="ink-sidebar__list">
+    {items.map((item) => (
+      <li class="ink-sidebar__item">
+        {item.children ? (
+          <details class="ink-sidebar__group" open={item.children.some((c) => isCurrent(c.href)) || undefined}>
+            <summary class="ink-sidebar__summary">{item.label}</summary>
+            <ul class="ink-sidebar__sublist">
+              {item.children.map((child) => (
+                <li>
+                  <a
+                    class="ink-sidebar__link"
+                    href={child.href}
+                    aria-current={isCurrent(child.href) ? "page" : undefined}
+                  >
+                    {child.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ) : (
+          <a
+            class="ink-sidebar__link"
+            href={item.href}
+            aria-current={isCurrent(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .ink-sidebar__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--ink-space-1);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-sidebar__summary {
+    cursor: pointer;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border-radius: var(--ink-radius-md);
+    font-weight: var(--ink-font-weight-medium);
+    list-style: none;
+  }
+
+  .ink-sidebar__summary::-webkit-details-marker { display: none; }
+
+  .ink-sidebar__summary::before {
+    content: "";
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-inline-end: var(--ink-space-2);
+    border-inline-end: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    rotate: -45deg;
+    translate: 0 -1px;
+  }
+
+  .ink-sidebar__group[open] > .ink-sidebar__summary::before { rotate: 45deg; }
+
+  .ink-sidebar__summary:hover {
+    background: color-mix(in srgb, var(--ink-ink) 5%, transparent);
+  }
+
+  .ink-sidebar__sublist {
+    list-style: none;
+    padding: 0;
+    margin: var(--ink-space-1) 0 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  .ink-sidebar__link {
+    display: block;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    padding-inline-start: var(--ink-space-5);
+    border-radius: var(--ink-radius-md);
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .ink-sidebar__link:hover {
+    color: var(--ink-ink);
+    background: color-mix(in srgb, var(--ink-ink) 5%, transparent);
+  }
+
+  .ink-sidebar__link[aria-current="page"] {
+    color: var(--ink-ink);
+    font-weight: var(--ink-font-weight-medium);
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+  }
+</style>

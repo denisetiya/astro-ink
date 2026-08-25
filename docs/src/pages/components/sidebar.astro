@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Sidebar } from "astro-ink";
+---
+<Base title="Sidebar">
+  <div class="docs-page">
+    <h1>Sidebar</h1>
+    <p class="docs-lede">
+      Vertical section navigation. Groups collapse natively, and the group
+      holding the current page opens on load.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Sidebar
+        current="/components/button"
+        items={[
+          { label: "Getting started", href: "/" },
+          {
+            label: "Components",
+            children: [
+              { label: "Buttons", href: "/components/button" },
+              { label: "Inputs", href: "/components/text-field" },
+            ],
+          },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Sidebar
+  current="/components/button"
+  items=&#123;[
+    &#123; label: "Getting started", href: "/" &#125;,
+    &#123;
+      label: "Components",
+      children: [
+        &#123; label: "Buttons", href: "/components/button" &#125;,
+        &#123; label: "Inputs", href: "/components/text-field" &#125;,
+      ],
+    &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>items</code></td><td><code>Array</code></td><td>-</td><td>Links; <code>children</code> makes a collapsible group.</td></tr>
+        <tr><td><code>current</code></td><td><code>string</code></td><td>-</td><td>Href of the current page (opens its group).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Section</code></td><td>Nav landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Current link carries <code>aria-current="page"</code>.</li>
+      <li>Groups are native <code>details/summary</code>: keyboard free, zero script.</li>
+    </ul>
+  </div>
+</Base>

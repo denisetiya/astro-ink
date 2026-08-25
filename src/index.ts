@@ -23,3 +23,5 @@ export { default as ToggleButton } from "./components/ToggleButton.astro";
 export { default as Link } from "./components/Link.astro";
 export { default as Breadcrumbs } from "./components/Breadcrumbs.astro";
 export { default as Anchor } from "./components/Anchor.astro";
+export { default as Navbar } from "./components/Navbar.astro";
+export { default as Sidebar } from "./components/Sidebar.astro";

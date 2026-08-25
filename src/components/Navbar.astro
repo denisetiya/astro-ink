@@ -1,0 +1,139 @@
+---
+interface Props {
+  brand?: string;
+  brandHref?: string;
+  class?: string;
+}
+
+const { brand, brandHref = "/", class: className, ...rest } = Astro.props;
+---
+<header class:list={["ink-navbar", className]} data-ink-navbar {...rest}>
+  <div class="ink-navbar__bar">
+    {brand ? <a class="ink-navbar__brand" href={brandHref}>{brand}</a> : <slot name="brand" />}
+    <div class="ink-navbar__actions">
+      <slot name="actions" />
+      <button
+        type="button"
+        class="ink-navbar__toggle"
+        data-ink-navbar-toggle
+        aria-expanded="false"
+        aria-label="Menu"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M2 4.5h14M2 9h14M2 13.5h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <nav class="ink-navbar__nav" aria-label="Site" data-ink-navbar-nav>
+    <ul class="ink-navbar__list">
+      <slot />
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .ink-navbar {
+    border-bottom: 1px solid var(--ink-border);
+    background: var(--ink-bg);
+  }
+
+  .ink-navbar__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ink-space-4);
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: var(--ink-space-3) var(--ink-space-4);
+  }
+
+  .ink-navbar__brand {
+    font-weight: var(--ink-font-weight-bold);
+    font-size: var(--ink-text-lg);
+    color: var(--ink-ink);
+    text-decoration: none;
+  }
+
+  .ink-navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-navbar__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    background: var(--ink-surface);
+    color: var(--ink-ink);
+  }
+
+  .ink-navbar__nav {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 0 var(--ink-space-4) var(--ink-space-3);
+  }
+
+  .ink-navbar__list {
+    display: none;
+    flex-direction: column;
+    gap: var(--ink-space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ink-navbar[data-open] .ink-navbar__list { display: flex; }
+
+  .ink-navbar :global(.ink-navbar__link) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: var(--ink-space-1);
+    color: var(--ink-ink);
+    text-decoration: none;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-navbar :global(.ink-navbar__link:hover) {
+    color: var(--ink-accent);
+  }
+
+  @media (min-width: 48rem) {
+    .ink-navbar__toggle { display: none; }
+    .ink-navbar__nav { padding-bottom: 0; }
+    .ink-navbar__list {
+      display: flex;
+      flex-direction: row;
+      gap: var(--ink-space-4);
+      padding-bottom: var(--ink-space-3);
+    }
+  }
+</style>
+
+<script>
+  function initNavbars(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-navbar]").forEach((bar) => {
+      const toggle = bar.querySelector<HTMLButtonElement>("[data-ink-navbar-toggle]");
+      if (!toggle || toggle.dataset.inkBound) return;
+      toggle.dataset.inkBound = "true";
+      toggle.addEventListener("click", () => {
+        const open = bar.hasAttribute("data-open");
+        if (open) bar.removeAttribute("data-open");
+        else bar.setAttribute("data-open", "");
+        toggle.setAttribute("aria-expanded", String(!open));
+      });
+    });
+  }
+
+  initNavbars();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initNavbars(root ?? document); } };
+</script>

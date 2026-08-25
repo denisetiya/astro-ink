@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Navbar } from "astro-ink";
+---
+<Base title="Navbar">
+  <div class="docs-page">
+    <h1>Navbar</h1>
+    <p class="docs-lede">
+      Site header with brand, link list, and an actions slot. On small screens
+      the links collapse behind a 44px menu button.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Navbar brand="Acme" brandHref="/">
+        <li><a class="ink-navbar__link" href="/components">Components</a></li>
+        <li><a class="ink-navbar__link" href="/guides/theming">Theming</a></li>
+        <Button slot="actions" size="sm" href="/">Get started</Button>
+      </Navbar>
+    </div>
+    <pre class="docs-code"><code>&lt;Navbar brand="Acme" brandHref="/"&gt;
+  &lt;li&gt;&lt;a class="ink-navbar__link" href="/components"&gt;Components&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class="ink-navbar__link" href="/guides/theming"&gt;Theming&lt;/a&gt;&lt;/li&gt;
+  &lt;Button slot="actions" size="sm" href="/"&gt;Get started&lt;/Button&gt;
+&lt;/Navbar&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>brand</code></td><td><code>string</code></td><td>-</td><td>Brand text (or a <code>brand</code> slot).</td></tr>
+        <tr><td><code>brandHref</code></td><td><code>string</code></td><td><code>/</code></td><td>Brand destination.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Toggle button is 44px with <code>aria-expanded</code>.</li>
+      <li>Links are real anchors; resize the window to test the collapse.</li>
+    </ul>
+  </div>
+</Base>
