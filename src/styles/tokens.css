@@ -60,4 +60,9 @@
 
   /* focus */
   --ink-focus-color: var(--ink-accent);
+
+  /* stacking */
+  --ink-z-dropdown: 50;
+  --ink-z-overlay: 100;
+  --ink-z-modal: 200;
 }

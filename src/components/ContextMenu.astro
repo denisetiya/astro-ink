@@ -1,0 +1,119 @@
+---
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-context", className]} data-ink-context {...rest}>
+  <slot name="trigger" />
+  <div class="ink-context__list" role="menu" aria-label={label} data-ink-context-list hidden>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .ink-context {
+    position: relative;
+    display: inline-block;
+  }
+
+  .ink-context__list {
+    position: fixed;
+    min-width: 12rem;
+    padding: var(--ink-space-1);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-context__list[hidden] { display: none; }
+
+  .ink-context__list :global([role="menuitem"]) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    min-height: 2.75rem;
+    border-radius: var(--ink-radius-sm);
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: start;
+  }
+
+  .ink-context__list :global([role="menuitem"]:hover),
+  .ink-context__list :global([role="menuitem"]:focus-visible) {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+    outline: none;
+  }
+</style>
+
+<script>
+  function initContexts(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-context]").forEach((zone) => {
+      if (zone.dataset.inkBound) return;
+      zone.dataset.inkBound = "true";
+      const list = zone.querySelector<HTMLElement>("[data-ink-context-list]");
+      const triggerArea = zone.firstElementChild as HTMLElement | null;
+      if (!list || !triggerArea) return;
+
+      const open = (x: number, y: number) => {
+        list.hidden = false;
+        const w = Math.min(list.offsetWidth || 192, window.innerWidth - 8);
+        const h = Math.min(list.offsetHeight || 200, window.innerHeight - 8);
+        list.style.left = `${Math.max(4, Math.min(x, window.innerWidth - w - 4))}px`;
+        list.style.top = `${Math.max(4, Math.min(y, window.innerHeight - h - 4))}px`;
+        list.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
+      };
+      const close = () => {
+        list.hidden = true;
+      };
+
+      triggerArea.addEventListener("contextmenu", (event: MouseEvent) => {
+        event.preventDefault();
+        open(event.clientX, event.clientY);
+      });
+
+      list.addEventListener("keydown", (event: KeyboardEvent) => {
+        const els = Array.from(
+          list.querySelectorAll<HTMLElement>('[role="menuitem"]'),
+        );
+        const at = els.indexOf(document.activeElement as HTMLElement);
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          return;
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          els[(at + 1) % els.length]?.focus();
+        }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          els[(at - 1 + els.length) % els.length]?.focus();
+        }
+      });
+
+      document.addEventListener(
+        "pointerdown",
+        (event: MouseEvent) => {
+          if (event.target instanceof Node && !zone.contains(event.target)) close();
+        },
+        true,
+      );
+    });
+  }
+
+  initContexts();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initContexts(root ?? document); } };
+</script>

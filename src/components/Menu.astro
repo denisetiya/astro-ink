@@ -1,0 +1,163 @@
+---
+interface Props {
+  label: string;
+  align?: "start" | "end";
+  class?: string;
+}
+
+const { label, align = "start", class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-menu", `ink-menu--${align}`, className]} data-ink-menu {...rest}>
+  <slot name="trigger" />
+  <div class="ink-menu__list" role="menu" aria-label={label} data-ink-menu-list hidden>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .ink-menu {
+    position: relative;
+    display: inline-block;
+  }
+
+  .ink-menu__list {
+    position: absolute;
+    top: calc(100% + var(--ink-space-1));
+    min-width: 12rem;
+    padding: var(--ink-space-1);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-menu--start .ink-menu__list { inset-inline-start: 0; }
+  .ink-menu--end .ink-menu__list { inset-inline-end: 0; }
+
+  .ink-menu__list[hidden] { display: none; }
+
+  .ink-menu__list :global([role="menuitem"]) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    min-height: 2.75rem;
+    border-radius: var(--ink-radius-sm);
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: start;
+  }
+
+  .ink-menu__list :global([role="menuitem"]:hover),
+  .ink-menu__list :global([role="menuitem"]:focus-visible) {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+    outline: none;
+  }
+</style>
+
+<script>
+  function initMenus(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-menu]").forEach((menu) => {
+      if (menu.dataset.inkBound) return;
+      menu.dataset.inkBound = "true";
+      const list = menu.querySelector<HTMLElement>("[data-ink-menu-list]");
+      const trigger = menu.querySelector<HTMLElement>("[data-ink-menu-trigger]");
+      if (!list || !trigger) return;
+      trigger.setAttribute("aria-haspopup", "menu");
+      trigger.setAttribute("aria-expanded", "false");
+
+      const items = () =>
+        Array.from(
+          list.querySelectorAll<HTMLElement>(
+            '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+          ),
+        );
+
+      const open = () => {
+        list.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+      };
+      const close = (refocus = true) => {
+        if (list.hidden) return;
+        list.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        if (refocus) trigger.focus();
+      };
+
+      trigger.addEventListener("click", () => {
+        if (list.hidden) open();
+        else close(false);
+      });
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          open();
+          items()[0]?.focus();
+        }
+        if (menu.closest("[data-ink-menubar]")) {
+          const bar = menu.closest("[data-ink-menubar]")!;
+          const menus = Array.from(bar.querySelectorAll<HTMLElement>("[data-ink-menu]"));
+          const i = menus.indexOf(menu);
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            menus[(i + 1) % menus.length]!
+              .querySelector<HTMLElement>("[data-ink-menu-trigger]")
+              ?.focus();
+          }
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            menus[(i - 1 + menus.length) % menus.length]!
+              .querySelector<HTMLElement>("[data-ink-menu-trigger]")
+              ?.focus();
+          }
+        }
+      });
+
+      list.addEventListener("keydown", (event: KeyboardEvent) => {
+        const els = items();
+        const at = els.indexOf(document.activeElement as HTMLElement);
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close(true);
+          return;
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          els[(at + 1) % els.length]?.focus();
+        }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          els[(at - 1 + els.length) % els.length]?.focus();
+        }
+        if (event.key === "Home") {
+          event.preventDefault();
+          els[0]?.focus();
+        }
+        if (event.key === "End") {
+          event.preventDefault();
+          els[els.length - 1]?.focus();
+        }
+        if (event.key === "Tab") close(false);
+      });
+
+      document.addEventListener(
+        "pointerdown",
+        (event: MouseEvent) => {
+          if (event.target instanceof Node && !menu.contains(event.target)) close(false);
+        },
+        true,
+      );
+    });
+  }
+
+  initMenus();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initMenus(root ?? document); } };
+</script>

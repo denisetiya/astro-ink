@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ContextMenu } from "astro-ink";
+---
+<Base title="ContextMenu">
+  <div class="docs-page">
+    <h1>ContextMenu</h1>
+    <p class="docs-lede">
+      Right-click actions on any region. The menu opens at the cursor and
+      stays inside the viewport.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <ContextMenu label="File actions">
+        <div
+          slot="trigger"
+          id="demo-zone"
+          tabindex="0"
+          style="min-height: 8rem; display: grid; place-content: center; border: 1.5px dashed var(--ink-border-strong); border-radius: var(--ink-radius-md); color: var(--ink-muted); font-size: var(--ink-text-sm);"
+        >
+          Right-click (or long-press) this box
+        </div>
+        <a role="menuitem" href="/guides/theming">Open</a>
+        <button role="menuitem" type="button">Rename</button>
+        <button role="menuitem" type="button">Delete</button>
+      </ContextMenu>
+    </div>
+    <pre class="docs-code"><code>&lt;ContextMenu label="File actions"&gt;
+  &lt;div slot="trigger" id="demo-zone" tabindex="0"&gt;Right-click this box&lt;/div&gt;
+  &lt;a role="menuitem" href="/guides/theming"&gt;Open&lt;/a&gt;
+  &lt;button role="menuitem" type="button"&gt;Delete&lt;/button&gt;
+&lt;/ContextMenu&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Menu landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Items are keyboard operable after opening.</li>
+      <li>Escape closes; position is clamped to the viewport.</li>
+      <li>The trigger region stays a plain element: add your own label for AT if needed.</li>
+    </ul>
+  </div>
+</Base>

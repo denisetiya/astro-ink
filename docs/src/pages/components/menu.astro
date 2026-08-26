@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Menu } from "astro-ink";
+---
+<Base title="Menu">
+  <div class="docs-page">
+    <h1>Menu</h1>
+    <p class="docs-lede">
+      Actions list behind a trigger. Arrow keys travel, Escape returns to the
+      trigger, outside clicks close.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" id="demo-basic">
+      <Menu label="Account actions">
+        <Button slot="trigger" variant="secondary" data-ink-menu-trigger>Account</Button>
+        <a role="menuitem" href="/guides/theming">Profile settings</a>
+        <a role="menuitem" href="/components">All components</a>
+        <button role="menuitem" type="button">Sign out</button>
+      </Menu>
+    </div>
+    <pre class="docs-code"><code>&lt;Menu label="Account actions"&gt;
+  &lt;Button slot="trigger" variant="secondary" data-ink-menu-trigger&gt;Account&lt;/Button&gt;
+  &lt;a role="menuitem" href="/guides/theming"&gt;Profile settings&lt;/a&gt;
+  &lt;button role="menuitem" type="button"&gt;Sign out&lt;/button&gt;
+&lt;/Menu&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Menu landmark name.</td></tr>
+        <tr><td><code>align</code></td><td><code>start | end</code></td><td><code>start</code></td><td>Which edge the list opens from.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Item contract</h2>
+    <p>
+      Items are your elements with <code>role="menuitem"</code> (links or
+      buttons). The trigger carries <code>slot="trigger"</code> and
+      <code>data-ink-menu-trigger</code>; the script adds
+      <code>aria-haspopup/expanded</code> itself.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Arrows, Home/End navigate; Escape closes and returns focus.</li>
+      <li>Tab leaves the menu naturally instead of trapping.</li>
+      <li>Outside clicks close without stealing focus.</li>
+    </ul>
+  </div>
+</Base>

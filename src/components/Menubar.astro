@@ -1,0 +1,38 @@
+---
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = "Main menu", class: className, ...rest } = Astro.props;
+---
+<nav aria-label={label} class:list={["ink-menubar", className]} data-ink-menubar {...rest}>
+  <div class="ink-menubar__row" role="presentation">
+    <slot />
+  </div>
+</nav>
+
+<style>
+  .ink-menubar__row {
+    display: flex;
+    gap: var(--ink-space-1);
+    align-items: center;
+  }
+
+  .ink-menubar :global([data-ink-menu-trigger]) {
+    padding: var(--ink-space-2) var(--ink-space-3);
+    min-height: 2.75rem;
+    border: none;
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    border-radius: var(--ink-radius-md);
+    cursor: pointer;
+  }
+
+  .ink-menubar :global([data-ink-menu-trigger]:hover),
+  .ink-menubar :global([data-ink-menu-trigger][aria-expanded="true"]) {
+    background: color-mix(in srgb, var(--ink-ink) 6%, transparent);
+  }
+</style>

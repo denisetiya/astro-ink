@@ -28,3 +28,6 @@ export { default as Sidebar } from "./components/Sidebar.astro";
 export { default as Tabs } from "./components/Tabs.astro";
 export { default as Pagination } from "./components/Pagination.astro";
 export { default as Stepper } from "./components/Stepper.astro";
+export { default as Menu } from "./components/Menu.astro";
+export { default as Menubar } from "./components/Menubar.astro";
+export { default as ContextMenu } from "./components/ContextMenu.astro";

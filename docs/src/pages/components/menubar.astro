@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Menu, Menubar } from "astro-ink";
+---
+<Base title="Menubar">
+  <div class="docs-page">
+    <h1>Menubar</h1>
+    <p class="docs-lede">
+      Desktop-style menu bar: left and right arrows travel between menus,
+      each menu behaves like <code>Menu</code>.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Menubar label="Editor">
+        <Menu label="File menu">
+          <button slot="trigger" type="button" data-ink-menu-trigger>File</button>
+          <a role="menuitem" href="/components">Open library</a>
+          <button role="menuitem" type="button">Save draft</button>
+        </Menu>
+        <Menu label="Edit menu">
+          <button slot="trigger" type="button" data-ink-menu-trigger>Edit</button>
+          <button role="menuitem" type="button">Undo</button>
+          <button role="menuitem" type="button">Redo</button>
+        </Menu>
+      </Menubar>
+    </div>
+    <pre class="docs-code"><code>&lt;Menubar label="Editor"&gt;
+  &lt;Menu label="File menu"&gt;
+    &lt;button slot="trigger" type="button" data-ink-menu-trigger&gt;File&lt;/button&gt;
+    &lt;a role="menuitem" href="/components"&gt;Open library&lt;/a&gt;
+  &lt;/Menu&gt;
+  ...
+&lt;/Menubar&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Main menu</code></td><td>Landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>ArrowLeft/Right move between menu triggers; arrows inside menus work like <code>Menu</code>.</li>
+      <li>Trigger buttons are 44px with visible focus.</li>
+    </ul>
+  </div>
+</Base>
