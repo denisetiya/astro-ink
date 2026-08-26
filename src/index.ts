@@ -26,3 +26,5 @@ export { default as Anchor } from "./components/Anchor.astro";
 export { default as Navbar } from "./components/Navbar.astro";
 export { default as Sidebar } from "./components/Sidebar.astro";
 export { default as Tabs } from "./components/Tabs.astro";
+export { default as Pagination } from "./components/Pagination.astro";
+export { default as Stepper } from "./components/Stepper.astro";

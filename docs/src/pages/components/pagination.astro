@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Pagination } from "astro-ink";
+---
+<Base title="Pagination">
+  <div class="docs-page">
+    <h1>Pagination</h1>
+    <p class="docs-lede">
+      Page list with ellipsis, first/last always visible, and edges that
+      disable themselves instead of linking nowhere.
+    </p>
+
+    <h2>Middle of many</h2>
+    <div class="docs-example" id="demo-current" style="display: grid;">
+      <Pagination page={2} total={12} href={(n) => `/components/pagination?page=${n}`} />
+    </div>
+    <pre class="docs-code"><code>&lt;Pagination page=&#123;2&#125; total=&#123;12&#125; href=&#123;(n) =&gt; `/components/pagination?page=$&#123;n&#125;`&#125; /&gt;</code></pre>
+
+    <h2>First page</h2>
+    <div class="docs-example" id="demo-first" style="display: grid;">
+      <Pagination page={1} total={12} href={(n) => `/components/pagination?page=${n}`} />
+    </div>
+    <pre class="docs-code"><code>&lt;Pagination page=&#123;1&#125; total=&#123;12&#125; href=&#123;(n) =&gt; `/components/pagination?page=$&#123;n&#125;`&#125; /&gt;</code></pre>
+
+    <h2>Live demo</h2>
+    <p>Click a number: the page reloads with <code>?page=N</code> in the address bar.</p>
+    <div class="docs-example" id="demo-nav" style="display: grid;">
+      <Pagination page={2} total={12} href={(n) => `?page=${n}`} />
+    </div>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>page</code></td><td><code>number</code></td><td>-</td><td>Current page (1-based, clamped).</td></tr>
+        <tr><td><code>total</code></td><td><code>number</code></td><td>-</td><td>Total pages.</td></tr>
+        <tr><td><code>href</code></td><td><code>(n) =&gt; string</code></td><td>-</td><td>Link builder per page.</td></tr>
+        <tr><td><code>prevLabel / nextLabel</code></td><td><code>string</code></td><td><code>Previous / Next</code></td><td>Edge labels.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real links: middle-click and open-in-tab work; current page is <code>aria-current="page"</code>.</li>
+      <li>Disabled edges render as text with <code>aria-disabled</code>, not dead links.</li>
+      <li>Ellipsis is decorative (<code>aria-hidden</code>).</li>
+    </ul>
+  </div>
+</Base>

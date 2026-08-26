@@ -1,0 +1,105 @@
+---
+interface Props {
+  steps: Array<{ label: string; href?: string; description?: string }>;
+  current: number;
+  label?: string;
+  class?: string;
+}
+
+const { steps, current, label = "Progress", class: className, ...rest } = Astro.props;
+---
+<ol aria-label={label} class:list={["ink-stepper", className]} {...rest}>
+  {steps.map((step, i) => {
+    const status = i < current ? "done" : i === current ? "current" : "upcoming";
+    return (
+      <li class="ink-stepper__step" data-status={status} aria-current={status === "current" ? "step" : undefined}>
+        <span class="ink-stepper__marker" aria-hidden="true">
+          {status === "done" ? (
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2.5 6.5l2.5 2.5 4.5-6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          ) : (
+            <span class="ink-stepper__index">{i + 1}</span>
+          )}
+        </span>
+        <span class="ink-stepper__text">
+          {step.href && status !== "current" ? (
+            <a class="ink-stepper__label" href={step.href}>{step.label}</a>
+          ) : (
+            <span class="ink-stepper__label">{step.label}</span>
+          )}
+          {step.description && <span class="ink-stepper__desc">{step.description}</span>}
+        </span>
+      </li>
+    );
+  })}
+</ol>
+
+<style>
+  .ink-stepper {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  @media (min-width: 48rem) {
+    .ink-stepper {
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+    }
+  }
+
+  .ink-stepper__step {
+    display: flex;
+    gap: var(--ink-space-2);
+    align-items: flex-start;
+    padding: var(--ink-space-2) 0;
+  }
+
+  .ink-stepper__marker {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-border-strong);
+    color: var(--ink-muted);
+    font-size: var(--ink-text-xs);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-stepper__step[data-status="done"] .ink-stepper__marker {
+    background: var(--ink-accent);
+    border-color: var(--ink-accent);
+    color: var(--ink-accent-ink);
+  }
+
+  .ink-stepper__step[data-status="current"] .ink-stepper__marker {
+    border-color: var(--ink-accent);
+    color: var(--ink-accent);
+  }
+
+  .ink-stepper__text {
+    display: grid;
+    gap: 2px;
+  }
+
+  .ink-stepper__label {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    color: var(--ink-ink);
+  }
+
+  a.ink-stepper__label { color: var(--ink-accent); }
+
+  .ink-stepper__step[data-status="upcoming"] .ink-stepper__label { color: var(--ink-muted); }
+
+  .ink-stepper__desc {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+</style>

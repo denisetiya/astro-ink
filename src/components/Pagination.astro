@@ -1,0 +1,102 @@
+---
+import { buildPageList } from "../scripts/pagination";
+
+interface Props {
+  page: number;
+  total: number;
+  href: (n: number) => string;
+  prevLabel?: string;
+  nextLabel?: string;
+  label?: string;
+  class?: string;
+}
+
+const {
+  page, total, href, prevLabel = "Previous", nextLabel = "Next",
+  label = "Pagination", class: className, ...rest
+} = Astro.props;
+
+const current = Math.min(Math.max(total, 1), Math.max(1, Math.floor(page)));
+const list = buildPageList(current, total);
+---
+<nav aria-label={label} class:list={["ink-pagination", className]} {...rest}>
+  <ul class="ink-pagination__list">
+    <li class="ink-pagination__prev">
+      {current > 1 ? (
+        <a class="ink-pagination__link" href={href(current - 1)} aria-label={`${prevLabel}, page ${current - 1}`}>{prevLabel}</a>
+      ) : (
+        <span class="ink-pagination__link" aria-disabled="true">{prevLabel}</span>
+      )}
+    </li>
+    {list.map((item) =>
+      item === "…" ? (
+        <li><span class="ink-pagination__ellipsis" aria-hidden="true">…</span></li>
+      ) : (
+        <li>
+          <a
+            class="ink-pagination__link"
+            href={href(item)}
+            aria-current={item === current ? "page" : undefined}
+            aria-label={item === current ? `Page ${item}` : `Go to page ${item}`}
+          >
+            {item}
+          </a>
+        </li>
+      ),
+    )}
+    <li class="ink-pagination__next">
+      {current < total ? (
+        <a class="ink-pagination__link" href={href(current + 1)} aria-label={`${nextLabel}, page ${current + 1}`}>{nextLabel}</a>
+      ) : (
+        <span class="ink-pagination__link" aria-disabled="true">{nextLabel}</span>
+      )}
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .ink-pagination__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ink-space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ink-pagination__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding-inline: var(--ink-space-2);
+    border: 1px solid transparent;
+    border-radius: var(--ink-radius-md);
+    color: var(--ink-ink);
+    text-decoration: none;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-pagination__link:hover {
+    border-color: var(--ink-border-strong);
+    background: var(--ink-surface);
+  }
+
+  .ink-pagination__link[aria-current="page"] {
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-pagination__link[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .ink-pagination__ellipsis {
+    padding-inline: var(--ink-space-1);
+    color: var(--ink-muted);
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Stepper } from "astro-ink";
+---
+<Base title="Stepper">
+  <div class="docs-page">
+    <h1>Stepper</h1>
+    <p class="docs-lede">
+      A checkout in three acts: done steps link back, the current step is
+      marked, the future waits its turn.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Stepper
+        current={2}
+        steps={[
+          { label: "Cart", href: "/components", description: "Review items" },
+          { label: "Shipping", href: "/components", description: "Where it goes" },
+          { label: "Payment", description: "How you pay" },
+          { label: "Done", description: "Receipt" },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Stepper
+  current=&#123;2&#125;
+  steps=&#123;[
+    &#123; label: "Cart", href: "/components" &#125;,
+    ...
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>steps</code></td><td><code>Array</code></td><td>-</td><td>Label + optional href + description.</td></tr>
+        <tr><td><code>current</code></td><td><code>number</code></td><td>-</td><td>0-based index of the current step.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Ordered list with <code>aria-current="step"</code> on the active one.</li>
+      <li>Done steps are links, the current step is text, upcoming is plain text.</li>
+      <li>Status also exposed via <code>data-status</code> for styling hooks.</li>
+    </ul>
+  </div>
+</Base>
