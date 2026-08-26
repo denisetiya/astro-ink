@@ -1,0 +1,72 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Tabs } from "astro-ink";
+
+const items = [
+  { id: "overview", label: "Overview" },
+  { id: "billing", label: "Billing" },
+  { id: "team", label: "Team" },
+];
+---
+<Base title="Tabs">
+  <div class="docs-page">
+    <h1>Tabs</h1>
+    <p class="docs-lede">
+      Three sections, one screen. Arrow keys move and select; panels toggle
+      with them.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Tabs tabs={items}>
+        <div data-tab-panel="overview" role="tabpanel" id="ink-panel-overview" aria-labelledby="ink-tab-overview" aria-label="Overview">
+          <p>Usage numbers and recent activity live here.</p>
+        </div>
+        <div data-tab-panel="billing" role="tabpanel" id="ink-panel-billing" aria-labelledby="ink-tab-billing" aria-label="Billing">
+          <p>Invoices, receipts, and the current plan.</p>
+        </div>
+        <div data-tab-panel="team" role="tabpanel" id="ink-panel-team" aria-labelledby="ink-tab-team" aria-label="Team">
+          <p>Members, roles, and invitations.</p>
+        </div>
+      </Tabs>
+    </div>
+    <pre class="docs-code"><code>&lt;Tabs tabs=&#123;items&#125;&gt;
+  &lt;div data-tab-panel="overview" role="tabpanel"
+    id="ink-panel-overview" aria-labelledby="ink-tab-overview"&gt;
+    Usage numbers and recent activity live here.
+  &lt;/div&gt;
+  ...
+&lt;/Tabs&gt;</code></pre>
+
+    <h2>Panel contract</h2>
+    <p>
+      Each panel is your markup with <code>data-tab-panel</code> matching the tab
+      <code>id</code>, plus <code>role="tabpanel"</code>, a matching
+      <code>id="ink-panel-[id]"</code>, and <code>aria-labelledby="ink-tab-[id]"</code>.
+    </p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>tabs</code></td><td><code>Array&lt;&#123; id, label &#125;&gt;</code></td><td>-</td><td>Tabs in order.</td></tr>
+        <tr><td><code>active</code></td><td><code>string</code></td><td>first tab</td><td>Initial tab id.</td></tr>
+        <tr><td><code>tablistLabel</code></td><td><code>string</code></td><td><code>Tabs</code></td><td>Landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:tab:change", (event) =&gt; &#123;
+  console.log(event.detail.id);
+&#125;);</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Automatic activation: arrows move focus and select together.</li>
+      <li>Home/End jump; only the selected tab is in the Tab order.</li>
+      <li>Hidden panels stay in the DOM but leave the accessibility tree.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,127 @@
+---
+interface Props {
+  tabs: Array<{ id: string; label: string }>;
+  active?: string;
+  tablistLabel?: string;
+  class?: string;
+}
+
+const { tabs, active, tablistLabel = "Tabs", class: className, ...rest } = Astro.props;
+const current = active ?? tabs[0]!.id;
+---
+<div class:list={["ink-tabs", className]} data-ink-tabs data-active={current} {...rest}>
+  <div class="ink-tabs__list" role="tablist" aria-label={tablistLabel}>
+    {tabs.map((t) => (
+      <button
+        type="button"
+        role="tab"
+        class="ink-tabs__tab"
+        id={`ink-tab-${t.id}`}
+        data-tab-id={t.id}
+        aria-selected={t.id === current ? "true" : "false"}
+        aria-controls={`ink-panel-${t.id}`}
+        tabindex={t.id === current ? 0 : -1}
+      >
+        {t.label}
+      </button>
+    ))}
+  </div>
+  <div class="ink-tabs__panels">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .ink-tabs__list {
+    display: flex;
+    gap: var(--ink-space-1);
+    border-bottom: 1px solid var(--ink-border);
+  }
+
+  .ink-tabs__tab {
+    padding: var(--ink-space-2) var(--ink-space-4);
+    min-height: 2.75rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: transparent;
+    color: var(--ink-muted);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    cursor: pointer;
+  }
+
+  .ink-tabs__tab:hover { color: var(--ink-ink); }
+
+  .ink-tabs__tab[aria-selected="true"] {
+    color: var(--ink-ink);
+    border-bottom-color: var(--ink-accent);
+  }
+
+  .ink-tabs__tab:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-tabs__panels {
+    padding-top: var(--ink-space-4);
+  }
+
+  .ink-tabs__panels > :global([data-tab-panel][hidden]) {
+    display: none;
+  }
+</style>
+
+<script>
+  import { createRoving } from "../scripts/roving";
+
+  function selectTab(root: HTMLElement, id: string, moveFocus: boolean) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    for (const tab of tabs) {
+      const on = tab.dataset.tabId === id;
+      tab.setAttribute("aria-selected", String(on));
+      tab.tabIndex = on ? 0 : -1;
+      if (on && moveFocus) tab.focus();
+    }
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-tab-panel]"));
+    for (const panel of panels) {
+      panel.hidden = panel.dataset.tabPanel !== id;
+    }
+    root.setAttribute("data-active", id);
+    root.dispatchEvent(new CustomEvent("ink:tab:change", { bubbles: true, detail: { id } }));
+  }
+
+  function initTabs(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-tabs]").forEach((tabsRoot) => {
+      if (tabsRoot.dataset.inkBound) return;
+      tabsRoot.dataset.inkBound = "true";
+      const list = tabsRoot.querySelector<HTMLElement>('[role="tablist"]');
+      if (!list) return;
+      createRoving(list, '[role="tab"]', { orientation: "horizontal" });
+      // Automatic activation: moving focus selects.
+      list.addEventListener("focusin", (event) => {
+        const el = event.target as HTMLElement;
+        const tab = el.closest?.("[data-tab-id]") as HTMLElement | null;
+        if (tab?.dataset.tabId && tab.getAttribute("aria-selected") !== "true") {
+          selectTab(tabsRoot, tab.dataset.tabId, false);
+        }
+      });
+      tabsRoot.addEventListener("click", (event) => {
+        const el = event.target as HTMLElement;
+        const tab = el.closest?.("[data-tab-id]") as HTMLElement | null;
+        if (tab?.dataset.tabId) selectTab(tabsRoot, tab.dataset.tabId, false);
+      });
+      const initial = tabsRoot.getAttribute("data-active") ?? "";
+      if (initial) {
+        const panels = Array.from(tabsRoot.querySelectorAll<HTMLElement>("[data-tab-panel]"));
+        for (const panel of panels) panel.hidden = panel.dataset.tabPanel !== initial;
+      }
+    });
+  }
+
+  initTabs();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTabs(root ?? document); } };
+</script>

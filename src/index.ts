@@ -25,3 +25,4 @@ export { default as Breadcrumbs } from "./components/Breadcrumbs.astro";
 export { default as Anchor } from "./components/Anchor.astro";
 export { default as Navbar } from "./components/Navbar.astro";
 export { default as Sidebar } from "./components/Sidebar.astro";
+export { default as Tabs } from "./components/Tabs.astro";
