@@ -1,0 +1,60 @@
+---
+import Base from "../../layouts/Base.astro";
+import { NavigationMenu } from "astro-ink";
+---
+<Base title="NavigationMenu">
+  <div class="docs-page">
+    <h1>NavigationMenu</h1>
+    <p class="docs-lede">
+      Horizontal site nav with dropdown submenus. Submenus inherit the full
+      <code>Menu</code> keyboard behavior for free.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <NavigationMenu
+        label="Docs"
+        items={[
+          { label: "Overview", href: "/" },
+          {
+            label: "Guides",
+            children: [
+              { label: "Theming guide", href: "/guides/theming" },
+              { label: "All components", href: "/components" },
+            ],
+          },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;NavigationMenu
+  label="Docs"
+  items=&#123;[
+    &#123; label: "Overview", href: "/" &#125;,
+    &#123;
+      label: "Guides",
+      children: [
+        &#123; label: "Theming guide", href: "/guides/theming" &#125;,
+        &#123; label: "All components", href: "/components" &#125;,
+      ],
+    &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>items</code></td><td><code>Array</code></td><td>-</td><td>Links; <code>children</code> makes a dropdown.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Site</code></td><td>Nav landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Submenus get arrows, Home/End, Escape from the <code>Menu</code> script.</li>
+      <li>Plain items are links; dropdown triggers announce expanded state.</li>
+    </ul>
+  </div>
+</Base>

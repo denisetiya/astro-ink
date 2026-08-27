@@ -34,3 +34,13 @@ test("context menu opens on right click", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(page.locator("[data-ink-context-list]")).toBeHidden();
 });
+
+test("navigation menu submenu opens and navigates", async ({ page }) => {
+  await page.goto("/components/navigation-menu");
+  const trigger = page.locator(".ink-navmenu [data-ink-menu-trigger]").first();
+  await trigger.click();
+  const sub = page.locator(".ink-navmenu [data-ink-menu-list] [role='menuitem']").first();
+  await expect(sub).toBeVisible();
+  await sub.click();
+  await expect(page).toHaveURL(/\/guides\/theming/);
+});

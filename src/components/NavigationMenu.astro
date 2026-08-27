@@ -1,0 +1,69 @@
+---
+import Menu from "./Menu.astro";
+
+interface Props {
+  items: Array<{
+    label: string;
+    href?: string;
+    children?: Array<{ label: string; href: string }>;
+  }>;
+  label?: string;
+  class?: string;
+}
+
+const { items, label = "Site", class: className, ...rest } = Astro.props;
+---
+<nav aria-label={label} class:list={["ink-navmenu", className]} {...rest}>
+  <ul class="ink-navmenu__list">
+    {items.map((item) => (
+      <li class="ink-navmenu__item">
+        {item.children ? (
+          <Menu label={`${item.label} submenu`}>
+            <button slot="trigger" type="button" data-ink-menu-trigger class="ink-navmenu__trigger">
+              {item.label}
+            </button>
+            {item.children.map((child) => (
+              <a role="menuitem" href={child.href}>{child.label}</a>
+            ))}
+          </Menu>
+        ) : (
+          <a class="ink-navmenu__link" href={item.href ?? "#"}>{item.label}</a>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .ink-navmenu__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ink-space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ink-navmenu__link,
+  .ink-navmenu__trigger {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border: none;
+    border-radius: var(--ink-radius-md);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .ink-navmenu__link:hover,
+  .ink-navmenu__trigger:hover,
+  .ink-navmenu__trigger[aria-expanded="true"] {
+    background: color-mix(in srgb, var(--ink-ink) 6%, transparent);
+  }
+</style>
