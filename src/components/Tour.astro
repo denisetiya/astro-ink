@@ -1,0 +1,199 @@
+---
+interface Props {
+  steps: Array<{ target: string; title: string; body: string }>;
+  class?: string;
+}
+
+const { steps, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-tour", className]} data-ink-tour data-steps={JSON.stringify(steps)} {...rest}>
+  <div class="ink-tour__backdrop" data-ink-tour-backdrop hidden></div>
+  <div
+    class="ink-tour__tip"
+    role="dialog"
+    aria-modal="false"
+    data-ink-tour-tip
+    hidden
+  >
+    <p class="ink-tour__count" data-ink-tour-count></p>
+    <p class="ink-tour__title" data-ink-tour-title></p>
+    <p class="ink-tour__body" data-ink-tour-body></p>
+    <div class="ink-tour__actions">
+      <button type="button" class="ink-tour__btn" data-ink-tour-back>Back</button>
+      <button type="button" class="ink-tour__btn ink-tour__btn--primary" data-ink-tour-next>Next</button>
+      <button type="button" class="ink-tour__btn" data-ink-tour-end>End tour</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ink-tour__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.45);
+    z-index: var(--ink-z-overlay, 100);
+  }
+
+  .ink-tour__backdrop[hidden] { display: none; }
+
+  .ink-tour__tip {
+    position: fixed;
+    width: min(20rem, calc(100vw - 2rem));
+    padding: var(--ink-space-4);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-lg);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-modal, 200);
+  }
+
+  .ink-tour__tip[hidden] { display: none; }
+
+  .ink-tour__count {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-tour__title {
+    font-weight: var(--ink-font-weight-semibold);
+    margin-block: var(--ink-space-1) 0;
+  }
+
+  .ink-tour__body {
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+    margin-top: var(--ink-space-1);
+  }
+
+  .ink-tour__actions {
+    display: flex;
+    gap: var(--ink-space-2);
+    margin-top: var(--ink-space-3);
+  }
+
+  .ink-tour__btn {
+    padding: var(--ink-space-1) var(--ink-space-3);
+    min-height: 2.75rem;
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    cursor: pointer;
+  }
+
+  .ink-tour__btn--primary {
+    background: var(--ink-accent);
+    border-color: transparent;
+    color: var(--ink-accent-ink);
+  }
+
+  .ink-tour__btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  :global(.ink-tour__highlight) {
+    outline: 3px solid var(--ink-accent);
+    outline-offset: 3px;
+    border-radius: var(--ink-radius-sm);
+  }
+</style>
+
+<script>
+  interface TourStep {
+    target: string;
+    title: string;
+    body: string;
+  }
+
+  function initTours(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-tour]").forEach((tour) => {
+      if (tour.dataset.inkBound) return;
+      tour.dataset.inkBound = "true";
+      const steps: TourStep[] = JSON.parse(tour.dataset.steps ?? "[]");
+      const backdrop = tour.querySelector<HTMLElement>("[data-ink-tour-backdrop]");
+      const tip = tour.querySelector<HTMLElement>("[data-ink-tour-tip]");
+      const count = tour.querySelector<HTMLElement>("[data-ink-tour-count]");
+      const title = tour.querySelector<HTMLElement>("[data-ink-tour-title]");
+      const body = tour.querySelector<HTMLElement>("[data-ink-tour-body]");
+      const back = tour.querySelector<HTMLButtonElement>("[data-ink-tour-back]");
+      const next = tour.querySelector<HTMLButtonElement>("[data-ink-tour-next]");
+      const end = tour.querySelector<HTMLElement>("[data-ink-tour-end]");
+      if (!backdrop || !tip || !count || !title || !body || !back || !next || !end) return;
+
+      let at = 0;
+
+      const clearHighlights = () => {
+        document
+          .querySelectorAll(".ink-tour__highlight")
+          .forEach((el) => el.classList.remove("ink-tour__highlight"));
+      };
+
+      const place = () => {
+        const step = steps[at];
+        if (!step) return;
+        clearHighlights();
+        const target = document.querySelector(step.target);
+        if (target instanceof HTMLElement) {
+          target.classList.add("ink-tour__highlight");
+          const r = target.getBoundingClientRect();
+          const top = Math.min(window.innerHeight - 220, r.bottom + 12);
+          tip.style.top = `${Math.max(12, top)}px`;
+          tip.style.left = `${Math.max(12, Math.min(window.innerWidth - 340, r.left))}px`;
+        }
+        count.textContent = `Step ${at + 1} of ${steps.length}`;
+        tip.setAttribute("aria-label", `Step ${at + 1} of ${steps.length}`);
+        title.textContent = step.title;
+        body.textContent = step.body;
+        back.disabled = at === 0;
+        next.textContent = at === steps.length - 1 ? "Finish" : "Next";
+      };
+
+      const start = () => {
+        if (steps.length === 0) return;
+        at = 0;
+        backdrop.hidden = false;
+        tip.hidden = false;
+        place();
+        next.focus();
+      };
+
+      const finish = () => {
+        backdrop.hidden = true;
+        tip.hidden = true;
+        clearHighlights();
+        tour.dispatchEvent(new CustomEvent("ink:tour:end", { bubbles: true }));
+      };
+
+      document.addEventListener("ink:tour:start", () => start());
+      back.addEventListener("click", () => {
+        if (at > 0) {
+          at--;
+          place();
+        }
+      });
+      next.addEventListener("click", () => {
+        if (at < steps.length - 1) {
+          at++;
+          place();
+        } else {
+          finish();
+        }
+      });
+      end.addEventListener("click", finish);
+      tip.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          finish();
+        }
+      });
+    });
+  }
+
+  initTours();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTours(root ?? document); } };
+</script>

@@ -36,3 +36,5 @@ export { default as CommandMenu } from "./components/CommandMenu.astro";
 export { default as Drawer } from "./components/Drawer.astro";
 export { default as Sheet } from "./components/Sheet.astro";
 export { default as SpeedDial } from "./components/SpeedDial.astro";
+export { default as BottomNavigation } from "./components/BottomNavigation.astro";
+export { default as Tour } from "./components/Tour.astro";

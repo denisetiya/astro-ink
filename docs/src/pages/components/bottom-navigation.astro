@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import { BottomNavigation } from "astro-ink";
+---
+<Base title="BottomNavigation">
+  <div class="docs-page">
+    <h1>BottomNavigation</h1>
+    <p class="docs-lede">
+      Thumb-zone navigation for app-like layouts. Three to five destinations,
+      current one marked.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <BottomNavigation
+        current="/components"
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Library", href: "/components" },
+          { label: "Theming", href: "/guides/theming" },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;BottomNavigation
+  current="/components"
+  items=&#123;[
+    &#123; label: "Home", href: "/" &#125;,
+    &#123; label: "Library", href: "/components" &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>With icons</h2>
+    <div class="docs-example" style="display: grid;">
+      <BottomNavigation
+        current="/"
+        items={[
+          { label: "Home", href: "/", iconSvg: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 7l6-5 6 5v7H9.5v-4h-3v4H2V7z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>' },
+          { label: "Library", href: "/components" },
+        ]}
+      />
+    </div>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>items</code></td><td><code>Array</code></td><td>-</td><td>Label + href + optional <code>iconSvg</code> string.</td></tr>
+        <tr><td><code>current</code></td><td><code>string</code></td><td>-</td><td>Href of the current destination.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Primary</code></td><td>Nav landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real links with <code>aria-current="page"</code>; the bar is 56px tall for thumbs.</li>
+      <li>Icons are decorative; the label does the talking.</li>
+    </ul>
+  </div>
+</Base>

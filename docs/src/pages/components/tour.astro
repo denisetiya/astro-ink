@@ -1,0 +1,63 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Tour } from "astro-ink";
+---
+<Base title="Tour">
+  <div class="docs-page">
+    <h1>Tour</h1>
+    <p class="docs-lede">
+      A guided walkthrough: highlight one element at a time, explain it,
+      move on. Starts when your app dispatches <code>ink:tour:start</code>.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid; gap: var(--ink-space-4);">
+      <Button id="start-tour" type="button">Start tour</Button>
+      <p id="tour-target-1" style="padding: var(--ink-space-3); border: 1px solid var(--ink-border); border-radius: var(--ink-radius-md);">First stop: this card.</p>
+      <p id="tour-target-2" style="padding: var(--ink-space-3); border: 1px solid var(--ink-border); border-radius: var(--ink-radius-md);">Second stop: this one.</p>
+      <Tour
+        steps={[
+          { target: "#tour-target-1", title: "Welcome", body: "This is the first thing to notice." },
+          { target: "#tour-target-2", title: "Second", body: "And this is the second." },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Tour
+  steps=&#123;[
+    &#123; target: "#tour-target-1", title: "Welcome", body: "..." &#125;,
+    &#123; target: "#tour-target-2", title: "Second", body: "..." &#125;,
+  &#125;&#125;
+/&gt;
+&lt;script&gt;
+  document.getElementById("start-tour")
+    .addEventListener("click", () =&gt; &#123;
+      document.dispatchEvent(new CustomEvent("ink:tour:start", &#123; bubbles: true &#125;));
+    &#125;);
+&lt;/script&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>steps</code></td><td><code>Array</code></td><td>-</td><td>CSS selector target + title + body each.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Events</h2>
+    <p>Dispatch <code>ink:tour:start</code> on <code>document</code> to begin. Listen for <code>ink:tour:end</code> on completion.</p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The tooltip is a labeled dialog; Escape ends the tour.</li>
+      <li>Highlights never move focus; Back is disabled on the first step.</li>
+    </ul>
+  </div>
+</Base>
+
+<script>
+  document.getElementById("start-tour")?.addEventListener("click", () => {
+    document.dispatchEvent(new CustomEvent("ink:tour:start", { bubbles: true }));
+  });
+</script>
