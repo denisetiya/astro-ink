@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { SpeedDial } from "astro-ink";
+---
+<Base title="SpeedDial">
+  <div class="docs-page">
+    <h1>SpeedDial</h1>
+    <p class="docs-lede">
+      A floating action button that fans out into quick actions. Escape folds
+      it back.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <SpeedDial label="Create">
+        <a href="/components" aria-label="New page" style="font-size: var(--ink-text-lg);">+</a>
+        <a href="/guides/theming" aria-label="New theme" style="font-size: var(--ink-text-lg);">T</a>
+      </SpeedDial>
+    </div>
+    <pre class="docs-code"><code>&lt;SpeedDial label="Create"&gt;
+  &lt;a href="/components" aria-label="New page"&gt;+&lt;/a&gt;
+  &lt;a href="/guides/theming" aria-label="New theme"&gt;T&lt;/a&gt;
+&lt;/SpeedDial&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Quick actions</code></td><td>Trigger accessible name.</td></tr>
+        <tr><td><code>direction</code></td><td><code>up | down | left | right</code></td><td><code>up</code></td><td>Fan direction.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Expanded state in <code>aria-expanded</code>; trigger is 56px.</li>
+      <li>Give every action an <code>aria-label</code> when it shows an icon only.</li>
+    </ul>
+  </div>
+</Base>

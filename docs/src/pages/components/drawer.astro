@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Drawer, TextField } from "astro-ink";
+---
+<Base title="Drawer">
+  <div class="docs-page">
+    <h1>Drawer</h1>
+    <p class="docs-lede">
+      Panel sliding in from an edge. Focus is trapped inside, Escape closes,
+      and focus returns to the trigger.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button data-ink-drawer="#demo">Open filters</Button>
+      <Drawer id="demo" label="Filters">
+        <TextField id="drawer-q" label="Keyword" placeholder="Search products" />
+        <Button type="button">Apply</Button>
+      </Drawer>
+    </div>
+    <pre class="docs-code"><code>&lt;Button data-ink-drawer="#demo"&gt;Open filters&lt;/Button&gt;
+&lt;Drawer id="demo" label="Filters"&gt;
+  &lt;TextField id="drawer-q" label="Keyword" /&gt;
+  &lt;Button type="button"&gt;Apply&lt;/Button&gt;
+&lt;/Drawer&gt;</code></pre>
+
+    <h2>Sides</h2>
+    <p>Pass <code>side="left" | "right" | "bottom"</code>. <code>Sheet</code> is the bottom variant with the same API.</p>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:drawer:open", (event) =&gt; &#123;
+  console.log(event.target.id);
+&#125;);</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Targeted by <code>data-ink-drawer="#id"</code> triggers.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Dialog landmark name.</td></tr>
+        <tr><td><code>side</code></td><td><code>left | right | bottom</code></td><td><code>right</code></td><td>Slide edge.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Focus trap via the shared helper; backdrop click and Escape both close.</li>
+      <li>Focus returns to the trigger; body scroll locks while open.</li>
+    </ul>
+  </div>
+</Base>

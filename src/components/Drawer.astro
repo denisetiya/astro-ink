@@ -1,0 +1,171 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  side?: "left" | "right" | "bottom";
+  class?: string;
+}
+
+const { id, label, side = "right", class: className, ...rest } = Astro.props;
+---
+<div class="ink-drawer-root" data-ink-drawer-root={id}>
+  <div class="ink-drawer__backdrop" data-ink-drawer-backdrop hidden></div>
+  <div
+    id={id}
+    class:list={["ink-drawer", `ink-drawer--${side}`, className]}
+    role="dialog"
+    aria-modal="true"
+    aria-label={label}
+    data-ink-drawer-panel
+    hidden
+    {...rest}
+  >
+    <div class="ink-drawer__body">
+      <slot />
+    </div>
+    <button type="button" class="ink-drawer__close" data-ink-drawer-close aria-label="Close dialog">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  .ink-drawer__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.35);
+    z-index: var(--ink-z-overlay, 100);
+  }
+
+  .ink-drawer__backdrop[hidden] { display: none; }
+
+  .ink-drawer {
+    position: fixed;
+    background: var(--ink-surface);
+    z-index: var(--ink-z-modal, 200);
+    box-shadow: var(--ink-shadow-2);
+    padding: var(--ink-space-5);
+    overflow: auto;
+  }
+
+  .ink-drawer[hidden] { display: none; }
+
+  .ink-drawer--right {
+    top: 0;
+    right: 0;
+    height: 100dvh;
+    width: min(24rem, 90vw);
+    border-inline-start: 1px solid var(--ink-border-strong);
+  }
+
+  .ink-drawer--left {
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: min(24rem, 90vw);
+    border-inline-end: 1px solid var(--ink-border-strong);
+  }
+
+  .ink-drawer--bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 80dvh;
+    border-top: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-lg) var(--ink-radius-lg) 0 0;
+  }
+
+  .ink-drawer__body {
+    display: grid;
+    gap: var(--ink-space-3);
+  }
+
+  .ink-drawer__close {
+    position: absolute;
+    top: var(--ink-space-3);
+    right: var(--ink-space-3);
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    border-radius: var(--ink-radius-sm);
+    cursor: pointer;
+  }
+
+  .ink-drawer__close:hover {
+    color: var(--ink-ink);
+    background: color-mix(in srgb, var(--ink-ink) 6%, transparent);
+  }
+</style>
+
+<script>
+  import { trapFocus } from "../scripts/focus-trap";
+
+  const traps = new Map<HTMLElement, () => void>();
+  const triggers = new WeakMap<HTMLElement, HTMLElement>();
+
+  function openDrawer(panel: HTMLElement, trigger: HTMLElement) {
+    const root = panel.closest<HTMLElement>("[data-ink-drawer-root]");
+    const backdrop = root?.querySelector<HTMLElement>("[data-ink-drawer-backdrop]");
+    panel.hidden = false;
+    if (backdrop) backdrop.hidden = false;
+    document.body.style.overflow = "hidden";
+    triggers.set(panel, trigger);
+    traps.set(panel, trapFocus(panel));
+    panel.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]):not([data-ink-drawer-close]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])',
+    )?.focus();
+    panel.dispatchEvent(new CustomEvent("ink:drawer:open", { bubbles: true }));
+  }
+
+  function closeDrawer(panel: HTMLElement) {
+    const root = panel.closest<HTMLElement>("[data-ink-drawer-root]");
+    const backdrop = root?.querySelector<HTMLElement>("[data-ink-drawer-backdrop]");
+    panel.hidden = true;
+    if (backdrop) backdrop.hidden = true;
+    document.body.style.overflow = "";
+    traps.get(panel)?.();
+    traps.delete(panel);
+    triggers.get(panel)?.focus();
+    panel.dispatchEvent(new CustomEvent("ink:drawer:close", { bubbles: true }));
+  }
+
+  function initDrawers(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-drawer-panel]").forEach((panel) => {
+      if (panel.dataset.inkBound) return;
+      panel.dataset.inkBound = "true";
+      const id = panel.id;
+      const panelTriggers = Array.from(
+        document.querySelectorAll<HTMLElement>(`[data-ink-drawer="#${CSS.escape(id)}"]`),
+      );
+      for (const trigger of panelTriggers) {
+        trigger.addEventListener("click", () => openDrawer(panel, trigger));
+      }
+      panel
+        .querySelector("[data-ink-drawer-close]")
+        ?.addEventListener("click", () => closeDrawer(panel));
+      panel
+        .closest("[data-ink-drawer-root]")
+        ?.querySelector("[data-ink-drawer-backdrop]")
+        ?.addEventListener("click", () => closeDrawer(panel));
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeDrawer(panel);
+        }
+      });
+    });
+  }
+
+  initDrawers();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initDrawers(root ?? document); } };
+</script>

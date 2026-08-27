@@ -1,0 +1,124 @@
+---
+interface Props {
+  label?: string;
+  direction?: "up" | "down" | "left" | "right";
+  class?: string;
+}
+
+const { label = "Quick actions", direction = "up", class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-speed", `ink-speed--${direction}`, className]} data-ink-speed {...rest}>
+  <div class="ink-speed__actions" data-ink-speed-actions hidden>
+    <slot />
+  </div>
+  <button
+    type="button"
+    class="ink-speed__trigger"
+    data-ink-speed-trigger
+    aria-expanded="false"
+    aria-label={label}
+  >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+    </svg>
+  </button>
+</div>
+
+<style>
+  .ink-speed {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-speed--down { flex-direction: column-reverse; }
+  .ink-speed--left { flex-direction: row-reverse; }
+  .ink-speed--right { flex-direction: row; }
+
+  .ink-speed__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ink-space-2);
+    align-items: center;
+  }
+
+  .ink-speed--left .ink-speed__actions,
+  .ink-speed--right .ink-speed__actions {
+    flex-direction: row;
+  }
+
+  .ink-speed__actions[hidden] { display: none; }
+
+  .ink-speed__actions > :global(a),
+  .ink-speed__actions > :global(button) {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    color: var(--ink-ink);
+  }
+
+  .ink-speed__trigger {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--ink-shadow-2);
+  }
+
+  .ink-speed__trigger svg {
+    transition: rotate var(--ink-duration-base) var(--ink-ease);
+  }
+
+  .ink-speed__trigger[aria-expanded="true"] svg { rotate: 45deg; }
+</style>
+
+<script>
+  function initSpeed(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-speed]").forEach((dial) => {
+      if (dial.dataset.inkBound) return;
+      dial.dataset.inkBound = "true";
+      const trigger = dial.querySelector<HTMLElement>("[data-ink-speed-trigger]");
+      const actions = dial.querySelector<HTMLElement>("[data-ink-speed-actions]");
+      if (!trigger || !actions) return;
+      const setOpen = (open: boolean) => {
+        trigger.setAttribute("aria-expanded", String(open));
+        actions.hidden = !open;
+      };
+      trigger.addEventListener("click", () =>
+        setOpen(trigger.getAttribute("aria-expanded") !== "true"),
+      );
+      dial.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setOpen(false);
+          trigger.focus();
+        }
+      });
+      document.addEventListener(
+        "pointerdown",
+        (event: MouseEvent) => {
+          if (event.target instanceof Node && !dial.contains(event.target)) setOpen(false);
+        },
+        true,
+      );
+    });
+  }
+
+  initSpeed();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initSpeed(root ?? document); } };
+</script>

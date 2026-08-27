@@ -33,3 +33,6 @@ export { default as Menubar } from "./components/Menubar.astro";
 export { default as ContextMenu } from "./components/ContextMenu.astro";
 export { default as NavigationMenu } from "./components/NavigationMenu.astro";
 export { default as CommandMenu } from "./components/CommandMenu.astro";
+export { default as Drawer } from "./components/Drawer.astro";
+export { default as Sheet } from "./components/Sheet.astro";
+export { default as SpeedDial } from "./components/SpeedDial.astro";

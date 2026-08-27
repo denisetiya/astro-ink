@@ -1,0 +1,14 @@
+---
+import Drawer from "./Drawer.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  class?: string;
+}
+
+const { id, label, class: className, ...rest } = Astro.props;
+---
+<Drawer id={id} label={label} side="bottom" class={["ink-sheet", className]} {...rest}>
+  <slot />
+</Drawer>

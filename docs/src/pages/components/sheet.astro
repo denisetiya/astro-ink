@@ -1,0 +1,31 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Sheet } from "astro-ink";
+---
+<Base title="Sheet">
+  <div class="docs-page">
+    <h1>Sheet</h1>
+    <p class="docs-lede">
+      A drawer that slides from the bottom. Same API, triggers, and events as
+      <code>Drawer</code>.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button data-ink-drawer="#sheet-demo">Open share sheet</Button>
+      <Sheet id="sheet-demo" label="Share">
+        <p style="color: var(--ink-muted); font-size: var(--ink-text-sm);">Send this page to a teammate.</p>
+        <Button type="button">Copy link</Button>
+      </Sheet>
+    </div>
+    <pre class="docs-code"><code>&lt;Button data-ink-drawer="#sheet-demo"&gt;Open share sheet&lt;/Button&gt;
+&lt;Sheet id="sheet-demo" label="Share"&gt;
+  &lt;Button type="button"&gt;Copy link&lt;/Button&gt;
+&lt;/Sheet&gt;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Same contract as Drawer: trap, Escape, backdrop, focus restore.</li>
+    </ul>
+  </div>
+</Base>
