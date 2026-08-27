@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import { CommandMenu } from "astro-ink";
+---
+<Base title="CommandMenu">
+  <div class="docs-page">
+    <h1>CommandMenu</h1>
+    <p class="docs-lede">
+      Jump anywhere with the keyboard. Press <kbd>Ctrl K</kbd>, type, and go.
+      One palette per page.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <CommandMenu
+        items={[
+          { label: "Home", href: "/", hint: "Landing" },
+          { label: "All components", href: "/components", hint: "Index" },
+          { label: "Button", href: "/components/button", hint: "Component" },
+          { label: "Alert", href: "/components/alert", hint: "Component" },
+          { label: "Tabs", href: "/components/tabs", hint: "Component" },
+          { label: "Text field", href: "/components/text-field", hint: "Component" },
+          { label: "Theming guide", href: "/guides/theming", hint: "Guide" },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;CommandMenu
+  items=&#123;[
+    &#123; label: "Home", href: "/" &#125;,
+    &#123; label: "Theming guide", href: "/guides/theming", hint: "Guide" &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>items</code></td><td><code>Array</code></td><td>-</td><td>Label + href + optional hint.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Type a command…</code></td><td>Filter input hint.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Command menu</code></td><td>Dialog landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Combobox + listbox with <code>aria-activedescendant</code>.</li>
+      <li>Escape closes and returns focus to the trigger.</li>
+      <li>Empty state announces itself in text, not silence.</li>
+    </ul>
+  </div>
+</Base>
