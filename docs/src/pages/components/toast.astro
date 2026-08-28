@@ -1,0 +1,76 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Toast } from "astro-ink";
+---
+<Base title="Toast">
+  <div class="docs-page">
+    <h1>Toast</h1>
+    <p class="docs-lede">
+      Fire-and-forget notifications. Your script dispatches an event; the
+      region queues, caps, and auto-dismisses.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button id="save-demo" type="button">Save</Button>
+      <Toast />
+    </div>
+    <pre class="docs-code"><code>&lt;Button id="save-demo" type="button"&gt;Save&lt;/Button&gt;
+&lt;Toast /&gt;
+&lt;script&gt;
+  document.getElementById("save-demo")
+    .addEventListener("click", () =&gt; &#123;
+      document.dispatchEvent(new CustomEvent("ink:toast:show", &#123;
+        detail: &#123; title: "Saved", body: "All changes synced." &#125;,
+      &#125;));
+    &#125;);
+&lt;/script&gt;</code></pre>
+
+    <h2>Event API</h2>
+    <pre class="docs-code"><code>document.dispatchEvent(new CustomEvent("ink:toast:show", &#123;
+  detail: &#123;
+    title: "Saved",              // required
+    body: "All changes synced.", // optional
+    variant: "success",          // info | success | warning | danger (data hook)
+    duration: 6000,              // optional, overrides region
+  &#125;,
+&#125;));</code></pre>
+    <p>Listen for <code>ink:toast:shown</code> and <code>ink:toast:dismissed</code> (both carry <code>detail.id</code>).</p>
+
+    <h2>Assertive region</h2>
+    <p>Errors need interruption. A second region can announce assertively:</p>
+    <div class="docs-example" style="display: grid;">
+      <Toast polite={false} />
+    </div>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>position</code></td><td><code>bottom-right | bottom-left | top-right | top-left | bottom-center</code></td><td><code>bottom-right</code></td><td>Screen corner.</td></tr>
+        <tr><td><code>duration</code></td><td><code>number</code></td><td><code>4000</code></td><td>Auto-dismiss ms.</td></tr>
+        <tr><td><code>max</code></td><td><code>number</code></td><td><code>3</code></td><td>Queue cap; oldest is dropped.</td></tr>
+        <tr><td><code>polite</code></td><td><code>boolean</code></td><td><code>true</code></td><td><code>false</code> renders an assertive alert region.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Live region announces without moving focus.</li>
+      <li>Every toast has a labeled dismiss button.</li>
+      <li>The cap stops notification spam; errors get the assertive region.</li>
+    </ul>
+  </div>
+</Base>
+
+<script>
+  document.getElementById("save-demo")?.addEventListener("click", () => {
+    document.dispatchEvent(
+      new CustomEvent("ink:toast:show", {
+        detail: { title: "Saved", body: "All changes synced." },
+      }),
+    );
+  });
+</script>

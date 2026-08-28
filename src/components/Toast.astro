@@ -1,0 +1,152 @@
+---
+interface Props {
+  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left" | "bottom-center";
+  duration?: number;
+  max?: number;
+  polite?: boolean;
+  class?: string;
+}
+
+const {
+  position = "bottom-right", duration = 4000, max = 3, polite = true,
+  class: className, ...rest
+} = Astro.props;
+---
+<div
+  class:list={["ink-toast-region", `ink-toast-region--${position}`, className]}
+  role={polite ? "status" : "alert"}
+  aria-live={polite ? "polite" : "assertive"}
+  data-ink-toast-region
+  data-duration={duration}
+  data-max={max}
+  {...rest}
+>
+</div>
+
+<style>
+  .ink-toast-region {
+    position: fixed;
+    display: grid;
+    gap: var(--ink-space-2);
+    width: min(22rem, calc(100vw - 2rem));
+    z-index: var(--ink-z-modal, 200);
+  }
+
+  .ink-toast-region--bottom-right { right: var(--ink-space-4); bottom: var(--ink-space-4); }
+  .ink-toast-region--bottom-left { left: var(--ink-space-4); bottom: var(--ink-space-4); }
+  .ink-toast-region--top-right { right: var(--ink-space-4); top: var(--ink-space-4); }
+  .ink-toast-region--top-left { left: var(--ink-space-4); top: var(--ink-space-4); }
+
+  .ink-toast-region--bottom-center {
+    left: 50%;
+    translate: -50% 0;
+    bottom: var(--ink-space-4);
+  }
+
+  :global(.ink-toast) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--ink-space-2);
+    align-items: start;
+    padding: var(--ink-space-3) var(--ink-space-4);
+    background: var(--ink-ink);
+    color: var(--ink-bg);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    font-size: var(--ink-text-sm);
+  }
+
+  :global(.ink-toast__title) { font-weight: var(--ink-font-weight-medium); }
+
+  :global(.ink-toast__body) {
+    color: color-mix(in srgb, currentColor 75%, transparent);
+    margin-top: 2px;
+  }
+
+  :global(.ink-toast__close) {
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+    padding: var(--ink-space-1);
+    border-radius: var(--ink-radius-sm);
+    min-width: 2rem;
+    min-height: 2rem;
+    font-size: var(--ink-text-base);
+    line-height: 1;
+  }
+
+  :global(.ink-toast__close:hover) { opacity: 1; }
+</style>
+
+<script>
+  interface ToastDetail {
+    title: string;
+    body?: string;
+    variant?: "info" | "success" | "warning" | "danger";
+    duration?: number;
+  }
+
+  let seq = 0;
+
+  function initToasts(root: ParentNode = document) {
+    const regions = Array.from(root.querySelectorAll<HTMLElement>("[data-ink-toast-region]"));
+    if (regions.length === 0) return;
+
+    const show = (detail: ToastDetail) => {
+      const region = regions[0]!;
+      const max = Number(region.dataset.max ?? 3);
+      const fallback = Number(region.dataset.duration ?? 4000);
+      const el = document.createElement("div");
+      el.className = "ink-toast";
+      el.dataset.toastId = String(++seq);
+      if (detail.variant) el.dataset.variant = detail.variant;
+      const titleWrap = document.createElement("div");
+      const strong = document.createElement("strong");
+      strong.className = "ink-toast__title";
+      strong.textContent = detail.title;
+      titleWrap.appendChild(strong);
+      if (detail.body) {
+        const body = document.createElement("p");
+        body.className = "ink-toast__body";
+        body.textContent = detail.body;
+        titleWrap.appendChild(body);
+      }
+      const close = document.createElement("button");
+      close.type = "button";
+      close.className = "ink-toast__close";
+      close.setAttribute("aria-label", "Dismiss notification");
+      close.textContent = "×";
+      const dismiss = () => {
+        el.remove();
+        document.dispatchEvent(
+          new CustomEvent("ink:toast:dismissed", { detail: { id: el.dataset.toastId } }),
+        );
+      };
+      close.addEventListener("click", dismiss);
+      el.appendChild(titleWrap);
+      el.appendChild(close);
+      region.appendChild(el);
+      while (region.children.length > max) region.firstElementChild?.remove();
+      document.dispatchEvent(
+        new CustomEvent("ink:toast:shown", { detail: { id: el.dataset.toastId } }),
+      );
+      setTimeout(dismiss, detail.duration ?? fallback);
+    };
+
+    const doc = document as unknown as { __inkToastBound?: boolean };
+    if (!doc.__inkToastBound) {
+      doc.__inkToastBound = true;
+      document.addEventListener("ink:toast:show", (event: Event) => {
+        show((event as CustomEvent<ToastDetail>).detail);
+      });
+    }
+  }
+
+  initToasts();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initToasts(root ?? document); } };
+</script>

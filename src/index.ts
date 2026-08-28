@@ -41,3 +41,4 @@ export { default as Tour } from "./components/Tour.astro";
 export { default as Dialog } from "./components/Dialog.astro";
 export { default as ConfirmDialog } from "./components/ConfirmDialog.astro";
 export { default as Backdrop } from "./components/Backdrop.astro";
+export { default as Toast } from "./components/Toast.astro";
