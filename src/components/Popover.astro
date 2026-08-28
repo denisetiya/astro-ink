@@ -1,0 +1,103 @@
+---
+interface Props {
+  label: string;
+  placement?: "top" | "bottom" | "left" | "right";
+  class?: string;
+}
+
+const { label, placement = "bottom", class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-popover", className]} data-ink-popover data-placement={placement} {...rest}>
+  <slot name="trigger" />
+  <div class="ink-popover__panel" data-ink-popover-panel role="group" aria-label={label} hidden>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .ink-popover {
+    position: relative;
+    display: inline-block;
+  }
+
+  .ink-popover__panel {
+    position: fixed;
+    min-width: 12rem;
+    max-width: min(20rem, calc(100vw - 2rem));
+    padding: var(--ink-space-3) var(--ink-space-4);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-popover__panel[hidden] { display: none; }
+</style>
+
+<script>
+  import { positionFloating } from "../scripts/popper";
+  import type { Placement } from "../scripts/popper";
+
+  function initPopovers(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-popover]").forEach((pop) => {
+      if (pop.dataset.inkBound) return;
+      pop.dataset.inkBound = "true";
+      const trigger = pop.querySelector<HTMLElement>("[data-ink-popover-trigger]");
+      const panel = pop.querySelector<HTMLElement>("[data-ink-popover-panel]");
+      if (!trigger || !panel) return;
+      trigger.setAttribute("aria-expanded", "false");
+
+      const place = () => {
+        positionFloating(trigger, panel, {
+          placement: (pop.dataset.placement ?? "bottom") as Placement,
+        });
+      };
+      const open = () => {
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        place();
+      };
+      const close = (refocus = false) => {
+        if (panel.hidden) return;
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        if (refocus) trigger.focus();
+      };
+
+      trigger.addEventListener("click", () => {
+        if (panel.hidden) open();
+        else close(false);
+      });
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close(true);
+        }
+      });
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close(true);
+        }
+      });
+      document.addEventListener(
+        "pointerdown",
+        (event: MouseEvent) => {
+          if (event.target instanceof Node && !pop.contains(event.target)) close(false);
+        },
+        true,
+      );
+      window.addEventListener("resize", () => {
+        if (!panel.hidden) place();
+      });
+    });
+  }
+
+  initPopovers();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initPopovers(root ?? document); } };
+</script>

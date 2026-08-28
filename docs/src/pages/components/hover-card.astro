@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { HoverCard } from "astro-ink";
+---
+<Base title="HoverCard">
+  <div class="docs-page">
+    <h1>HoverCard</h1>
+    <p class="docs-lede">
+      Preview on hover and on focus. Same positioning engine as
+      <code>Popover</code>, no click required.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" id="demo-hover">
+      <HoverCard label="Author preview">
+        <span slot="trigger" data-ink-hover-trigger tabindex="0" style="color: var(--ink-accent); cursor: pointer;">@denisetiya</span>
+        <p><strong>Denis Setiya</strong><br />Maintains astro-ink. 12 commits this week.</p>
+      </HoverCard>
+    </div>
+    <pre class="docs-code"><code>&lt;HoverCard label="Author preview"&gt;
+  &lt;span slot="trigger" data-ink-hover-trigger tabindex="0"&gt;@denisetiya&lt;/span&gt;
+  &lt;p&gt;&lt;strong&gt;Denis Setiya&lt;/strong&gt;...&lt;/p&gt;
+&lt;/HoverCard&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Panel landmark name.</td></tr>
+        <tr><td><code>delay</code></td><td><code>number</code></td><td><code>300</code></td><td>Open delay in ms (prevents flicker).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Focus opens the card too: mouse-only patterns are forbidden.</li>
+      <li>Escape closes; the trigger needs <code>tabindex="0"</code> when it is not natively focusable.</li>
+    </ul>
+  </div>
+</Base>

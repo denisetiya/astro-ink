@@ -1,0 +1,95 @@
+---
+interface Props {
+  label: string;
+  delay?: number;
+  class?: string;
+}
+
+const { label, delay = 300, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-hover", className]} data-ink-hover data-delay={delay} {...rest}>
+  <slot name="trigger" />
+  <div class="ink-hover__panel" data-ink-hover-panel role="group" aria-label={label} hidden>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .ink-hover {
+    position: relative;
+    display: inline-block;
+  }
+
+  .ink-hover__panel {
+    position: fixed;
+    min-width: 12rem;
+    max-width: min(20rem, calc(100vw - 2rem));
+    padding: var(--ink-space-3) var(--ink-space-4);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-hover__panel[hidden] { display: none; }
+</style>
+
+<script>
+  import { positionFloating } from "../scripts/popper";
+
+  function initHovers(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-hover]").forEach((card) => {
+      if (card.dataset.inkBound) return;
+      card.dataset.inkBound = "true";
+      const trigger = card.querySelector<HTMLElement>("[data-ink-hover-trigger]");
+      const panel = card.querySelector<HTMLElement>("[data-ink-hover-panel]");
+      if (!trigger || !panel) return;
+      const delay = Number(card.dataset.delay ?? 300);
+      let timer: number | undefined;
+
+      const place = () => positionFloating(trigger, panel, { placement: "bottom" });
+      const open = () => {
+        panel.hidden = false;
+        place();
+      };
+      const close = () => {
+        panel.hidden = true;
+      };
+
+      const schedule = () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(open, delay);
+      };
+      const cancel = () => window.clearTimeout(timer);
+
+      trigger.addEventListener("mouseenter", schedule);
+      trigger.addEventListener("mouseleave", () => {
+        cancel();
+        setTimeout(() => {
+          if (!card.matches(":hover")) close();
+        }, 100);
+      });
+      panel.addEventListener("mouseenter", cancel);
+      panel.addEventListener("mouseleave", close);
+      trigger.addEventListener("focus", open);
+      card.addEventListener("focusout", (event: FocusEvent) => {
+        if (event.relatedTarget instanceof Node && !card.contains(event.relatedTarget)) close();
+      });
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          trigger.focus();
+        }
+      });
+    });
+  }
+
+  initHovers();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initHovers(root ?? document); } };
+</script>

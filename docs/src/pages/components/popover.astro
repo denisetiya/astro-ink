@@ -1,0 +1,49 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Popover } from "astro-ink";
+---
+<Base title="Popover">
+  <div class="docs-page">
+    <h1>Popover</h1>
+    <p class="docs-lede">
+      Rich content on demand: click to pin, positioned with flip and clamping,
+      Escape to dismiss.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" id="demo-popover">
+      <Popover label="Storage details" placement="bottom">
+        <Button slot="trigger" variant="secondary" data-ink-popover-trigger>Details</Button>
+        <p><strong>42 GB</strong> of 100 GB used across 3 projects.</p>
+      </Popover>
+    </div>
+    <pre class="docs-code"><code>&lt;Popover label="Storage details" placement="bottom"&gt;
+  &lt;Button slot="trigger" variant="secondary" data-ink-popover-trigger&gt;Details&lt;/Button&gt;
+  &lt;p&gt;&lt;strong&gt;42 GB&lt;/strong&gt; of 100 GB used.&lt;/p&gt;
+&lt;/Popover&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Panel landmark name.</td></tr>
+        <tr><td><code>placement</code></td><td><code>top | bottom | left | right</code></td><td><code>bottom</code></td><td>Preferred side; flips when cramped.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Trigger contract</h2>
+    <p>
+      The trigger carries <code>slot="trigger"</code> and
+      <code>data-ink-popover-trigger</code>; the script sets
+      <code>aria-expanded</code> itself.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Panel is plain content, not modal: Tab moves in and out freely.</li>
+      <li>Escape closes and returns focus; outside clicks close quietly.</li>
+    </ul>
+  </div>
+</Base>
