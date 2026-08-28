@@ -5,6 +5,7 @@ interface Props {
   href?: string;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  id?: string;
   class?: string;
   "aria-label"?: string;
 }
@@ -15,6 +16,7 @@ const {
   href,
   type = "button",
   disabled = false,
+  id,
   class: className,
   ...rest
 } = Astro.props;
@@ -23,6 +25,7 @@ const Tag = href ? "a" : "button";
 ---
 <Tag
   class:list={["ink-button", `ink-button--${variant}`, `ink-button--${size}`, className]}
+  id={id}
   href={href}
   type={href ? undefined : type}
   disabled={href ? undefined : disabled || undefined}

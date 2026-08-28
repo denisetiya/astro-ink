@@ -55,14 +55,16 @@ and a custom theme template.
 
 ## Status
 
-21 components shipped: Button, Badge, Alert, Container, VisuallyHidden,
+39 components shipped: Button, Badge, Alert, Container, VisuallyHidden,
 Field, TextField, NumberInput, PasswordInput, SearchInput, Textarea, Select,
 Checkbox, Radio, RadioGroup, Switch, Slider, File, InputGroup, Form,
-ButtonGroup, ToggleButton.
+ButtonGroup, ToggleButton, Link, Breadcrumbs, Anchor, Navbar, Sidebar,
+Tabs, Pagination, Stepper, Menu, Menubar, ContextMenu, NavigationMenu,
+CommandMenu, Drawer, Sheet, SpeedDial, BottomNavigation, Tour.
 
-Upcoming: navigation (Tabs, Breadcrumbs, Pagination, Menu, Stepper, ...),
-overlay (Dialog, Toast, Tooltip, Popover, ...), data display, advanced inputs,
-Data Grid, pickers, and charts — 99 more on the roadmap.
+Upcoming: overlay feedback (Dialog, Toast, Tooltip, Popover, ...), data
+display, advanced inputs, Data Grid, pickers, and charts — 81 more on the
+roadmap.
 
 ## License
 
