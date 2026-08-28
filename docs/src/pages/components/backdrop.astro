@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Backdrop, Button } from "astro-ink";
+---
+<Base title="Backdrop">
+  <div class="docs-page">
+    <h1>Backdrop</h1>
+    <p class="docs-lede">
+      The dim layer behind overlays. Dialog, Drawer, and Tour manage their own;
+      reach for this one only when building a custom overlay.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button id="show-backdrop" type="button">Show backdrop (1.5s)</Button>
+      <Backdrop id="demo-backdrop" hidden />
+    </div>
+    <pre class="docs-code"><code>&lt;Backdrop id="demo-backdrop" hidden /&gt;
+&lt;script&gt;
+  document.getElementById("show-backdrop")
+    .addEventListener("click", () =&gt; &#123;
+      const b = document.getElementById("demo-backdrop");
+      b.hidden = false;
+      setTimeout(() =&gt; &#123; b.hidden = true; &#125;, 1500);
+    &#125;);
+&lt;/script&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>So your code can toggle <code>hidden</code>.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Always <code>aria-hidden</code>: it is scenery, never content.</li>
+      <li>Pair it with a focus-managed panel; never use it alone to block input.</li>
+    </ul>
+  </div>
+</Base>
+
+<script>
+  document.getElementById("show-backdrop")?.addEventListener("click", () => {
+    const b = document.getElementById("demo-backdrop");
+    if (!b) return;
+    b.hidden = false;
+    setTimeout(() => {
+      b.hidden = true;
+    }, 1500);
+  });
+</script>

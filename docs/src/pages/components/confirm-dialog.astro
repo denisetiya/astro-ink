@@ -1,0 +1,64 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, ConfirmDialog } from "astro-ink";
+---
+<Base title="ConfirmDialog">
+  <div class="docs-page">
+    <h1>ConfirmDialog</h1>
+    <p class="docs-lede">
+      Yes-or-no gate before a destructive action. Confirm dispatches an event
+      and closes; your script does the rest.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button variant="danger" data-ink-dialog="#confirm-demo">Delete project</Button>
+      <ConfirmDialog
+        id="confirm-demo"
+        title="Delete this project?"
+        body="This removes the project and every deployment in it. This cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Keep"
+        danger
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Button variant="danger" data-ink-dialog="#confirm-demo"&gt;Delete project&lt;/Button&gt;
+&lt;ConfirmDialog
+  id="confirm-demo"
+  title="Delete this project?"
+  body="This removes the project and every deployment in it."
+  confirmLabel="Delete"
+  danger
+/&gt;</code></pre>
+
+    <h2>Wiring confirm</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:confirm", (event) =&gt; &#123;
+  console.log("confirmed: " + event.detail.id);
+  // ...perform the destructive action
+&#125;);</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>title / body</code></td><td><code>string</code></td><td>-</td><td>Heading and explanation.</td></tr>
+        <tr><td><code>confirmLabel / cancelLabel</code></td><td><code>string</code></td><td><code>Confirm / Cancel</code></td><td>Button labels.</td></tr>
+        <tr><td><code>danger</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Danger-styled confirm button.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Same contract as Dialog: trap, Escape, backdrop, focus restore.</li>
+      <li>State the consequence in <code>body</code>, not just the question.</li>
+    </ul>
+  </div>
+</Base>
+
+<script>
+  document.addEventListener("ink:confirm", (event) => {
+    console.log("confirmed: " + (event as CustomEvent).detail.id);
+  });
+</script>

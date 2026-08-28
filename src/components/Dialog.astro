@@ -1,0 +1,156 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { id, label, size = "md", class: className, ...rest } = Astro.props;
+---
+<div class="ink-dialog-root" data-ink-dialog-root={id}>
+  <div class="ink-dialog__backdrop" data-ink-dialog-backdrop hidden></div>
+  <div
+    id={id}
+    class:list={["ink-dialog", `ink-dialog--${size}`, className]}
+    role="dialog"
+    aria-modal="true"
+    aria-label={label}
+    data-ink-dialog-panel
+    hidden
+    {...rest}
+  >
+    <div class="ink-dialog__body">
+      <slot />
+    </div>
+    <button type="button" class="ink-dialog__close" data-ink-dialog-close aria-label="Close dialog">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  .ink-dialog__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.45);
+    z-index: var(--ink-z-overlay, 100);
+  }
+
+  .ink-dialog__backdrop[hidden] { display: none; }
+
+  .ink-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: min(32rem, calc(100vw - 2rem));
+    max-height: 85dvh;
+    overflow: auto;
+    padding: var(--ink-space-5);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-lg);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-modal, 200);
+  }
+
+  .ink-dialog[hidden] { display: none; }
+
+  .ink-dialog--sm { width: min(22rem, calc(100vw - 2rem)); }
+  .ink-dialog--lg { width: min(48rem, calc(100vw - 2rem)); }
+
+  .ink-dialog__body {
+    display: grid;
+    gap: var(--ink-space-3);
+  }
+
+  .ink-dialog__close {
+    position: absolute;
+    top: var(--ink-space-3);
+    right: var(--ink-space-3);
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    border-radius: var(--ink-radius-sm);
+    cursor: pointer;
+  }
+
+  .ink-dialog__close:hover {
+    color: var(--ink-ink);
+    background: color-mix(in srgb, var(--ink-ink) 6%, transparent);
+  }
+</style>
+
+<script>
+  import { trapFocus } from "../scripts/focus-trap";
+
+  const traps = new Map<HTMLElement, () => void>();
+  const triggers = new WeakMap<HTMLElement, HTMLElement>();
+
+  const CONTENT_FOCUSABLE = 'a[href], button:not([disabled]):not([data-ink-dialog-close]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function openDialog(panel: HTMLElement, trigger: HTMLElement) {
+    const root = panel.closest<HTMLElement>("[data-ink-dialog-root]");
+    const backdrop = root?.querySelector<HTMLElement>("[data-ink-dialog-backdrop]");
+    panel.hidden = false;
+    if (backdrop) backdrop.hidden = false;
+    document.body.style.overflow = "hidden";
+    triggers.set(panel, trigger);
+    traps.set(panel, trapFocus(panel));
+    panel.querySelector<HTMLElement>(CONTENT_FOCUSABLE)?.focus();
+    panel.dispatchEvent(new CustomEvent("ink:dialog:open", { bubbles: true }));
+  }
+
+  function closeDialog(panel: HTMLElement) {
+    const root = panel.closest<HTMLElement>("[data-ink-dialog-root]");
+    const backdrop = root?.querySelector<HTMLElement>("[data-ink-dialog-backdrop]");
+    panel.hidden = true;
+    if (backdrop) backdrop.hidden = true;
+    document.body.style.overflow = "";
+    traps.get(panel)?.();
+    traps.delete(panel);
+    triggers.get(panel)?.focus();
+    panel.dispatchEvent(new CustomEvent("ink:dialog:close", { bubbles: true }));
+  }
+
+  function initDialogs(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-dialog-panel]").forEach((panel) => {
+      if (panel.dataset.inkBound) return;
+      panel.dataset.inkBound = "true";
+      const id = panel.id;
+      const panelTriggers = Array.from(
+        document.querySelectorAll<HTMLElement>(`[data-ink-dialog="#${CSS.escape(id)}"]`),
+      );
+      for (const trigger of panelTriggers) {
+        trigger.addEventListener("click", () => openDialog(panel, trigger));
+      }
+      panel
+        .querySelector("[data-ink-dialog-close]")
+        ?.addEventListener("click", () => closeDialog(panel));
+      panel
+        .closest("[data-ink-dialog-root]")
+        ?.querySelector("[data-ink-dialog-backdrop]")
+        ?.addEventListener("click", () => closeDialog(panel));
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeDialog(panel);
+        }
+      });
+    });
+  }
+
+  initDialogs();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initDialogs(root ?? document); } };
+</script>

@@ -38,3 +38,6 @@ export { default as Sheet } from "./components/Sheet.astro";
 export { default as SpeedDial } from "./components/SpeedDial.astro";
 export { default as BottomNavigation } from "./components/BottomNavigation.astro";
 export { default as Tour } from "./components/Tour.astro";
+export { default as Dialog } from "./components/Dialog.astro";
+export { default as ConfirmDialog } from "./components/ConfirmDialog.astro";
+export { default as Backdrop } from "./components/Backdrop.astro";

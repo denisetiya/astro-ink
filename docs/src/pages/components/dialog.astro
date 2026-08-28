@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Dialog, TextField } from "astro-ink";
+---
+<Base title="Dialog">
+  <div class="docs-page">
+    <h1>Dialog</h1>
+    <p class="docs-lede">
+      Modal task window. Focus is trapped inside, Escape closes, and focus
+      returns to the trigger.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Button data-ink-dialog="#demo">Invite member</Button>
+      <Dialog id="demo" label="Invite member">
+        <TextField id="invite-email" label="Email" type="email" placeholder="teammate@example.com" />
+        <Button type="button">Send invite</Button>
+      </Dialog>
+    </div>
+    <pre class="docs-code"><code>&lt;Button data-ink-dialog="#demo"&gt;Invite member&lt;/Button&gt;
+&lt;Dialog id="demo" label="Invite member"&gt;
+  &lt;TextField id="invite-email" label="Email" /&gt;
+  &lt;Button type="button"&gt;Send invite&lt;/Button&gt;
+&lt;/Dialog&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <p>Pass <code>size="sm" | "md" | "lg"</code>. ConfirmDialog locks to <code>sm</code>.</p>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:dialog:open", (event) =&gt; &#123;
+  console.log(event.target.id);
+&#125;);</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Targeted by <code>data-ink-dialog="#id"</code> triggers.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Dialog landmark name.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Panel width.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>role="dialog"</code> + <code>aria-modal</code> + focus trap via the shared helper.</li>
+      <li>Escape and backdrop click close; body scroll locks while open.</li>
+    </ul>
+  </div>
+</Base>

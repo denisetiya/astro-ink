@@ -1,0 +1,69 @@
+---
+import Dialog from "./Dialog.astro";
+import Button from "./Button.astro";
+
+interface Props {
+  id: string;
+  title: string;
+  body: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  danger?: boolean;
+  class?: string;
+}
+
+const {
+  id, title, body, confirmLabel = "Confirm", cancelLabel = "Cancel",
+  danger = false, class: className, ...rest
+} = Astro.props;
+---
+<Dialog id={id} label={title} size="sm" class={["ink-confirm", className]} {...rest}>
+  <h2 class="ink-confirm__title">{title}</h2>
+  <p class="ink-confirm__body">{body}</p>
+  <div class="ink-confirm__actions">
+    <Button variant="secondary" data-ink-dialog-close>{cancelLabel}</Button>
+    <Button variant={danger ? "danger" : "primary"} data-ink-confirm>{confirmLabel}</Button>
+  </div>
+</Dialog>
+
+<style>
+  .ink-confirm__title {
+    font-size: var(--ink-text-lg);
+    font-weight: var(--ink-font-weight-semibold);
+  }
+
+  .ink-confirm__body {
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+
+  .ink-confirm__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--ink-space-2);
+  }
+</style>
+
+<script>
+  function initConfirms(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-confirm]").forEach((btn) => {
+      if (btn.dataset.inkBound) return;
+      btn.dataset.inkBound = "true";
+      btn.addEventListener("click", () => {
+        const panel = btn.closest<HTMLElement>("[data-ink-dialog-panel]");
+        btn.dispatchEvent(
+          new CustomEvent("ink:confirm", { bubbles: true, detail: { id: panel?.id } }),
+        );
+        panel
+          ?.querySelector<HTMLElement>("[data-ink-dialog-close]")
+          ?.click();
+      });
+    });
+  }
+
+  initConfirms();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initConfirms(root ?? document); } };
+</script>
