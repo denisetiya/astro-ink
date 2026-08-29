@@ -1,0 +1,40 @@
+---
+import Base from "../../layouts/Base.astro";
+import { SkipLink } from "astro-ink";
+---
+<Base title="SkipLink">
+  <div class="docs-page">
+    <h1>SkipLink</h1>
+    <p class="docs-lede">
+      A shortcut past the chrome. Hidden until focused, then it takes
+      keyboard users straight to the content.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <SkipLink target="#demo-main" />
+      <main id="demo-main" tabindex="-1" style="padding: var(--ink-space-4); border: 1px solid var(--ink-border); border-radius: var(--ink-radius-md);">
+        <p>Focus the link above (Tab from the address bar on a page using it), then Enter.</p>
+      </main>
+    </div>
+    <pre class="docs-code"><code>&lt;SkipLink target="#demo-main" /&gt;
+&lt;main id="demo-main" tabindex="-1"&gt;...&lt;/main&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>target</code></td><td><code>string</code></td><td><code>#main</code></td><td>Id of the main content.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Skip to content</code></td><td>Link text.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>First focusable element on the page; your layout should render it right after <code>&lt;body&gt;</code>.</li>
+      <li>The target needs <code>tabindex="-1"</code> so focus can land on it.</li>
+    </ul>
+  </div>
+</Base>

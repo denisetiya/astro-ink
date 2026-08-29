@@ -1,0 +1,39 @@
+---
+interface Props {
+  target?: string;
+  label?: string;
+  class?: string;
+}
+
+const { target = "#main", label = "Skip to content", class: className, ...rest } = Astro.props;
+---
+<a class:list={["ink-skip", className]} href={target} {...rest}>{label}</a>
+
+<style>
+  .ink-skip {
+    position: absolute;
+    top: var(--ink-space-2);
+    left: var(--ink-space-2);
+    padding: var(--ink-space-2) var(--ink-space-4);
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    background: var(--ink-ink);
+    color: var(--ink-bg);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    border-radius: var(--ink-radius-md);
+    z-index: calc(var(--ink-z-modal, 200) + 10);
+    text-decoration: none;
+  }
+
+  .ink-skip:not(:focus):not(:focus-visible) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

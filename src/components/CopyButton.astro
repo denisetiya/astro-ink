@@ -1,0 +1,97 @@
+---
+interface Props {
+  text: string;
+  label?: string;
+  copiedLabel?: string;
+  class?: string;
+}
+
+const { text, label = "Copy to clipboard", copiedLabel = "Copied", class: className, ...rest } = Astro.props;
+---
+<button
+  type="button"
+  class:list={["ink-copy", className]}
+  data-ink-copy
+  data-text={text}
+  data-copied-label={copiedLabel}
+  aria-label={label}
+  title={label}
+  {...rest}
+>
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <rect x="4.5" y="4.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+    <path d="M9.5 4.5v-2a1 1 0 0 0-1-1h-5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2" stroke="currentColor" stroke-width="1.5" />
+  </svg>
+  <span class="ink-copy__text" data-ink-copy-text>{label}</span>
+</button>
+
+<style>
+  .ink-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    background: var(--ink-surface);
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    cursor: pointer;
+  }
+
+  .ink-copy:hover { border-color: var(--ink-ink); }
+</style>
+
+<script>
+  async function copyText(text: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      ta.remove();
+      return ok;
+    }
+  }
+
+  function initCopy(root: ParentNode = document) {
+    root.querySelectorAll<HTMLButtonElement>("[data-ink-copy]").forEach((btn) => {
+      if (btn.dataset.inkBound) return;
+      btn.dataset.inkBound = "true";
+      const label = btn.querySelector("[data-ink-copy-text]");
+      const original = label?.textContent ?? "";
+      btn.addEventListener("click", async () => {
+        const ok = await copyText(btn.dataset.text ?? "");
+        if (!ok || !label) return;
+        const done = btn.dataset.copiedLabel ?? "Copied";
+        label.textContent = done;
+        btn.setAttribute("aria-label", done);
+        btn.dispatchEvent(
+          new CustomEvent("ink:copy", { bubbles: true, detail: { text: btn.dataset.text } }),
+        );
+        setTimeout(() => {
+          label.textContent = original;
+          btn.setAttribute("aria-label", original);
+        }, 2000);
+      });
+    });
+  }
+
+  initCopy();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initCopy(root ?? document); } };
+</script>

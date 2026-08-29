@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { CopyButton } from "astro-ink";
+---
+<Base title="CopyButton">
+  <div class="docs-page">
+    <h1>CopyButton</h1>
+    <p class="docs-lede">
+      Copies text with confirmation. Clipboard API first, legacy fallback
+      second, label swap always.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <CopyButton text="npm install astro-ink" label="Copy install command" />
+    </div>
+    <pre class="docs-code"><code>&lt;CopyButton text="npm install astro-ink" label="Copy install command" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>text</code></td><td><code>string</code></td><td>-</td><td>Text to copy (required).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Copy to clipboard</code></td><td>Button label.</td></tr>
+        <tr><td><code>copiedLabel</code></td><td><code>string</code></td><td><code>Copied</code></td><td>Confirmation text (2s).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:copy", (event) =&gt; &#123;
+  console.log("copied: " + event.detail.text);
+&#125;);</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>State lives in the accessible name, so AT announces the confirmation.</li>
+      <li>44px minimum, visible focus, real button.</li>
+    </ul>
+  </div>
+</Base>

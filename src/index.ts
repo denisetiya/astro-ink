@@ -52,3 +52,5 @@ export { default as Banner } from "./components/Banner.astro";
 export { default as EmptyState } from "./components/EmptyState.astro";
 export { default as Result } from "./components/Result.astro";
 export { default as LoadingOverlay } from "./components/LoadingOverlay.astro";
+export { default as SkipLink } from "./components/SkipLink.astro";
+export { default as CopyButton } from "./components/CopyButton.astro";
