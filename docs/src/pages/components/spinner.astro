@@ -1,0 +1,38 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Spinner } from "astro-ink";
+---
+<Base title="Spinner">
+  <div class="docs-page">
+    <h1>Spinner</h1>
+    <p class="docs-lede">
+      Work with no finish line: search, save, sync. Announced politely, shown
+      briefly.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Spinner />
+      <Spinner size="sm" label="Saving draft…" />
+    </div>
+    <pre class="docs-code"><code>&lt;Spinner /&gt;
+&lt;Spinner size="sm" label="Saving draft…" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Loading…</code></td><td>Announced text, visually hidden.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md</code></td><td><code>md</code></td><td>Ring diameter.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>role="status"</code> announces once, then stays quiet.</li>
+      <li>Remove it when the work finishes; a permanent spinner is a lie.</li>
+    </ul>
+  </div>
+</Base>

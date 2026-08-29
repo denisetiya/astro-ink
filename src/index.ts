@@ -44,3 +44,6 @@ export { default as Backdrop } from "./components/Backdrop.astro";
 export { default as Toast } from "./components/Toast.astro";
 export { default as Popover } from "./components/Popover.astro";
 export { default as HoverCard } from "./components/HoverCard.astro";
+export { default as Progress } from "./components/Progress.astro";
+export { default as ProgressRing } from "./components/ProgressRing.astro";
+export { default as Spinner } from "./components/Spinner.astro";

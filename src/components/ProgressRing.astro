@@ -1,0 +1,68 @@
+---
+interface Props {
+  value?: number;
+  size?: number;
+  label: string;
+  class?: string;
+}
+
+const { value, size = 44, label, class: className, ...rest } = Astro.props;
+const R = 18;
+const C = 2 * Math.PI * R;
+const pct = value === undefined ? undefined : Math.min(100, Math.max(0, value));
+const offset = pct === undefined ? 0 : C - (pct / 100) * C;
+---
+<div class:list={["ink-ring", className]}>
+  <svg
+    class="ink-ring__svg"
+    width={size}
+    height={size}
+    viewBox="0 0 44 44"
+    role="progressbar"
+    aria-label={label}
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-valuenow={pct === undefined ? undefined : Math.round(pct)}
+    {...rest}
+  >
+    <circle class="ink-ring__track" cx="22" cy="22" r={R} />
+    <circle
+      class:list={["ink-ring__fill", pct === undefined && "ink-ring__fill--spin"]}
+      cx="22"
+      cy="22"
+      r={R}
+      stroke-dasharray={pct === undefined ? `${C * 0.25} ${C}` : `${C}`}
+      stroke-dashoffset={offset}
+      transform="rotate(-90 22 22)"
+    />
+  </svg>
+</div>
+
+<style>
+  .ink-ring__track {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ink-ink) 12%, var(--ink-bg));
+    stroke-width: 5;
+  }
+
+  .ink-ring__fill {
+    fill: none;
+    stroke: var(--ink-accent);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset var(--ink-duration-base) var(--ink-ease);
+  }
+
+  .ink-ring__fill--spin {
+    transform-origin: 22px 22px;
+    animation: ink-ring-spin 1.2s linear infinite;
+  }
+
+  @keyframes ink-ring-spin {
+    to { rotate: 360deg; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ink-ring__fill--spin { animation: none; }
+  }
+</style>

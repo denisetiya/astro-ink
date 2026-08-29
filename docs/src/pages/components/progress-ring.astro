@@ -1,0 +1,39 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ProgressRing } from "astro-ink";
+---
+<Base title="ProgressRing">
+  <div class="docs-page">
+    <h1>ProgressRing</h1>
+    <p class="docs-lede">
+      A circular progress for tight spaces: avatars, sync buttons, uploads in
+      table rows.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <ProgressRing label="Sync" value={75} />
+      <ProgressRing label="Indexing" />
+    </div>
+    <pre class="docs-code"><code>&lt;ProgressRing label="Sync" value=&#123;75&#125; /&gt;
+&lt;ProgressRing label="Indexing" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>value</code></td><td><code>number</code></td><td>-</td><td>0 to 100, clipped; omit to spin.</td></tr>
+        <tr><td><code>size</code></td><td><code>number</code></td><td><code>44</code></td><td>Pixel diameter.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Accessible name (required).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Same <code>progressbar</code> contract as Progress.</li>
+      <li>Spin pauses under reduced motion.</li>
+    </ul>
+  </div>
+</Base>
