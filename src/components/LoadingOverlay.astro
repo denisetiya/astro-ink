@@ -1,13 +1,14 @@
 ---
 interface Props {
+  id?: string;
   label?: string;
   visible?: boolean;
   class?: string;
 }
 
-const { label = "Loading…", visible = true, class: className, ...rest } = Astro.props;
+const { id, label = "Loading…", visible = true, class: className, ...rest } = Astro.props;
 ---
-<div class:list={["ink-loading", className]} data-ink-loading {...rest}>
+<div id={id} class:list={["ink-loading", className]} data-ink-loading {...rest}>
   <slot />
   <div class="ink-loading__overlay" data-ink-loading-overlay hidden={!visible || undefined}>
     <span class="ink-loading__box" role="status" aria-label={label}>
