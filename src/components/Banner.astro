@@ -1,0 +1,73 @@
+---
+interface Props {
+  variant?: "info" | "success" | "warning" | "danger";
+  dismissLabel?: string;
+  class?: string;
+}
+
+const { variant = "info", dismissLabel, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-banner", `ink-banner--${variant}`, className]} role="status" data-ink-banner {...rest}>
+  <p class="ink-banner__body"><slot /></p>
+  {dismissLabel && (
+    <button type="button" class="ink-banner__close" data-ink-banner-close aria-label={dismissLabel}>×</button>
+  )}
+</div>
+
+<style>
+  .ink-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-3);
+    padding: var(--ink-space-2) var(--ink-space-4);
+    font-size: var(--ink-text-sm);
+    border-bottom: 1px solid var(--ink-border);
+  }
+
+  .ink-banner__body {
+    flex: 1;
+    color: var(--ink-ink);
+  }
+
+  .ink-banner--info { background: color-mix(in srgb, var(--ink-info) 8%, var(--ink-surface)); }
+  .ink-banner--success { background: color-mix(in srgb, var(--ink-success) 8%, var(--ink-surface)); }
+  .ink-banner--warning { background: color-mix(in srgb, var(--ink-warning) 10%, var(--ink-surface)); }
+  .ink-banner--danger { background: color-mix(in srgb, var(--ink-danger) 8%, var(--ink-surface)); }
+
+  .ink-banner__close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+    font-size: var(--ink-text-lg);
+    line-height: 1;
+    padding: var(--ink-space-1) var(--ink-space-2);
+    border-radius: var(--ink-radius-sm);
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .ink-banner__close:hover { opacity: 1; }
+</style>
+
+<script>
+  function initBanners(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-banner-close]").forEach((btn) => {
+      if (btn.dataset.inkBound) return;
+      btn.dataset.inkBound = "true";
+      btn.addEventListener("click", () => {
+        const banner = btn.closest<HTMLElement>("[data-ink-banner]");
+        if (!banner) return;
+        banner.dispatchEvent(new CustomEvent("ink:banner:dismiss", { bubbles: true }));
+        banner.remove();
+      });
+    });
+  }
+
+  initBanners();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initBanners(root ?? document); } };
+</script>

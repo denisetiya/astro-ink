@@ -1,0 +1,41 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  title: string;
+  body?: string;
+  actionLabel?: string;
+  actionHref?: string;
+  class?: string;
+}
+
+const { title, body, actionLabel, actionHref = "#", class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-empty", className]} {...rest}>
+  <slot name="icon" />
+  <p class="ink-empty__title">{title}</p>
+  {body && <p class="ink-empty__body">{body}</p>}
+  {actionLabel && <Button variant="secondary" href={actionHref}>{actionLabel}</Button>}
+</div>
+
+<style>
+  .ink-empty {
+    display: grid;
+    justify-items: center;
+    gap: var(--ink-space-2);
+    padding: var(--ink-space-7) var(--ink-space-4);
+    text-align: center;
+    border: 1px dashed var(--ink-border-strong);
+    border-radius: var(--ink-radius-lg);
+  }
+
+  .ink-empty__title {
+    font-weight: var(--ink-font-weight-semibold);
+  }
+
+  .ink-empty__body {
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+    max-width: 40ch;
+  }
+</style>

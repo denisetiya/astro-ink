@@ -1,0 +1,37 @@
+---
+interface Props {
+  variant?: "info" | "success" | "warning" | "danger";
+  title?: string;
+  class?: string;
+}
+
+const { variant = "info", title, class: className, ...rest } = Astro.props;
+---
+<section
+  class:list={["ink-callout", `ink-callout--${variant}`, className]}
+  aria-label={title}
+  {...rest}
+>
+  {title && <p class="ink-callout__title">{title}</p>}
+  <div class="ink-callout__body"><slot /></div>
+</section>
+
+<style>
+  .ink-callout {
+    border-inline-start: 3px solid var(--ink-border-strong);
+    padding: var(--ink-space-3) var(--ink-space-4);
+    background: color-mix(in srgb, var(--ink-ink) 3%, var(--ink-surface));
+    border-radius: 0 var(--ink-radius-md) var(--ink-radius-md) 0;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-callout__title {
+    font-weight: var(--ink-font-weight-semibold);
+    margin-bottom: var(--ink-space-1);
+  }
+
+  .ink-callout--info { border-inline-start-color: var(--ink-info); }
+  .ink-callout--success { border-inline-start-color: var(--ink-success); }
+  .ink-callout--warning { border-inline-start-color: var(--ink-warning); }
+  .ink-callout--danger { border-inline-start-color: var(--ink-danger); }
+</style>

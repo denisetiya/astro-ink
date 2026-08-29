@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import { EmptyState } from "astro-ink";
+---
+<Base title="EmptyState">
+  <div class="docs-page">
+    <h1>EmptyState</h1>
+    <p class="docs-lede">
+      Nothing here yet, and exactly what to do about it. Honest empty states
+      replace fabricated activity feeds.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <EmptyState
+        title="No projects yet"
+        body="Projects hold your pages, themes, and deploys. Create the first one to get going."
+        actionLabel="Create project"
+        actionHref="/components"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;EmptyState
+  title="No projects yet"
+  body="Projects hold your pages, themes, and deploys."
+  actionLabel="Create project"
+  actionHref="/components"
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>title</code></td><td><code>string</code></td><td>-</td><td>Why it is empty.</td></tr>
+        <tr><td><code>body</code></td><td><code>string</code></td><td>-</td><td>One sentence of context.</td></tr>
+        <tr><td><code>actionLabel / actionHref</code></td><td><code>string</code></td><td>-</td><td>The one action that fills it.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Empty states name the cause AND the next action (R-27 done right).</li>
+      <li>First run, filtered-to-nothing, and permission-denied are different copies: write them separately.</li>
+    </ul>
+  </div>
+</Base>

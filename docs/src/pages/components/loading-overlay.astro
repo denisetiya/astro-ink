@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, LoadingOverlay } from "astro-ink";
+---
+<Base title="LoadingOverlay">
+  <div class="docs-page">
+    <h1>LoadingOverlay</h1>
+    <p class="docs-lede">
+      Dims a region while it reloads and says what is happening. Wraps your
+      content; the overlay toggles with <code>hidden</code>.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <LoadingOverlay id="demo-loading" label="Refreshing data…" visible={false}>
+        <div style="padding: var(--ink-space-5); border: 1px solid var(--ink-border); border-radius: var(--ink-radius-md);">
+          <p><strong>Dashboard snapshot</strong></p>
+          <p style="color: var(--ink-muted); font-size: var(--ink-text-sm);">12 charts, updated 2 minutes ago.</p>
+        </div>
+      </LoadingOverlay>
+      <Button id="toggle-loading" type="button">Toggle loading</Button>
+    </div>
+    <pre class="docs-code"><code>&lt;LoadingOverlay label="Refreshing data…" visible=&#123;false&#125;&gt;
+  ...your content...
+&lt;/LoadingOverlay&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Loading…</code></td><td>Announced text (explicit aria-label).</td></tr>
+        <tr><td><code>visible</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Show the overlay.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Announces via <code>role="status"</code> with an explicit label (Chromium ignores clipped text).</li>
+      <li>Says WHAT is loading, not just "loading".</li>
+    </ul>
+  </div>
+</Base>
+
+<script>
+  document.getElementById("toggle-loading")?.addEventListener("click", () => {
+    const overlay = document.querySelector("#demo-loading [data-ink-loading-overlay]");
+    if (overlay instanceof HTMLElement) overlay.hidden = !overlay.hidden;
+  });
+</script>

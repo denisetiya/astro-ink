@@ -1,0 +1,49 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Result } from "astro-ink";
+---
+<Base title="Result">
+  <div class="docs-page">
+    <h1>Result</h1>
+    <p class="docs-lede">
+      The end of a flow: success, error, or information with next steps. Big
+      enough to land, calm enough to trust.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Result
+        status="success"
+        title="Payment complete"
+        body="Receipt INV-2041 was emailed. Your plan upgrades immediately."
+      >
+        <Button href="/components">Back to components</Button>
+        <Button variant="secondary" href="/guides/theming">View receipt</Button>
+      </Result>
+    </div>
+    <pre class="docs-code"><code>&lt;Result
+  status="success"
+  title="Payment complete"
+  body="Receipt INV-2041 was emailed."
+&gt;
+  &lt;Button href="/components"&gt;Back to components&lt;/Button&gt;
+&lt;/Result&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>status</code></td><td><code>success | error | info</code></td><td>-</td><td>Glyph + accent.</td></tr>
+        <tr><td><code>title / body</code></td><td><code>string</code></td><td>-</td><td>Outcome + next step context.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Title is a real heading; the glyph is decorative.</li>
+      <li>Actions are real buttons/links in the default slot.</li>
+    </ul>
+  </div>
+</Base>

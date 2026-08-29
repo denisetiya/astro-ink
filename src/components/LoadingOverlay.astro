@@ -1,0 +1,61 @@
+---
+interface Props {
+  label?: string;
+  visible?: boolean;
+  class?: string;
+}
+
+const { label = "Loading…", visible = true, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-loading", className]} data-ink-loading {...rest}>
+  <slot />
+  <div class="ink-loading__overlay" data-ink-loading-overlay hidden={!visible || undefined}>
+    <span class="ink-loading__box" role="status" aria-label={label}>
+      <span class="ink-loading__ring" aria-hidden="true"></span>
+    </span>
+  </div>
+</div>
+
+<style>
+  .ink-loading { position: relative; }
+
+  .ink-loading__overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    background: color-mix(in srgb, var(--ink-bg) 70%, transparent);
+    border-radius: inherit;
+    z-index: 1;
+  }
+
+  .ink-loading__overlay[hidden] { display: none; }
+
+  .ink-loading__box {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    padding: var(--ink-space-3) var(--ink-space-4);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-1);
+  }
+
+  .ink-loading__ring {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    border: 2.5px solid color-mix(in srgb, var(--ink-ink) 15%, transparent);
+    border-top-color: var(--ink-accent);
+    animation: ink-spin 0.8s linear infinite;
+  }
+
+  @keyframes ink-spin {
+    to { rotate: 360deg; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ink-loading__ring { animation-duration: 2.4s; }
+  }
+</style>
