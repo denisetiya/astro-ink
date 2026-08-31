@@ -1,0 +1,70 @@
+---
+interface Props {
+  sidebarWidth?: string;
+  sidebarLabel?: string;
+  mainLabel?: string;
+  class?: string;
+}
+
+const {
+  sidebarWidth = "16rem",
+  sidebarLabel = "Sidebar",
+  mainLabel = "Content",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+<div class:list={["ink-shell", className]} style={`--ink-shell-sidebar: ${sidebarWidth};`} {...rest}>
+  <header class="ink-shell__header">
+    <slot name="header" />
+  </header>
+  <div class="ink-shell__body">
+    <aside class="ink-shell__sidebar" aria-label={sidebarLabel}>
+      <slot name="sidebar" />
+    </aside>
+    <main class="ink-shell__main" aria-label={mainLabel}>
+      <slot />
+    </main>
+  </div>
+</div>
+
+<style>
+  .ink-shell {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 60dvh;
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-lg);
+    overflow: hidden;
+  }
+
+  .ink-shell__header {
+    border-bottom: 1px solid var(--ink-border);
+    background: var(--ink-surface);
+    padding: var(--ink-space-3) var(--ink-space-4);
+  }
+
+  .ink-shell__body {
+    display: grid;
+    grid-template-columns: var(--ink-shell-sidebar, 16rem) 1fr;
+  }
+
+  .ink-shell__sidebar {
+    border-inline-end: 1px solid var(--ink-border);
+    padding: var(--ink-space-4);
+    background: color-mix(in srgb, var(--ink-ink) 2%, var(--ink-surface));
+  }
+
+  .ink-shell__main {
+    padding: var(--ink-space-4);
+    min-width: 0;
+  }
+
+  @media (max-width: 47.99rem) {
+    .ink-shell__body { grid-template-columns: 1fr; }
+    .ink-shell__sidebar {
+      border-inline-end: none;
+      border-bottom: 1px solid var(--ink-border);
+    }
+  }
+</style>

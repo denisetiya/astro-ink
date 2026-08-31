@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { AppShell } from "astro-ink";
+---
+<Base title="AppShell">
+  <div class="docs-page">
+    <h1>AppShell</h1>
+    <p class="docs-lede">
+      A full page frame: header bar, sidebar, content. Sidebar folds above
+      the content on small screens.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <AppShell mainLabel="Demo content">
+        <p slot="header" style="font-weight: var(--ink-font-weight-semibold);">Acme console</p>
+        <nav slot="sidebar" aria-label="Demo">
+          <p style="font-size: var(--ink-text-sm);">Sidebar links</p>
+        </nav>
+        <p>Main content lives here.</p>
+      </AppShell>
+    </div>
+    <pre class="docs-code"><code>&lt;AppShell mainLabel="Demo content"&gt;
+  &lt;p slot="header"&gt;Acme console&lt;/p&gt;
+  &lt;nav slot="sidebar" aria-label="Demo"&gt;...&lt;/nav&gt;
+  &lt;p&gt;Main content lives here.&lt;/p&gt;
+&lt;/AppShell&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>sidebarWidth</code></td><td><code>string</code></td><td><code>16rem</code></td><td>Sidebar column width.</td></tr>
+        <tr><td><code>sidebarLabel / mainLabel</code></td><td><code>string</code></td><td><code>Sidebar / Content</code></td><td>Landmark names.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-shell-sidebar: 16rem;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real <code>header</code>, <code>aside</code>, and <code>main</code> landmarks with names.</li>
+      <li>Sidebar stacks above content on mobile; DOM order never changes.</li>
+    </ul>
+  </div>
+</Base>

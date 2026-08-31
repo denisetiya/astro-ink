@@ -60,3 +60,5 @@ export { default as Kbd } from "./components/Kbd.astro";
 export { default as Paper } from "./components/Paper.astro";
 export { default as Grid } from "./components/Grid.astro";
 export { default as Stack } from "./components/Stack.astro";
+export { default as AppShell } from "./components/AppShell.astro";
+export { default as PageHeader } from "./components/PageHeader.astro";

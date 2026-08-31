@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, PageHeader } from "astro-ink";
+---
+<Base title="PageHeader">
+  <div class="docs-page">
+    <h1>PageHeader</h1>
+    <p class="docs-lede">
+      Page title, supporting line, and actions in one row. Description caps
+      at 60 characters wide for comfortable reading.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <PageHeader
+        title="Projects"
+        description="Ship pages, themes, and deploys from one console."
+        level={2}
+      >
+        <Button slot="actions">New project</Button>
+        <Button slot="actions" variant="secondary">Import</Button>
+      </PageHeader>
+    </div>
+    <pre class="docs-code"><code>&lt;PageHeader title="Projects" description="..."&gt;
+  &lt;Button slot="actions"&gt;New project&lt;/Button&gt;
+&lt;/PageHeader&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>title</code></td><td><code>string</code></td><td>-</td><td>Page heading.</td></tr>
+        <tr><td><code>description</code></td><td><code>string</code></td><td>-</td><td>One supporting line.</td></tr>
+        <tr><td><code>level</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>Heading level (use 2 inside demo/docs contexts).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>One h1 per page: pass <code>level={2}</code> when the page title already exists.</li>
+      <li>Actions sit in a labeled group next to the title.</li>
+    </ul>
+  </div>
+</Base>
