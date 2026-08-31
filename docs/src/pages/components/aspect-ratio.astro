@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { AspectRatio } from "astro-ink";
+---
+<Base title="AspectRatio">
+  <div class="docs-page">
+    <h1>AspectRatio</h1>
+    <p class="docs-lede">
+      Media boxes that keep their shape: video embeds, thumbnails, gallery
+      tiles. The child fills the frame.
+    </p>
+
+    <h2>Examples</h2>
+    <div class="docs-example" style="display: grid;">
+      <AspectRatio ratio="16 / 9">
+        <div style="display: grid; place-content: center; background: color-mix(in srgb, var(--ink-accent) 18%, var(--ink-surface)); color: var(--ink-ink); font-size: var(--ink-text-sm);">16 : 9</div>
+      </AspectRatio>
+      <AspectRatio ratio="1 / 1">
+        <div style="display: grid; place-content: center; background: color-mix(in srgb, var(--ink-info) 15%, var(--ink-surface)); color: var(--ink-ink); font-size: var(--ink-text-sm);">1 : 1</div>
+      </AspectRatio>
+    </div>
+    <pre class="docs-code"><code>&lt;AspectRatio ratio="16 / 9"&gt;
+  &lt;img src="..." alt="..." /&gt;
+&lt;/AspectRatio&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>ratio</code></td><td><code>string</code></td><td><code>16 / 9</code></td><td>Any CSS aspect-ratio value.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Layout only: alt text and captions live on the media inside.</li>
+      <li>Demos use labeled color blocks, never fake imagery.</li>
+    </ul>
+  </div>
+</Base>

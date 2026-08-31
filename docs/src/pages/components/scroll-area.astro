@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ScrollArea } from "astro-ink";
+---
+<Base title="ScrollArea">
+  <div class="docs-page">
+    <h1>ScrollArea</h1>
+    <p class="docs-lede">
+      A capped region that scrolls: long option lists, logs, terms. Styled
+      scrollbars, keyboard scrollable.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <ScrollArea maxHeight="10rem">
+        <p>Line one. Terms of service, condensed.</p>
+        <p>Line two. You grant us nothing and we take nothing.</p>
+        <p>Line three. Data stays in your account.</p>
+        <p>Line four. Export anytime, in open formats.</p>
+        <p>Line five. Delete means delete, within 30 days.</p>
+        <p>Line six. Questions go to support, answered by humans.</p>
+        <p>Line seven. That is the whole agreement.</p>
+        <p>Line eight. Signed, the astro-ink team.</p>
+      </ScrollArea>
+    </div>
+    <pre class="docs-code"><code>&lt;ScrollArea maxHeight="10rem"&gt;
+  &lt;p&gt;Line one...&lt;/p&gt;
+  ...
+&lt;/ScrollArea&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>maxHeight</code></td><td><code>string</code></td><td><code>16rem</code></td><td>Cap before scrolling.</td></tr>
+        <tr><td><code>axis</code></td><td><code>y | x | both</code></td><td><code>y</code></td><td>Scroll axes.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>tabindex="0"</code> makes the region keyboard scrollable.</li>
+      <li>Keep focusable content rare inside scroll regions; the region itself scrolls with arrows.</li>
+    </ul>
+  </div>
+</Base>

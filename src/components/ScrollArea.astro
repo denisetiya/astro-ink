@@ -1,0 +1,46 @@
+---
+interface Props {
+  maxHeight?: string;
+  axis?: "y" | "x" | "both";
+  class?: string;
+}
+
+const { maxHeight = "16rem", axis = "y", class: className, ...rest } = Astro.props;
+---
+<div
+  class:list={["ink-scroll", `ink-scroll--${axis}`, className]}
+  style={`max-height: ${maxHeight};`}
+  tabindex="0"
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-scroll {
+    overflow: auto;
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-radius-md);
+  }
+
+  .ink-scroll--y { overflow-x: hidden; }
+  .ink-scroll--x { overflow-y: hidden; }
+
+  .ink-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .ink-scroll::-webkit-scrollbar-thumb {
+    background: var(--ink-border-strong);
+    border-radius: 999px;
+    border: 2px solid var(--ink-surface);
+  }
+
+  .ink-scroll::-webkit-scrollbar-track { background: transparent; }
+
+  .ink-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-border-strong) transparent;
+  }
+</style>

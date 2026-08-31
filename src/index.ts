@@ -62,3 +62,6 @@ export { default as Grid } from "./components/Grid.astro";
 export { default as Stack } from "./components/Stack.astro";
 export { default as AppShell } from "./components/AppShell.astro";
 export { default as PageHeader } from "./components/PageHeader.astro";
+export { default as ScrollArea } from "./components/ScrollArea.astro";
+export { default as ScrollShadow } from "./components/ScrollShadow.astro";
+export { default as AspectRatio } from "./components/AspectRatio.astro";

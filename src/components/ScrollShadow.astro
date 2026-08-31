@@ -1,0 +1,78 @@
+---
+interface Props {
+  maxHeight?: string;
+  class?: string;
+}
+
+const { maxHeight = "16rem", class: className, ...rest } = Astro.props;
+---
+<div
+  class:list={["ink-scrollshadow", className]}
+  style={`max-height: ${maxHeight};`}
+  data-ink-scrollshadow
+  data-top="false"
+  data-bottom="false"
+  tabindex="0"
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-scrollshadow {
+    position: relative;
+    overflow: auto;
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-radius-md);
+  }
+
+  .ink-scrollshadow::before,
+  .ink-scrollshadow::after {
+    content: "";
+    position: sticky;
+    display: block;
+    height: var(--ink-space-3);
+    margin-bottom: calc(var(--ink-space-3) * -1);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--ink-duration-fast) var(--ink-ease);
+    z-index: 1;
+  }
+
+  .ink-scrollshadow::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.12), transparent);
+  }
+
+  .ink-scrollshadow::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.12), transparent);
+  }
+
+  .ink-scrollshadow[data-top="true"]::before { opacity: 1; }
+  .ink-scrollshadow[data-bottom="true"]::after { opacity: 1; }
+</style>
+
+<script>
+  function sync(el: HTMLElement) {
+    const slop = 4;
+    el.dataset.top = String(el.scrollTop > slop);
+    el.dataset.bottom = String(el.scrollTop + el.clientHeight < el.scrollHeight - slop);
+  }
+
+  function initScrollShadows(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-scrollshadow]").forEach((el) => {
+      if (el.dataset.inkBound) return;
+      el.dataset.inkBound = "true";
+      const onScroll = () => sync(el);
+      el.addEventListener("scroll", onScroll, { passive: true });
+      sync(el);
+    });
+  }
+
+  initScrollShadows();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initScrollShadows(root ?? document); } };
+</script>
