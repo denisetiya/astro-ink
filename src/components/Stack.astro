@@ -1,0 +1,47 @@
+---
+interface Props {
+  direction?: "row" | "column";
+  gap?: "sm" | "md" | "lg";
+  align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "center" | "end" | "between";
+  wrap?: boolean;
+  class?: string;
+}
+
+const {
+  direction = "column", gap = "md", align = "stretch",
+  justify = "start", wrap = false, class: className, ...rest
+} = Astro.props;
+---
+<div
+  class:list={[
+    "ink-stack",
+    `ink-stack--${direction}`,
+    `ink-stack--gap-${gap}`,
+    `ink-stack--align-${align}`,
+    `ink-stack--justify-${justify}`,
+    wrap && "ink-stack--wrap",
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-stack { display: flex; }
+  .ink-stack--row { flex-direction: row; }
+  .ink-stack--column { flex-direction: column; }
+  .ink-stack--gap-sm { gap: var(--ink-space-2); }
+  .ink-stack--gap-md { gap: var(--ink-space-4); }
+  .ink-stack--gap-lg { gap: var(--ink-space-6); }
+  .ink-stack--align-start { align-items: flex-start; }
+  .ink-stack--align-center { align-items: center; }
+  .ink-stack--align-end { align-items: flex-end; }
+  .ink-stack--align-stretch { align-items: stretch; }
+  .ink-stack--justify-start { justify-content: flex-start; }
+  .ink-stack--justify-center { justify-content: center; }
+  .ink-stack--justify-end { justify-content: flex-end; }
+  .ink-stack--justify-between { justify-content: space-between; }
+  .ink-stack--wrap { flex-wrap: wrap; }
+</style>

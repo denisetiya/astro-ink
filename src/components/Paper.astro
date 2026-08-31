@@ -1,0 +1,40 @@
+---
+interface Props {
+  elevation?: 0 | 1 | 2;
+  padding?: "none" | "sm" | "md" | "lg";
+  square?: boolean;
+  class?: string;
+}
+
+const { elevation = 1, padding = "md", square = false, class: className, ...rest } = Astro.props;
+---
+<div
+  class:list={[
+    "ink-paper",
+    `ink-paper--e${elevation}`,
+    `ink-paper--pad-${padding}`,
+    square && "ink-paper--square",
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-paper {
+    background: var(--ink-paper-bg, var(--ink-surface));
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-paper-radius, var(--ink-radius-lg));
+  }
+
+  .ink-paper--square { border-radius: 0; }
+  .ink-paper--e0 { box-shadow: none; }
+  .ink-paper--e1 { box-shadow: var(--ink-shadow-1); }
+  .ink-paper--e2 { box-shadow: var(--ink-shadow-2); }
+
+  .ink-paper--pad-none { padding: 0; }
+  .ink-paper--pad-sm { padding: var(--ink-space-3); }
+  .ink-paper--pad-md { padding: var(--ink-space-4); }
+  .ink-paper--pad-lg { padding: var(--ink-space-6); }
+</style>

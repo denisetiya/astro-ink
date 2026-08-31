@@ -1,0 +1,25 @@
+---
+interface Props {
+  cols?: number;
+  gap?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { cols = 12, gap = "md", class: className, ...rest } = Astro.props;
+const gaps = { sm: "var(--ink-space-2)", md: "var(--ink-space-4)", lg: "var(--ink-space-6)" } as const;
+---
+<div
+  class:list={["ink-grid", className]}
+  style={`--ink-grid-cols: ${cols}; --ink-grid-gap: ${gaps[gap]};`}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ink-grid-cols, 12), 1fr);
+    gap: var(--ink-grid-gap, var(--ink-space-4));
+  }
+</style>

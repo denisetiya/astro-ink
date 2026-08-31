@@ -57,3 +57,6 @@ export { default as CopyButton } from "./components/CopyButton.astro";
 export { default as Chip } from "./components/Chip.astro";
 export { default as Divider } from "./components/Divider.astro";
 export { default as Kbd } from "./components/Kbd.astro";
+export { default as Paper } from "./components/Paper.astro";
+export { default as Grid } from "./components/Grid.astro";
+export { default as Stack } from "./components/Stack.astro";

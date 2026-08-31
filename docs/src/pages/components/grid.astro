@@ -1,0 +1,50 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Grid, Paper } from "astro-ink";
+---
+<Base title="Grid">
+  <div class="docs-page">
+    <h1>Grid</h1>
+    <p class="docs-lede">
+      A 12-column grid by default. Items span with plain
+      <code>grid-column</code>: no GridItem API to learn.
+    </p>
+
+    <h2>Four columns</h2>
+    <div class="docs-example" style="display: grid;">
+      <Grid cols={4} gap="md">
+        <Paper padding="sm">One</Paper>
+        <Paper padding="sm" style="grid-column: span 2;">Two wide</Paper>
+        <Paper padding="sm">Three</Paper>
+      </Grid>
+    </div>
+    <pre class="docs-code"><code>&lt;Grid cols=&#123;4&#125; gap="md"&gt;
+  &lt;Paper padding="sm"&gt;One&lt;/Paper&gt;
+  &lt;Paper padding="sm" style="grid-column: span 2;"&gt;Two wide&lt;/Paper&gt;
+  &lt;Paper padding="sm"&gt;Three&lt;/Paper&gt;
+&lt;/Grid&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>cols</code></td><td><code>number</code></td><td><code>12</code></td><td>Column count.</td></tr>
+        <tr><td><code>gap</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Gutter size.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-grid-cols: 12;
+  --ink-grid-gap: 1rem;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>DOM order is the reading order: span with CSS, never reorder content visually.</li>
+      <li>Layout has no semantics; the grid is invisible to AT.</li>
+    </ul>
+  </div>
+</Base>

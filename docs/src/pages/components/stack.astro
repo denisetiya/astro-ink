@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Stack } from "astro-ink";
+---
+<Base title="Stack">
+  <div class="docs-page">
+    <h1>Stack</h1>
+    <p class="docs-lede">
+      One-dimensional spacing: a row or a column with a gap, alignment, and
+      justification in props.
+    </p>
+
+    <h2>Row and column</h2>
+    <div class="docs-example">
+      <Stack direction="row" gap="md">
+        <Button size="sm">Save</Button>
+        <Button size="sm" variant="secondary">Cancel</Button>
+      </Stack>
+    </div>
+    <pre class="docs-code"><code>&lt;Stack direction="row" gap="md"&gt;
+  &lt;Button size="sm"&gt;Save&lt;/Button&gt;
+  &lt;Button size="sm" variant="secondary"&gt;Cancel&lt;/Button&gt;
+&lt;/Stack&gt;</code></pre>
+
+    <h2>Column</h2>
+    <div class="docs-example" style="display: grid;">
+      <Stack direction="column" gap="sm" align="start">
+        <Button size="sm">Save</Button>
+        <Button size="sm" variant="secondary">Cancel</Button>
+      </Stack>
+    </div>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>direction</code></td><td><code>row | column</code></td><td><code>column</code></td><td>Main axis.</td></tr>
+        <tr><td><code>gap</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Spacing.</td></tr>
+        <tr><td><code>align / justify</code></td><td><code>start | center | end | stretch / + between</code></td><td><code>stretch / start</code></td><td>Cross/main alignment.</td></tr>
+        <tr><td><code>wrap</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Allow wrapping.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>DOM order stays the visual order; no <code>order</code> overrides.</li>
+    </ul>
+  </div>
+</Base>
