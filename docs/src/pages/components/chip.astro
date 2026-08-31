@@ -1,0 +1,62 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Chip } from "astro-ink";
+---
+<Base title="Chip">
+  <div class="docs-page">
+    <h1>Chip</h1>
+    <p class="docs-lede">
+      Compact labels for tags, filters, and selections. Removable ones leave
+      with an event, not silence.
+    </p>
+
+    <h2>Variants</h2>
+    <div class="docs-example">
+      <Chip>Alpha</Chip>
+      <Chip variant="accent">Accent</Chip>
+      <Chip variant="success">Success</Chip>
+      <Chip variant="warning">Warning</Chip>
+      <Chip variant="danger">Danger</Chip>
+      <Chip variant="info">Info</Chip>
+    </div>
+    <pre class="docs-code"><code>&lt;Chip&gt;Alpha&lt;/Chip&gt;
+&lt;Chip variant="accent"&gt;Accent&lt;/Chip&gt;</code></pre>
+
+    <h2>Removable</h2>
+    <div class="docs-example">
+      <Chip removable itemLabel="Beta">Beta</Chip>
+      <Chip removable itemLabel="Gamma">Gamma</Chip>
+    </div>
+    <pre class="docs-code"><code>&lt;Chip removable itemLabel="Beta"&gt;Beta&lt;/Chip&gt;</code></pre>
+
+    <h2>Events</h2>
+    <pre class="docs-code"><code>document.addEventListener("ink:chip:remove", (event) =&gt; &#123;
+  console.log("chip-removed " + event.detail.text);
+&#125;);</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>variant / size</code></td><td><code>6 variants / sm | md</code></td><td><code>neutral / md</code></td><td>Look and size.</td></tr>
+        <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Renders a link chip.</td></tr>
+        <tr><td><code>removable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the × button.</td></tr>
+        <tr><td><code>itemLabel</code></td><td><code>string</code></td><td>-</td><td>Names the item in the remove button label.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Remove is a real button named "Remove [item]".</li>
+      <li>Pair color with the word, same as badges.</li>
+    </ul>
+  </div>
+</Base>
+
+<script>
+  document.addEventListener("ink:chip:remove", (event) => {
+    console.log("chip-removed " + (event as CustomEvent).detail.text);
+  });
+</script>

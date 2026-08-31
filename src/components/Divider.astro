@@ -1,0 +1,45 @@
+---
+interface Props {
+  orientation?: "horizontal" | "vertical";
+  class?: string;
+}
+
+const { orientation = "horizontal", class: className, ...rest } = Astro.props;
+---
+<div
+  class:list={["ink-divider", `ink-divider--${orientation}`, className]}
+  role="separator"
+  aria-orientation={orientation}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-3);
+    color: var(--ink-muted);
+    font-size: var(--ink-text-xs);
+  }
+
+  .ink-divider--horizontal::before,
+  .ink-divider--horizontal::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--ink-border-strong);
+  }
+
+  .ink-divider--vertical {
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .ink-divider--vertical::before,
+  .ink-divider--vertical::after {
+    content: "";
+    flex: 1;
+    border-inline-start: 1px solid var(--ink-border-strong);
+  }
+</style>

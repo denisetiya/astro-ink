@@ -1,0 +1,131 @@
+---
+interface Props {
+  variant?: "neutral" | "accent" | "success" | "warning" | "danger" | "info";
+  size?: "sm" | "md";
+  href?: string;
+  removable?: boolean;
+  removeLabel?: string;
+  itemLabel?: string;
+  class?: string;
+}
+
+const {
+  variant = "neutral", size = "md", href, removable = false,
+  removeLabel = "Remove", itemLabel, class: className, ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "span";
+---
+<Tag
+  class:list={["ink-chip", `ink-chip--${variant}`, `ink-chip--${size}`, className]}
+  href={href}
+  data-ink-chip
+  {...rest}
+>
+  <span class="ink-chip__label"><slot /></span>
+  {removable && (
+    <button
+      type="button"
+      class="ink-chip__remove"
+      data-ink-chip-remove
+      aria-label={itemLabel ? `${removeLabel} ${itemLabel}` : removeLabel}
+    >
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  )}
+</Tag>
+
+<style>
+  .ink-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    line-height: 1;
+    padding: var(--ink-space-1) var(--ink-space-2);
+    border-radius: var(--ink-chip-radius, 999px);
+    border: 1px solid transparent;
+    color: var(--ink-ink);
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+    text-decoration: none;
+  }
+
+  .ink-chip--sm { font-size: var(--ink-text-xs); }
+
+  a.ink-chip:hover { border-color: var(--ink-border-strong); }
+
+  .ink-chip--accent {
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+  }
+
+  .ink-chip--success {
+    background: color-mix(in srgb, var(--ink-success) 14%, transparent);
+    color: var(--ink-success-text, var(--ink-success));
+  }
+
+  .ink-chip--warning {
+    background: color-mix(in srgb, var(--ink-warning) 14%, transparent);
+    color: var(--ink-warning-text, var(--ink-warning));
+  }
+
+  .ink-chip--danger {
+    background: color-mix(in srgb, var(--ink-danger) 14%, transparent);
+    color: var(--ink-danger-text, var(--ink-danger));
+  }
+
+  .ink-chip--info {
+    background: color-mix(in srgb, var(--ink-info) 14%, transparent);
+    color: var(--ink-info-text, var(--ink-info));
+  }
+
+  .ink-chip__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .ink-chip__remove:hover {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 15%, transparent);
+  }
+</style>
+
+<script>
+  function initChips(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-chip-remove]").forEach((btn) => {
+      if (btn.dataset.inkBound) return;
+      btn.dataset.inkBound = "true";
+      btn.addEventListener("click", (event: Event) => {
+        event.stopPropagation();
+        const chip = btn.closest<HTMLElement>("[data-ink-chip]");
+        if (!chip) return;
+        chip.dispatchEvent(
+          new CustomEvent("ink:chip:remove", {
+            bubbles: true,
+            detail: { text: chip.textContent?.trim() },
+          }),
+        );
+        chip.remove();
+      });
+    });
+  }
+
+  initChips();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initChips(root ?? document); } };
+</script>

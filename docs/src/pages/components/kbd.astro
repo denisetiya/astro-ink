@@ -1,0 +1,24 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Kbd } from "astro-ink";
+---
+<Base title="Kbd">
+  <div class="docs-page">
+    <h1>Kbd</h1>
+    <p class="docs-lede">
+      Keyboard keys that look like keys. Semantic, not decoration.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <p>Press <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> to search.</p>
+    </div>
+    <pre class="docs-code"><code>Press &lt;Kbd&gt;Ctrl&lt;/Kbd&gt; + &lt;Kbd&gt;K&lt;/Kbd&gt; to search.</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>&lt;kbd&gt;</code> is the native element for key input; no extra ARIA needed.</li>
+      <li>Match the exact key names of the platform when mixing with prose.</li>
+    </ul>
+  </div>
+</Base>

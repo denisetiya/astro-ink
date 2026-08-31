@@ -54,3 +54,6 @@ export { default as Result } from "./components/Result.astro";
 export { default as LoadingOverlay } from "./components/LoadingOverlay.astro";
 export { default as SkipLink } from "./components/SkipLink.astro";
 export { default as CopyButton } from "./components/CopyButton.astro";
+export { default as Chip } from "./components/Chip.astro";
+export { default as Divider } from "./components/Divider.astro";
+export { default as Kbd } from "./components/Kbd.astro";

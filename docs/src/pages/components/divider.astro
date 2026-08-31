@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Divider } from "astro-ink";
+---
+<Base title="Divider">
+  <div class="docs-page">
+    <h1>Divider</h1>
+    <p class="docs-lede">
+      A rule between sections, horizontal or vertical, with an optional
+      center label.
+    </p>
+
+    <h2>Horizontal</h2>
+    <div class="docs-example" style="display: grid;">
+      <Divider />
+      <Divider>or continue with</Divider>
+    </div>
+    <pre class="docs-code"><code>&lt;Divider /&gt;
+&lt;Divider&gt;or continue with&lt;/Divider&gt;</code></pre>
+
+    <h2>Vertical</h2>
+    <div class="docs-example">
+      <span>Left</span>
+      <Divider orientation="vertical" />
+      <span>Right</span>
+    </div>
+    <pre class="docs-code"><code>&lt;span&gt;Left&lt;/span&gt;
+&lt;Divider orientation="vertical" /&gt;
+&lt;span&gt;Right&lt;/span&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>orientation</code></td><td><code>horizontal | vertical</code></td><td><code>horizontal</code></td><td>Rule direction.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Carries <code>role="separator"</code> with orientation.</li>
+      <li>Structural only: never use it as a heading or a section break substitute.</li>
+    </ul>
+  </div>
+</Base>

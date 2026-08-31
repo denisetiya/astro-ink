@@ -1,0 +1,22 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+<kbd class:list={["ink-kbd", className]} {...rest}><slot /></kbd>
+
+<style>
+  .ink-kbd {
+    display: inline-block;
+    padding: 1px var(--ink-space-1);
+    font-family: var(--ink-font-mono);
+    font-size: var(--ink-text-xs);
+    border: 1px solid var(--ink-border-strong);
+    border-bottom-width: 2px;
+    border-radius: var(--ink-radius-sm);
+    background: var(--ink-surface);
+    color: var(--ink-ink);
+  }
+</style>
