@@ -55,7 +55,7 @@ and a custom theme template.
 
 ## Status
 
-55 components shipped through Phase 4: Button, Badge, Alert, Container,
+68 components shipped through Phase 5: Button, Badge, Alert, Container,
 VisuallyHidden, Field, TextField, NumberInput, PasswordInput, SearchInput,
 Textarea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, File,
 InputGroup, Form, ButtonGroup, ToggleButton, Link, Breadcrumbs, Anchor,
@@ -63,11 +63,13 @@ Navbar, Sidebar, Tabs, Pagination, Stepper, Menu, Menubar, ContextMenu,
 NavigationMenu, CommandMenu, Drawer, Sheet, SpeedDial, BottomNavigation,
 Tour, Dialog, ConfirmDialog, Backdrop, Toast, Popover, HoverCard, Progress,
 ProgressRing, Spinner, Callout, Banner, EmptyState, Result, LoadingOverlay,
-SkipLink, CopyButton. Utilities: focus-trap, dismiss, roving, scrollspy,
-pagination builder, autosize, slider fill, Popper, Portal, ClickAway.
+SkipLink, CopyButton, Chip, Divider, Kbd, Paper, Grid, Stack, AppShell,
+PageHeader, ScrollArea, ScrollShadow, AspectRatio, Splitter, Affix.
+Utilities: focus-trap, dismiss, roving, scrollspy, pagination builder,
+autosize, slider fill, split math, Popper, Portal, ClickAway.
 
-Upcoming: surfaces & layout, data display, advanced inputs, Data Grid,
-pickers, and charts — 65 more on the roadmap.
+Upcoming: data display, advanced inputs, Data Grid, pickers, and charts —
+52 more on the roadmap.
 
 ## License
 

@@ -3,10 +3,11 @@ interface Props {
   elevation?: 0 | 1 | 2;
   padding?: "none" | "sm" | "md" | "lg";
   square?: boolean;
+  style?: string;
   class?: string;
 }
 
-const { elevation = 1, padding = "md", square = false, class: className, ...rest } = Astro.props;
+const { elevation = 1, padding = "md", square = false, style, class: className, ...rest } = Astro.props;
 ---
 <div
   class:list={[
@@ -16,6 +17,7 @@ const { elevation = 1, padding = "md", square = false, class: className, ...rest
     square && "ink-paper--square",
     className,
   ]}
+  style={style}
   {...rest}
 >
   <slot />
