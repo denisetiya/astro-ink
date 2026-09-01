@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Splitter } from "astro-ink";
+---
+<Base title="Splitter">
+  <div class="docs-page">
+    <h1>Splitter</h1>
+    <p class="docs-lede">
+      Two panes, one handle: drag it, or focus it and use arrows. Home and
+      End jump to the edges.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Splitter>
+        <div slot="first" style="padding: var(--ink-space-3); font-size: var(--ink-text-sm);">
+          <p><strong>Editor</strong></p>
+          <p style="color: var(--ink-muted);">Panels resize from 10 to 90 percent.</p>
+        </div>
+        <div slot="second" style="padding: var(--ink-space-3); font-size: var(--ink-text-sm);">
+          <p><strong>Preview</strong></p>
+          <p style="color: var(--ink-muted);">Drag the bar, or focus it and press arrows.</p>
+        </div>
+      </Splitter>
+    </div>
+    <pre class="docs-code"><code>&lt;Splitter&gt;
+  &lt;div slot="first"&gt;Editor&lt;/div&gt;
+  &lt;div slot="second"&gt;Preview&lt;/div&gt;
+&lt;/Splitter&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>direction</code></td><td><code>horizontal | vertical</code></td><td><code>horizontal</code></td><td>Split axis.</td></tr>
+        <tr><td><code>initial / min / max</code></td><td><code>number</code></td><td><code>50 / 10 / 90</code></td><td>First-pane percent bounds.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Resize panels</code></td><td>Handle accessible name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Theming</h2>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-split-pos: 50%;
+&#125;</code></pre>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Handle is a labeled separator with value, min, max.</li>
+      <li>Arrows move 2 (Shift: 10); Home/End jump; drag mirrors keyboard.</li>
+    </ul>
+  </div>
+</Base>

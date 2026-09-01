@@ -65,3 +65,4 @@ export { default as PageHeader } from "./components/PageHeader.astro";
 export { default as ScrollArea } from "./components/ScrollArea.astro";
 export { default as ScrollShadow } from "./components/ScrollShadow.astro";
 export { default as AspectRatio } from "./components/AspectRatio.astro";
+export { default as Splitter } from "./components/Splitter.astro";

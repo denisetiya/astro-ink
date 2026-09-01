@@ -1,0 +1,161 @@
+---
+interface Props {
+  direction?: "horizontal" | "vertical";
+  initial?: number;
+  min?: number;
+  max?: number;
+  label?: string;
+  height?: string;
+  class?: string;
+}
+
+const {
+  direction = "horizontal", initial = 50, min = 10, max = 90,
+  label = "Resize panels", height = "16rem", class: className, ...rest
+} = Astro.props;
+---
+<div
+  class:list={["ink-split", `ink-split--${direction}`, className]}
+  style={`--ink-split-pos: ${initial}%; height: ${height};`}
+  data-ink-split
+  data-min={min}
+  data-max={max}
+  {...rest}
+>
+  <div class="ink-split__pane" data-ink-split-first>
+    <slot name="first" />
+  </div>
+  <div
+    class="ink-split__handle"
+    role="separator"
+    aria-orientation={direction === "horizontal" ? "vertical" : "horizontal"}
+    aria-label={label}
+    aria-valuemin={min}
+    aria-valuemax={max}
+    aria-valuenow={initial}
+    tabindex="0"
+    data-ink-split-handle
+  ></div>
+  <div class="ink-split__pane" data-ink-split-second>
+    <slot name="second" />
+  </div>
+</div>
+
+<style>
+  .ink-split {
+    display: flex;
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    overflow: hidden;
+  }
+
+  .ink-split--vertical { flex-direction: column; }
+
+  .ink-split__pane {
+    overflow: auto;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .ink-split--horizontal .ink-split__pane:first-child {
+    flex-basis: var(--ink-split-pos, 50%);
+  }
+
+  .ink-split--horizontal .ink-split__pane:last-child { flex: 1; }
+
+  .ink-split--vertical .ink-split__pane:first-child {
+    flex-basis: var(--ink-split-pos, 50%);
+  }
+
+  .ink-split--vertical .ink-split__pane:last-child { flex: 1; }
+
+  .ink-split__handle {
+    flex-shrink: 0;
+    background: var(--ink-border);
+    transition: background-color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-split--horizontal .ink-split__handle {
+    width: 8px;
+    cursor: col-resize;
+  }
+
+  .ink-split--vertical .ink-split__handle {
+    height: 8px;
+    cursor: row-resize;
+  }
+
+  .ink-split__handle:hover,
+  .ink-split__handle:focus-visible {
+    background: var(--ink-accent);
+    outline: none;
+  }
+</style>
+
+<script>
+  import { computeSplitPercent } from "../scripts/split";
+
+  function clampRaw(pct: number, lo: number, hi: number): number {
+    return Math.round(Math.min(hi, Math.max(lo, pct)) * 10) / 10;
+  }
+
+  function initSplits(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-split]").forEach((split) => {
+      if (split.dataset.inkBound) return;
+      split.dataset.inkBound = "true";
+      const handle = split.querySelector<HTMLElement>("[data-ink-split-handle]");
+      if (!handle) return;
+      const min = Number(split.dataset.min ?? 10);
+      const max = Number(split.dataset.max ?? 90);
+      const vertical = split.classList.contains("ink-split--vertical");
+
+      const setPos = (pct: number) => {
+        split.style.setProperty("--ink-split-pos", `${pct}%`);
+        handle.setAttribute("aria-valuenow", String(pct));
+      };
+
+      const posFromEvent = (clientX: number, clientY: number): number => {
+        const r = split.getBoundingClientRect();
+        return vertical
+          ? computeSplitPercent(clientY - r.top, r.height, min, max)
+          : computeSplitPercent(clientX - r.left, r.width, min, max);
+      };
+
+      handle.addEventListener("pointerdown", (event: PointerEvent) => {
+        event.preventDefault();
+        handle.setPointerCapture?.(event.pointerId);
+        const move = (e: PointerEvent) => setPos(posFromEvent(e.clientX, e.clientY));
+        const up = () => {
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", up);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+      });
+
+      handle.addEventListener("keydown", (event: KeyboardEvent) => {
+        const current = Number(handle.getAttribute("aria-valuenow") ?? 50);
+        const step = event.shiftKey ? 10 : 2;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          event.preventDefault();
+          setPos(clampRaw(current + step, min, max));
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          event.preventDefault();
+          setPos(clampRaw(current - step, min, max));
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          setPos(min);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          setPos(max);
+        }
+      });
+    });
+  }
+
+  initSplits();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initSplits(root ?? document); } };
+</script>
