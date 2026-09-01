@@ -1,0 +1,26 @@
+---
+interface Props {
+  top?: string;
+  bottom?: string;
+  zIndex?: number;
+  class?: string;
+}
+
+const { top, bottom, zIndex, class: className, ...rest } = Astro.props;
+
+const style = [
+  top !== undefined ? `top: ${top};` : "",
+  bottom !== undefined ? `bottom: ${bottom};` : "",
+  zIndex !== undefined ? `z-index: ${zIndex};` : "",
+].join(" ");
+---
+<div class:list={["ink-affix", className]} style={style} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .ink-affix {
+    position: fixed;
+    z-index: var(--ink-z-overlay, 100);
+  }
+</style>

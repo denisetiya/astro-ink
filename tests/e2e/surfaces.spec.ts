@@ -19,3 +19,13 @@ test("stack direction row", async ({ page }) => {
   const dir = await page.locator(".ink-stack--row").first().evaluate((el) => getComputedStyle(el).flexDirection);
   expect(dir).toBe("row");
 });
+
+test("affix stays pinned on scroll", async ({ page }) => {
+  await page.goto("/components/affix");
+  const box = page.locator(".ink-affix").first();
+  const before = await box.boundingBox();
+  await page.evaluate(() => window.scrollTo(0, 600));
+  await page.waitForTimeout(150);
+  const after = await box.boundingBox();
+  expect(Math.abs(after.y - before.y)).toBeLessThan(2);
+});

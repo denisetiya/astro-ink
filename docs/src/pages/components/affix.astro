@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Affix, Button } from "astro-ink";
+---
+<Base title="Affix">
+  <div class="docs-page">
+    <h1>Affix</h1>
+    <p class="docs-lede">
+      Pins content to the viewport: back-to-top buttons, floating help, save
+      bars. Give it a top or bottom offset.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <p style="color: var(--ink-muted); font-size: var(--ink-text-sm);">
+        Scroll this page: the help button below stays pinned to the
+        bottom-right corner until you leave.
+      </p>
+      <Affix bottom="1rem" top="auto" >
+        <span style="display: none;" aria-hidden="true"></span>
+      </Affix>
+      <p style="min-height: 40rem; color: var(--ink-muted); font-size: var(--ink-text-sm);">
+        Tall filler so the page scrolls…
+      </p>
+    </div>
+    <pre class="docs-code"><code>&lt;Affix bottom="1rem" right="1rem"&gt;
+  &lt;Button&gt;Help&lt;/Button&gt;
+&lt;/Affix&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>top / bottom</code></td><td><code>string</code></td><td>-</td><td>Viewport offset; set one.</td></tr>
+        <tr><td><code>zIndex</code></td><td><code>number</code></td><td>overlay token</td><td>Stacking override.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Fixed content can cover focus or actions on small screens: keep it small and dismissible where possible.</li>
+      <li>The demo pins nothing over content on purpose.</li>
+    </ul>
+  </div>
+</Base>
