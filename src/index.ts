@@ -67,3 +67,5 @@ export { default as ScrollShadow } from "./components/ScrollShadow.astro";
 export { default as AspectRatio } from "./components/AspectRatio.astro";
 export { default as Splitter } from "./components/Splitter.astro";
 export { default as Affix } from "./components/Affix.astro";
+export { default as Accordion } from "./components/Accordion.astro";
+export { default as AccordionItem } from "./components/AccordionItem.astro";

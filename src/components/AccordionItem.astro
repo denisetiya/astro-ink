@@ -1,0 +1,80 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  expanded?: boolean;
+  class?: string;
+}
+
+const { id, title, expanded = false, class: className, ...rest } = Astro.props;
+const panelId = `${id}-panel`;
+const btnId = `${id}-btn`;
+---
+<div class:list={["ink-acc-item", className]} data-ink-acc-item {...rest}>
+  <h3 class="ink-acc-heading">
+    <button
+      type="button"
+      class="ink-acc-trigger"
+      id={btnId}
+      aria-expanded={expanded ? "true" : "false"}
+      aria-controls={panelId}
+      data-ink-acc-trigger
+    >
+      <span class="ink-acc-title">{title}</span>
+      <svg class="ink-acc-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </h3>
+  <div
+    class="ink-acc-panel"
+    id={panelId}
+    role="region"
+    aria-labelledby={btnId}
+    data-ink-acc-panel
+    hidden={!expanded || undefined}
+  >
+    <div class="ink-acc-body"><slot /></div>
+  </div>
+</div>
+
+<style>
+  .ink-acc-heading { margin: 0; }
+
+  .ink-acc-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ink-space-3);
+    width: 100%;
+    padding: var(--ink-space-3) var(--ink-space-4);
+    min-height: 3.25rem;
+    border: none;
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-base);
+    font-weight: var(--ink-font-weight-medium);
+    cursor: pointer;
+    text-align: start;
+  }
+
+  .ink-acc-trigger:hover {
+    background: color-mix(in srgb, var(--ink-ink) 3%, transparent);
+  }
+
+  .ink-acc-chevron {
+    flex-shrink: 0;
+    color: var(--ink-muted);
+    transition: rotate var(--ink-duration-base) var(--ink-ease);
+  }
+
+  .ink-acc-trigger[aria-expanded="true"] .ink-acc-chevron { rotate: 180deg; }
+
+  .ink-acc-panel[hidden] { display: none; }
+
+  .ink-acc-body {
+    padding: 0 var(--ink-space-4) var(--ink-space-4);
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+</style>

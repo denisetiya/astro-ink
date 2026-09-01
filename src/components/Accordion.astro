@@ -1,0 +1,68 @@
+---
+interface Props {
+  exclusive?: boolean;
+  class?: string;
+}
+
+const { exclusive = false, class: className, ...rest } = Astro.props;
+---
+<div
+  class:list={["ink-accordion", className]}
+  data-ink-accordion
+  data-exclusive={exclusive ? "" : undefined}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style>
+  .ink-accordion {
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    overflow: hidden;
+  }
+
+  .ink-accordion > :global(* + *) {
+    border-top: 1px solid var(--ink-border);
+  }
+</style>
+
+<script>
+  function initAccordions(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-accordion]").forEach((acc) => {
+      if (acc.dataset.inkBound) return;
+      acc.dataset.inkBound = "true";
+      const exclusive = acc.hasAttribute("data-exclusive");
+      acc.addEventListener("click", (event: Event) => {
+        const el = event.target as HTMLElement;
+        const trigger = el.closest?.("[data-ink-acc-trigger]") as HTMLElement | null;
+        if (!trigger) return;
+        const item = trigger.closest("[data-ink-acc-item]") as HTMLElement | null;
+        const panelId = trigger.getAttribute("aria-controls");
+        const panel = panelId ? acc.querySelector<HTMLElement>(`#${CSS.escape(panelId)}`) : null;
+        if (!item || !panel) return;
+        const open = trigger.getAttribute("aria-expanded") === "true";
+        if (exclusive && !open) {
+          for (const other of acc.querySelectorAll<HTMLElement>("[data-ink-acc-item]")) {
+            if (other === item) continue;
+            const otherTrigger = other.querySelector("[data-ink-acc-trigger]");
+            otherTrigger?.setAttribute("aria-expanded", "false");
+            const otherPanelId = otherTrigger?.getAttribute("aria-controls");
+            if (otherPanelId) {
+              acc.querySelector<HTMLElement>(`#${CSS.escape(otherPanelId)}`)?.setAttribute("hidden", "");
+            }
+          }
+        }
+        trigger.setAttribute("aria-expanded", String(!open));
+        if (open) panel.setAttribute("hidden", "");
+        else panel.removeAttribute("hidden");
+      });
+    });
+  }
+
+  initAccordions();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initAccordions(root ?? document); } };
+</script>
