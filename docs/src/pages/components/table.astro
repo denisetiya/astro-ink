@@ -1,0 +1,71 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "astro-ink";
+---
+<Base title="Table">
+  <div class="docs-page">
+    <h1>Table</h1>
+    <p class="docs-lede">
+      Tabular data with real semantics: captions, scoped headers, sticky
+      headers, striped rows. The wrapper scrolls on small screens.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Table caption="Recent invoices" striped stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell header scope="col">Customer</TableCell>
+            <TableCell header scope="col" align="end">Amount</TableCell>
+            <TableCell header scope="col">Status</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>Ada Lovelace</TableCell>
+            <TableCell align="end">$1,200</TableCell>
+            <TableCell>Paid</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Grace Hopper</TableCell>
+            <TableCell align="end">$850</TableCell>
+            <TableCell>Pending</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Alan Turing</TableCell>
+            <TableCell align="end">$2,300</TableCell>
+            <TableCell>Overdue</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+    <pre class="docs-code"><code>&lt;Table caption="Recent invoices" striped stickyHeader&gt;
+  &lt;TableHead&gt;
+    &lt;TableRow&gt;
+      &lt;TableCell header scope="col"&gt;Customer&lt;/TableCell&gt;
+    &lt;/TableRow&gt;
+  &lt;/TableHead&gt;
+  &lt;TableBody&gt;...&lt;/TableBody&gt;
+&lt;/Table&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>caption</code></td><td><code>string</code></td><td>-</td><td>Table summary for AT.</td></tr>
+        <tr><td><code>striped / hover</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Row treatments.</td></tr>
+        <tr><td><code>stickyHeader</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Pinned header row.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md</code></td><td><code>md</code></td><td>Cell density.</td></tr>
+        <tr><td><code>header / scope / align</code> (Cell)</td><td><code>-</code></td><td>-</td><td>Renders <code>th</code>, sets scope and alignment.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Column headers carry <code>scope="col"</code>; row headers <code>scope="row"</code>.</li>
+      <li>Captions describe the table; horizontal scroll on mobile never clips content.</li>
+    </ul>
+  </div>
+</Base>

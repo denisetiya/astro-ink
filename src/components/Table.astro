@@ -1,0 +1,89 @@
+---
+interface Props {
+  caption?: string;
+  striped?: boolean;
+  hover?: boolean;
+  stickyHeader?: boolean;
+  size?: "sm" | "md";
+  class?: string;
+}
+
+const {
+  caption, striped = false, hover = false, stickyHeader = false,
+  size = "md", class: className, ...rest
+} = Astro.props;
+---
+<div class="ink-table-wrap">
+  <table
+    class:list={[
+      "ink-table",
+      `ink-table--${size}`,
+      striped && "ink-table--striped",
+      hover && "ink-table--hover",
+      stickyHeader && "ink-table--sticky",
+      className,
+    ]}
+    {...rest}
+  >
+    {caption && <caption class="ink-table__caption">{caption}</caption>}
+    <slot />
+  </table>
+</div>
+
+<style>
+  .ink-table-wrap { overflow-x: auto; }
+
+  .ink-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-table__caption {
+    text-align: start;
+    padding-bottom: var(--ink-space-2);
+    color: var(--ink-muted);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-table :global(th),
+  .ink-table :global(td) {
+    text-align: start;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border-bottom: 1px solid var(--ink-border);
+  }
+
+  .ink-table :global(th) {
+    font-weight: var(--ink-font-weight-semibold);
+    color: var(--ink-muted);
+    font-size: var(--ink-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .ink-table--sm :global(th),
+  .ink-table--sm :global(td) {
+    padding: var(--ink-space-1) var(--ink-space-2);
+  }
+
+  .ink-table--striped :global(tbody tr:nth-child(even)) {
+    background: color-mix(in srgb, var(--ink-ink) 3%, var(--ink-surface));
+  }
+
+  .ink-table--hover :global(tbody tr:hover) {
+    background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-surface));
+  }
+
+  .ink-table--sticky :global(thead th) {
+    position: sticky;
+    top: 0;
+    background: var(--ink-surface);
+    box-shadow: 0 1px 0 var(--ink-border);
+  }
+
+  .ink-table :global(td[data-align="center"]),
+  .ink-table :global(th[data-align="center"]) { text-align: center; }
+
+  .ink-table :global(td[data-align="end"]),
+  .ink-table :global(th[data-align="end"]) { text-align: end; }
+</style>

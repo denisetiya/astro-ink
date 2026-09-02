@@ -76,3 +76,8 @@ export { default as List } from "./components/List.astro";
 export { default as ListItem } from "./components/ListItem.astro";
 export { default as ImageList } from "./components/ImageList.astro";
 export { default as Carousel } from "./components/Carousel.astro";
+export { default as Table } from "./components/Table.astro";
+export { default as TableHead } from "./components/TableHead.astro";
+export { default as TableBody } from "./components/TableBody.astro";
+export { default as TableRow } from "./components/TableRow.astro";
+export { default as TableCell } from "./components/TableCell.astro";

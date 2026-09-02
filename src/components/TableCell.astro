@@ -1,0 +1,19 @@
+---
+interface Props {
+  header?: boolean;
+  scope?: "col" | "row" | "colgroup" | "rowgroup";
+  align?: "start" | "center" | "end";
+  class?: string;
+}
+
+const { header = false, scope, align = "start", class: className, ...rest } = Astro.props;
+const Tag = header ? "th" : "td";
+---
+<Tag
+  class:list={["ink-tc", className]}
+  scope={scope}
+  data-align={align === "start" ? undefined : align}
+  {...rest}
+>
+  <slot />
+</Tag>
