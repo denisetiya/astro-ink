@@ -1,0 +1,49 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  fallback?: string;
+  size?: "sm" | "md" | "lg";
+  color?: string;
+  class?: string;
+}
+
+const { src, alt = "", fallback = "?", size = "md", color, class: className, ...rest } = Astro.props;
+---
+{src ? (
+  <img
+    class:list={["ink-avatar", `ink-avatar--${size}`, className]}
+    src={src}
+    alt={alt}
+    style={color ? `background: ${color};` : undefined}
+    {...rest}
+  />
+) : (
+  <span
+    class:list={["ink-avatar", `ink-avatar--${size}`, className]}
+    style={color ? `background: ${color};` : undefined}
+    {...rest}
+  >
+    {fallback}
+  </span>
+)}
+
+<style>
+  .ink-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--ink-accent) 18%, var(--ink-surface));
+    color: var(--ink-ink);
+    font-weight: var(--ink-font-weight-medium);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .ink-avatar--sm { width: 1.75rem; height: 1.75rem; font-size: var(--ink-text-xs); }
+  .ink-avatar--md { width: 2.5rem; height: 2.5rem; font-size: var(--ink-text-sm); }
+  .ink-avatar--lg { width: 3.5rem; height: 3.5rem; font-size: var(--ink-text-lg); }
+
+  img.ink-avatar { object-fit: cover; }
+</style>

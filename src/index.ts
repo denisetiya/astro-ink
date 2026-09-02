@@ -69,3 +69,5 @@ export { default as Splitter } from "./components/Splitter.astro";
 export { default as Affix } from "./components/Affix.astro";
 export { default as Accordion } from "./components/Accordion.astro";
 export { default as AccordionItem } from "./components/AccordionItem.astro";
+export { default as Avatar } from "./components/Avatar.astro";
+export { default as AvatarGroup } from "./components/AvatarGroup.astro";

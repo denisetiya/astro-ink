@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Avatar, AvatarGroup } from "astro-ink";
+---
+<Base title="AvatarGroup">
+  <div class="docs-page">
+    <h1>AvatarGroup</h1>
+    <p class="docs-lede">
+      A team in overlapping circles. Caps the visible row and counts the
+      rest honestly.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <AvatarGroup max={3} total={5} label="Project members">
+        <Avatar fallback="AL" />
+        <Avatar fallback="GK" />
+        <Avatar fallback="RS" />
+      </AvatarGroup>
+    </div>
+    <pre class="docs-code"><code>&lt;AvatarGroup max=&#123;3&#125; total=&#123;5&#125; label="Project members"&gt;
+  &lt;Avatar fallback="AL" /&gt;
+  &lt;Avatar fallback="GK" /&gt;
+  &lt;Avatar fallback="RS" /&gt;
+&lt;/AvatarGroup&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>max</code></td><td><code>number</code></td><td>-</td><td>Visible avatars before the counter.</td></tr>
+        <tr><td><code>total</code></td><td><code>number</code></td><td>-</td><td>Real member count.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Members</code></td><td>Group name, with count when known.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Group announces "Project members: 5", including the hidden ones.</li>
+      <li>Overlapping is visual only: each avatar stays in the accessibility tree.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,51 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Avatar } from "astro-ink";
+
+const adaSvg = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><circle cx="40" cy="40" r="40" fill="#c2410c"/><text x="40" y="52" font-size="32" text-anchor="middle" fill="#fff" font-family="sans-serif">AL</text></svg>`);
+---
+<Base title="Avatar">
+  <div class="docs-page">
+    <h1>Avatar</h1>
+    <p class="docs-lede">
+      A person in a circle: photo when you have one, initials when you do
+      not. The demo image is an inline placeholder, labeled as such.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Avatar src={adaSvg} alt="Ada Lovelace" />
+      <Avatar fallback="GK" />
+      <Avatar fallback="RS" color="var(--ink-info)" />
+    </div>
+    <pre class="docs-code"><code>&lt;Avatar src="..." alt="Ada Lovelace" /&gt;
+&lt;Avatar fallback="GK" /&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <div class="docs-example">
+      <Avatar size="sm" fallback="S" />
+      <Avatar size="md" fallback="M" />
+      <Avatar size="lg" fallback="L" />
+    </div>
+    <pre class="docs-code"><code>&lt;Avatar size="sm" fallback="S" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>src / alt</code></td><td><code>string</code></td><td>-</td><td>Photo; meaningful alt for real people.</td></tr>
+        <tr><td><code>fallback</code></td><td><code>string</code></td><td><code>?</code></td><td>Initials when there is no photo.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Diameter.</td></tr>
+        <tr><td><code>color</code></td><td><code>string</code></td><td>-</td><td>Background tint.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Name real people with <code>alt</code>; use <code>alt=""</code> for decorative repeats.</li>
+      <li>Fallback initials are text: announced as-is.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,51 @@
+---
+interface Props {
+  max?: number;
+  total?: number;
+  label?: string;
+  class?: string;
+}
+
+const { max, total, label = "Members", class: className, ...rest } = Astro.props;
+const overflow = max !== undefined && total !== undefined && total > max ? total - max : 0;
+---
+<div
+  class:list={["ink-agroup", className]}
+  role="group"
+  aria-label={total !== undefined ? `${label}: ${total}` : label}
+  {...rest}
+>
+  <slot />
+  {overflow > 0 && <span class="ink-agroup__more">+{overflow}</span>}
+</div>
+
+<style>
+  .ink-agroup {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .ink-agroup > :global(* + *) {
+    margin-inline-start: -0.625rem;
+  }
+
+  .ink-agroup > :global(*) {
+    border: 2px solid var(--ink-bg);
+  }
+
+  .ink-agroup__more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding-inline: var(--ink-space-2);
+    margin-inline-start: -0.625rem;
+    border-radius: 50%;
+    border: 2px solid var(--ink-bg);
+    background: var(--ink-ink);
+    color: var(--ink-bg);
+    font-size: var(--ink-text-xs);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>
