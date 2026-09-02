@@ -1,0 +1,28 @@
+---
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label, class: className, ...rest } = Astro.props;
+---
+<ul class:list={["ink-list", className]} aria-label={label} {...rest}>
+  <slot />
+</ul>
+
+<style>
+  .ink-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-radius-md);
+    overflow: hidden;
+    background: var(--ink-surface);
+  }
+
+  .ink-list > :global(* + *) {
+    border-top: 1px solid var(--ink-border);
+  }
+</style>

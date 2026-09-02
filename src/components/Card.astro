@@ -1,0 +1,47 @@
+---
+interface Props {
+  elevation?: 0 | 1 | 2;
+  class?: string;
+}
+
+const { elevation = 1, class: className, ...rest } = Astro.props;
+---
+<article
+  class:list={["ink-card", `ink-card--e${elevation}`, className]}
+  {...rest}
+>
+  <slot name="media" />
+  <div class="ink-card__body">
+    <slot name="header" />
+    <div class="ink-card__content"><slot /></div>
+    <div class="ink-card__actions"><slot name="actions" /></div>
+  </div>
+</article>
+
+<style>
+  .ink-card {
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-radius-lg);
+    overflow: hidden;
+  }
+
+  .ink-card--e0 { box-shadow: none; }
+  .ink-card--e1 { box-shadow: var(--ink-shadow-1); }
+  .ink-card--e2 { box-shadow: var(--ink-shadow-2); }
+
+  .ink-card__body {
+    display: grid;
+    gap: var(--ink-space-2);
+    padding: var(--ink-space-4);
+  }
+
+  .ink-card__actions {
+    display: flex;
+    gap: var(--ink-space-2);
+    flex-wrap: wrap;
+    margin-top: var(--ink-space-1);
+  }
+
+  .ink-card__actions:empty { display: none; }
+</style>

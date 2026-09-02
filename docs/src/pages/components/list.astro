@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+import { List, ListItem } from "astro-ink";
+---
+<Base title="List">
+  <div class="docs-page">
+    <h1>List</h1>
+    <p class="docs-lede">
+      Rows of the same kind: navigation, settings, files. Linked rows are
+      links; the rest are text.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <List label="Billing">
+        <ListItem href="/components" selected>Invoices</ListItem>
+        <ListItem href="/guides/theming">Payment methods</ListItem>
+        <ListItem disabled>Trash</ListItem>
+      </List>
+    </div>
+    <pre class="docs-code"><code>&lt;List label="Billing"&gt;
+  &lt;ListItem href="/components" selected&gt;Invoices&lt;/ListItem&gt;
+  &lt;ListItem href="/guides/theming"&gt;Payment methods&lt;/ListItem&gt;
+  &lt;ListItem disabled&gt;Trash&lt;/ListItem&gt;
+&lt;/List&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code> (List)</td><td><code>string</code></td><td>-</td><td>List landmark name.</td></tr>
+        <tr><td><code>href</code> (Item)</td><td><code>string</code></td><td>-</td><td>Renders a link row.</td></tr>
+        <tr><td><code>selected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the current row.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive text row.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real <code>ul/li</code>; the selected link carries <code>aria-current</code>.</li>
+      <li>Rows are 48px tall for thumbs and pointers alike.</li>
+    </ul>
+  </div>
+</Base>

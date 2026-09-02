@@ -1,0 +1,54 @@
+---
+interface Props {
+  href?: string;
+  selected?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const { href, selected = false, disabled = false, class: className, ...rest } = Astro.props;
+---
+<li class:list={["ink-li", selected && "ink-li--selected", className]} {...rest}>
+  {href && !disabled ? (
+    <a class="ink-li__link" href={href} aria-current={selected ? "true" : undefined}>
+      <slot />
+    </a>
+  ) : (
+    <span class="ink-li__text" aria-disabled={disabled ? "true" : undefined}>
+      <slot />
+    </span>
+  )}
+</li>
+
+<style>
+  .ink-li { font-size: var(--ink-text-sm); }
+
+  .ink-li__link,
+  .ink-li__text {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    width: 100%;
+    padding: var(--ink-space-3) var(--ink-space-4);
+    min-height: 3rem;
+    color: var(--ink-ink);
+    text-decoration: none;
+  }
+
+  a.ink-li__link:hover {
+    background: color-mix(in srgb, var(--ink-ink) 4%, transparent);
+  }
+
+  .ink-li--selected {
+    background: color-mix(in srgb, var(--ink-accent) 8%, transparent);
+  }
+
+  .ink-li__link[aria-current="true"] {
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-li__text[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
