@@ -81,3 +81,4 @@ export { default as TableHead } from "./components/TableHead.astro";
 export { default as TableBody } from "./components/TableBody.astro";
 export { default as TableRow } from "./components/TableRow.astro";
 export { default as TableCell } from "./components/TableCell.astro";
+export { default as Tooltip } from "./components/Tooltip.astro";

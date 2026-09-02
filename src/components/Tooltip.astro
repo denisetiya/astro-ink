@@ -1,0 +1,84 @@
+---
+interface Props {
+  text: string;
+  placement?: "top" | "bottom" | "left" | "right";
+  delay?: number;
+  id?: string;
+  class?: string;
+}
+
+const { text, placement = "top", delay = 200, id, class: className, ...rest } = Astro.props;
+const tipId = id ?? `ink-tip-${Math.random().toString(36).slice(2, 8)}`;
+---
+<span class:list={["ink-tooltip", className]} data-ink-tooltip data-delay={delay} data-placement={placement} {...rest}>
+  <slot />
+  <span class="ink-tooltip__tip" role="tooltip" id={tipId} data-ink-tooltip-tip hidden>{text}</span>
+</span>
+
+<style>
+  .ink-tooltip { position: relative; display: inline-block; }
+
+  .ink-tooltip__tip {
+    position: fixed;
+    max-width: min(16rem, calc(100vw - 2rem));
+    padding: var(--ink-space-1) var(--ink-space-2);
+    background: var(--ink-ink);
+    color: var(--ink-bg);
+    font-size: var(--ink-text-xs);
+    border-radius: var(--ink-radius-sm);
+    z-index: var(--ink-z-dropdown, 50);
+    pointer-events: none;
+  }
+
+  .ink-tooltip__tip[hidden] { display: none; }
+</style>
+
+<script>
+  import { positionFloating } from "../scripts/popper";
+  import type { Placement } from "../scripts/popper";
+
+  function initTooltips(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-tooltip]").forEach((tip) => {
+      if (tip.dataset.inkBound) return;
+      tip.dataset.inkBound = "true";
+      const trigger = tip.firstElementChild as HTMLElement | null;
+      const panel = tip.querySelector<HTMLElement>("[data-ink-tooltip-tip]");
+      if (!trigger || !panel) return;
+      const delay = Number(tip.dataset.delay ?? 200);
+      let timer: number | undefined;
+      trigger.setAttribute("aria-describedby", panel.id);
+
+      const show = () => {
+        panel.hidden = false;
+        positionFloating(trigger, panel, {
+          placement: (tip.dataset.placement ?? "top") as Placement,
+        });
+      };
+      const hide = () => {
+        panel.hidden = true;
+      };
+      const schedule = () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(show, delay);
+      };
+      const cancel = () => window.clearTimeout(timer);
+
+      trigger.addEventListener("mouseenter", schedule);
+      trigger.addEventListener("mouseleave", () => { cancel(); hide(); });
+      trigger.addEventListener("focus", show);
+      trigger.addEventListener("blur", hide);
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          hide();
+        }
+      });
+    });
+  }
+
+  initTooltips();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTooltips(root ?? document); } };
+</script>

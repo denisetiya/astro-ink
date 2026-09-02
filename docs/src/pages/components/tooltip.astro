@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Button, Tooltip } from "astro-ink";
+---
+<Base title="Tooltip">
+  <div class="docs-page">
+    <h1>Tooltip</h1>
+    <p class="docs-lede">
+      A one-line explanation on hover and focus. Plain text only: anything
+      interactive belongs in a Popover.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" id="demo-tip">
+      <Tooltip text="Saves to your library">
+        <Button data-ink-tooltip-trigger>Save</Button>
+      </Tooltip>
+    </div>
+    <pre class="docs-code"><code>&lt;Tooltip text="Saves to your library"&gt;
+  &lt;Button data-ink-tooltip-trigger&gt;Save&lt;/Button&gt;
+&lt;/Tooltip&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>text</code></td><td><code>string</code></td><td>-</td><td>The explanation.</td></tr>
+        <tr><td><code>placement</code></td><td><code>top | bottom | left | right</code></td><td><code>top</code></td><td>Preferred side; flips when cramped.</td></tr>
+        <tr><td><code>delay</code></td><td><code>number</code></td><td><code>200</code></td><td>Hover delay ms.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger links via <code>aria-describedby</code>; tooltip has <code>role="tooltip"</code>.</li>
+      <li>Focus shows it instantly (no delay); Escape hides it.</li>
+      <li>High-contrast pair (15:1) in both themes.</li>
+    </ul>
+  </div>
+</Base>
