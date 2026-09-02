@@ -74,3 +74,5 @@ export { default as AvatarGroup } from "./components/AvatarGroup.astro";
 export { default as Card } from "./components/Card.astro";
 export { default as List } from "./components/List.astro";
 export { default as ListItem } from "./components/ListItem.astro";
+export { default as ImageList } from "./components/ImageList.astro";
+export { default as Carousel } from "./components/Carousel.astro";

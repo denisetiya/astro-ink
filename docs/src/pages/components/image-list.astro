@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ImageList } from "astro-ink";
+---
+<Base title="ImageList">
+  <div class="docs-page">
+    <h1>ImageList</h1>
+    <p class="docs-lede">
+      A masonry-free gallery grid: fixed columns, uniform rows, children fill
+      their cells.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <ImageList cols={3} label="Demo gallery">
+        <li><div style="display: grid; place-content: center; height: 100%; background: color-mix(in srgb, var(--ink-accent) 18%, var(--ink-surface)); font-size: var(--ink-text-sm);">Garden</div></li>
+        <li><div style="display: grid; place-content: center; height: 100%; background: color-mix(in srgb, var(--ink-info) 15%, var(--ink-surface)); font-size: var(--ink-text-sm);">Studio</div></li>
+        <li><div style="display: grid; place-content: center; height: 100%; background: color-mix(in srgb, var(--ink-success) 15%, var(--ink-surface)); font-size: var(--ink-text-sm);">Kitchen</div></li>
+        <li><div style="display: grid; place-content: center; height: 100%; background: color-mix(in srgb, var(--ink-warning) 18%, var(--ink-surface)); font-size: var(--ink-text-sm);">Attic</div></li>
+        <li><div style="display: grid; place-content: center; height: 100%; background: color-mix(in srgb, var(--ink-danger) 12%, var(--ink-surface)); font-size: var(--ink-text-sm);">Basement</div></li>
+        <li><div style="display: grid; place-content: center; height: 100%; background: color-mix(in srgb, var(--ink-ink) 8%, var(--ink-surface)); font-size: var(--ink-text-sm);">Garage</div></li>
+      </ImageList>
+    </div>
+    <pre class="docs-code"><code>&lt;ImageList cols=&#123;3&#125; label="Demo gallery"&gt;
+  &lt;li&gt;&lt;img src="..." alt="Garden" /&gt;&lt;/li&gt;
+  ...
+&lt;/ImageList&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>cols</code></td><td><code>number</code></td><td><code>3</code></td><td>Column count.</td></tr>
+        <tr><td><code>gap</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Cell spacing.</td></tr>
+        <tr><td><code>rowHeight</code></td><td><code>string</code></td><td><code>10rem</code></td><td>Uniform row height.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>List landmark name.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real list; every image needs its own <code>alt</code> in production.</li>
+      <li>Demos show labeled blocks, never fake photos.</li>
+    </ul>
+  </div>
+</Base>

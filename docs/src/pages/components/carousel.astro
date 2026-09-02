@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Carousel } from "astro-ink";
+---
+<Base title="Carousel">
+  <div class="docs-page">
+    <h1>Carousel</h1>
+    <p class="docs-lede">
+      One slide in view, the rest a gesture away. Arrows, dots, and keyboard
+      come standard; autoplay stays off unless you ask.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Carousel label="Feature tour">
+        <div style="padding: var(--ink-space-5); background: color-mix(in srgb, var(--ink-accent) 12%, var(--ink-surface));"><strong>Slide 1.</strong> Meet the library.</div>
+        <div style="padding: var(--ink-space-5); background: color-mix(in srgb, var(--ink-info) 12%, var(--ink-surface));"><strong>Slide 2.</strong> Tokens everywhere.</div>
+        <div style="padding: var(--ink-space-5); background: color-mix(in srgb, var(--ink-success) 12%, var(--ink-surface));"><strong>Slide 3.</strong> Ship it.</div>
+      </Carousel>
+    </div>
+    <pre class="docs-code"><code>&lt;Carousel label="Feature tour"&gt;
+  &lt;div&gt;&lt;strong&gt;Slide 1.&lt;/strong&gt; Meet the library.&lt;/div&gt;
+  &lt;div&gt;&lt;strong&gt;Slide 2.&lt;/strong&gt; Tokens everywhere.&lt;/div&gt;
+  &lt;div&gt;&lt;strong&gt;Slide 3.&lt;/strong&gt; Ship it.&lt;/div&gt;
+&lt;/Carousel&gt;</code></pre>
+
+    <h2>Autoplay</h2>
+    <p>Pass <code>autoplay</code> with an optional <code>interval</code> (ms). It pauses on hover, focus, and reduced motion.</p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Carousel</code></td><td>Region name.</td></tr>
+        <tr><td><code>autoplay</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Advance automatically.</td></tr>
+        <tr><td><code>interval</code></td><td><code>number</code></td><td><code>5000</code></td><td>Autoplay delay ms.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Slides announce "N of M"; dots are labeled buttons with current state.</li>
+      <li>Arrow keys work when focus is inside; autoplay never runs under reduced motion.</li>
+    </ul>
+  </div>
+</Base>
