@@ -1,0 +1,42 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Typography } from "astro-ink";
+---
+<Base title="Typography">
+  <div class="docs-page">
+    <h1>Typography</h1>
+    <p class="docs-lede">
+      The type scale as components: headings, body, caption, overline. One
+      voice, eight registers.
+    </p>
+
+    <h2>Scale</h2>
+    <div class="docs-example" style="display: grid;">
+      <Typography variant="h2">Section heading</Typography>
+      <Typography variant="body">Body text for paragraphs and descriptions.</Typography>
+      <Typography variant="body-sm" muted>Small supporting text.</Typography>
+      <Typography variant="caption">Caption for metadata.</Typography>
+      <Typography variant="overline">Overline for eyebrows</Typography>
+    </div>
+    <pre class="docs-code"><code>&lt;Typography variant="h2"&gt;Section heading&lt;/Typography&gt;
+&lt;Typography variant="body"&gt;Body text...&lt;/Typography&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>variant</code></td><td><code>h1 | h2 | h3 | h4 | body | body-sm | caption | overline</code></td><td><code>body</code></td><td>Scale step (maps to real elements).</td></tr>
+        <tr><td><code>muted</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Secondary tone.</td></tr>
+        <tr><td><code>align</code></td><td><code>start | center | end</code></td><td><code>start</code></td><td>Text alignment.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Variants render their real elements: h2 is an h2, not a styled div.</li>
+      <li>Keep one h1 per page; reach for h2 here.</li>
+    </ul>
+  </div>
+</Base>

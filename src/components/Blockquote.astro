@@ -1,0 +1,29 @@
+---
+interface Props {
+  cite?: string;
+  class?: string;
+}
+
+const { cite, class: className, ...rest } = Astro.props;
+---
+<blockquote class:list={["ink-quote", className]} {...rest}>
+  <slot />
+  {cite && (
+    <footer class="ink-quote__footer">— <cite>{cite}</cite></footer>
+  )}
+</blockquote>
+
+<style>
+  .ink-quote {
+    margin: 0;
+    padding-inline-start: var(--ink-space-4);
+    border-inline-start: 3px solid var(--ink-accent);
+    font-size: var(--ink-text-lg);
+  }
+
+  .ink-quote__footer {
+    margin-top: var(--ink-space-2);
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+</style>

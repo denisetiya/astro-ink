@@ -1,0 +1,51 @@
+---
+import CopyButton from "./CopyButton.astro";
+
+interface Props {
+  language?: string;
+  code: string;
+  class?: string;
+}
+
+const { language = "text", code, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-codeblock", className]} {...rest}>
+  <div class="ink-codeblock__bar">
+    <span class="ink-codeblock__lang">{language}</span>
+    <CopyButton text={code} label={`Copy ${language} code`} />
+  </div>
+  <pre class="ink-codeblock__pre"><code>{code}</code></pre>
+</div>
+
+<style>
+  .ink-codeblock {
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-surface));
+  }
+
+  .ink-codeblock__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ink-space-3);
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border-bottom: 1px solid var(--ink-border);
+  }
+
+  .ink-codeblock__lang {
+    font-family: var(--ink-font-mono);
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-codeblock__pre {
+    margin: 0;
+    padding: var(--ink-space-3) var(--ink-space-4);
+    overflow-x: auto;
+    font-family: var(--ink-font-mono);
+    font-size: var(--ink-text-sm);
+    line-height: 1.6;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+type Variant = "h1" | "h2" | "h3" | "h4" | "body" | "body-sm" | "caption" | "overline";
+
+interface Props {
+  variant?: Variant;
+  muted?: boolean;
+  align?: "start" | "center" | "end";
+  class?: string;
+}
+
+const { variant = "body", muted = false, align = "start", class: className, ...rest } = Astro.props;
+
+const tags: Record<Variant, "h1" | "h2" | "h3" | "h4" | "p" | "small"> = {
+  h1: "h1", h2: "h2", h3: "h3", h4: "h4",
+  body: "p", "body-sm": "p", caption: "small", overline: "p",
+};
+const Tag = tags[variant];
+---
+<Tag
+  class:list={[
+    "ink-type",
+    `ink-type--${variant}`,
+    muted && "ink-type--muted",
+    `ink-type--align-${align}`,
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .ink-type { color: var(--ink-ink); }
+
+  .ink-type--h1 { font-size: var(--ink-text-2xl); font-weight: var(--ink-font-weight-bold); }
+  .ink-type--h2 { font-size: var(--ink-text-xl); font-weight: var(--ink-font-weight-semibold); }
+  .ink-type--h3 { font-size: var(--ink-text-lg); font-weight: var(--ink-font-weight-semibold); }
+  .ink-type--h4 { font-size: var(--ink-text-base); font-weight: var(--ink-font-weight-semibold); }
+  .ink-type--body { font-size: var(--ink-text-base); }
+  .ink-type--body-sm { font-size: var(--ink-text-sm); }
+  .ink-type--caption { font-size: var(--ink-text-xs); color: var(--ink-muted); }
+  .ink-type--overline {
+    font-size: var(--ink-text-xs);
+    font-weight: var(--ink-font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+  }
+
+  .ink-type--muted { color: var(--ink-muted); }
+  .ink-type--align-center { text-align: center; }
+  .ink-type--align-end { text-align: end; }
+</style>

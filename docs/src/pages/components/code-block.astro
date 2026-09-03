@@ -1,0 +1,36 @@
+---
+import Base from "../../layouts/Base.astro";
+import { CodeBlock } from "astro-ink";
+---
+<Base title="CodeBlock">
+  <div class="docs-page">
+    <h1>CodeBlock</h1>
+    <p class="docs-lede">
+      Code samples with a language label and a working copy button. No
+      highlighter dependency: structure first, color later.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <CodeBlock language="bash" code="npm install astro-ink" />
+    </div>
+    <pre class="docs-code"><code>&lt;CodeBlock language="bash" code="npm install astro-ink" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>code</code></td><td><code>string</code></td><td>-</td><td>Source text (required).</td></tr>
+        <tr><td><code>language</code></td><td><code>string</code></td><td><code>text</code></td><td>Label shown in the bar.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Copy feeds the real clipboard and confirms via the button label.</li>
+      <li>Long lines scroll inside the block; the page never overflows.</li>
+    </ul>
+  </div>
+</Base>

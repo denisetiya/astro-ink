@@ -1,0 +1,38 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Blockquote } from "astro-ink";
+---
+<Base title="Blockquote">
+  <div class="docs-page">
+    <h1>Blockquote</h1>
+    <p class="docs-lede">
+      Someone else's words, set apart. Quote plus source, nothing more.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Blockquote cite="Ada Lovelace">
+        That brain of mine is something more than merely mortal.
+      </Blockquote>
+    </div>
+    <pre class="docs-code"><code>&lt;Blockquote cite="Ada Lovelace"&gt;
+  That brain of mine is something more than merely mortal.
+&lt;/Blockquote&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>cite</code></td><td><code>string</code></td><td>-</td><td>Source name, rendered in a footer.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real <code>blockquote</code> with <code>cite</code> in a footer element.</li>
+      <li>The accent edge is decorative; the words carry the meaning.</li>
+    </ul>
+  </div>
+</Base>
