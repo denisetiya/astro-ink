@@ -1,0 +1,27 @@
+---
+import { markText } from "../scripts/highlight";
+
+interface Props {
+  text: string;
+  query: string;
+  caseSensitive?: boolean;
+  class?: string;
+}
+
+const { text, query, caseSensitive = false, class: className, ...rest } = Astro.props;
+const parts = markText(text, query, caseSensitive);
+---
+<span class:list={["ink-highlight", className]} {...rest}>
+  {parts.map((part) =>
+    part.hit ? <mark class="ink-highlight__mark">{part.text}</mark> : part.text,
+  )}
+</span>
+
+<style>
+  .ink-highlight__mark {
+    background: color-mix(in srgb, var(--ink-warning) 30%, transparent);
+    color: inherit;
+    border-radius: 2px;
+    padding-inline: 1px;
+  }
+</style>

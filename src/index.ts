@@ -85,3 +85,8 @@ export { default as Tooltip } from "./components/Tooltip.astro";
 export { default as Typography } from "./components/Typography.astro";
 export { default as Blockquote } from "./components/Blockquote.astro";
 export { default as CodeBlock } from "./components/CodeBlock.astro";
+export { default as Spoiler } from "./components/Spoiler.astro";
+export { default as Highlight } from "./components/Highlight.astro";
+export { default as Statistic } from "./components/Statistic.astro";
+export { default as Descriptions } from "./components/Descriptions.astro";
+export { default as Skeleton } from "./components/Skeleton.astro";

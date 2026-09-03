@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Descriptions } from "astro-ink";
+---
+<Base title="Descriptions">
+  <div class="docs-page">
+    <h1>Descriptions</h1>
+    <p class="docs-lede">
+      Term and definition pairs: settings summaries, order details, profile
+      facts. A description list, done right.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Descriptions
+        items={[
+          { term: "Plan", description: "Team, billed yearly" },
+          { term: "Owner", description: "Denis Setiya" },
+          { term: "Region", description: "Singapore" },
+        ]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Descriptions
+  items=&#123;[
+    &#123; term: "Plan", description: "Team, billed yearly" &#125;,
+    &#123; term: "Owner", description: "Denis Setiya" &#125;,
+  &#125;&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>items</code></td><td><code>Array</code></td><td>-</td><td>Term + description pairs.</td></tr>
+        <tr><td><code>layout</code></td><td><code>horizontal | vertical</code></td><td><code>horizontal</code></td><td>Term beside or above.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real <code>dl/dt/dd</code>: screen readers pair terms with values.</li>
+    </ul>
+  </div>
+</Base>

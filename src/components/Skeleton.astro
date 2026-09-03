@@ -1,0 +1,95 @@
+---
+interface Props {
+  variant?: "text" | "rect" | "circular";
+  width?: string;
+  height?: string;
+  lines?: number;
+  label?: string;
+  class?: string;
+}
+
+const {
+  variant = "text", width, height, lines = 3,
+  label = "Loading…", class: className, ...rest
+} = Astro.props;
+
+const lineCount = variant === "text" ? lines : 1;
+const style = [
+  width ? `width: ${width};` : "",
+  height ? `height: ${height};` : "",
+].join(" ");
+---
+<span
+  class:list={["ink-skeleton", `ink-skeleton--${variant}`, className]}
+  role="status"
+  aria-label={label}
+  style={style || undefined}
+  {...rest}
+>
+  {variant === "text" &&
+    Array.from({ length: lineCount }, (_, i) => (
+      <span class:list={["ink-skeleton__line", i === lineCount - 1 && "ink-skeleton__line--short"]} aria-hidden="true"></span>
+    ))}
+</span>
+
+<style>
+  .ink-skeleton {
+    display: block;
+    border-radius: var(--ink-radius-sm);
+  }
+
+  .ink-skeleton--text {
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-skeleton__line {
+    height: 1rem;
+    border-radius: var(--ink-radius-sm);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink-ink) 8%, transparent) 25%,
+      color-mix(in srgb, var(--ink-ink) 14%, transparent) 50%,
+      color-mix(in srgb, var(--ink-ink) 8%, transparent) 75%
+    );
+    background-size: 200% 100%;
+    animation: ink-shimmer 1.4s ease-in-out infinite;
+  }
+
+  .ink-skeleton__line--short { width: 60%; }
+
+  .ink-skeleton--rect,
+  .ink-skeleton--circular {
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+    animation: ink-pulse 1.4s ease-in-out infinite;
+  }
+
+  .ink-skeleton--rect {
+    min-height: 6rem;
+    border-radius: var(--ink-radius-md);
+  }
+
+  .ink-skeleton--circular {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  }
+
+  @keyframes ink-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  @keyframes ink-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ink-skeleton__line,
+    .ink-skeleton--rect,
+    .ink-skeleton--circular {
+      animation: none;
+    }
+  }
+</style>

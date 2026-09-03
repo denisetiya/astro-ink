@@ -1,0 +1,45 @@
+---
+interface Props {
+  items: Array<{ term: string; description: string }>;
+  layout?: "horizontal" | "vertical";
+  class?: string;
+}
+
+const { items, layout = "horizontal", class: className, ...rest } = Astro.props;
+---
+<dl class:list={["ink-desc", `ink-desc--${layout}`, className]} {...rest}>
+  {items.map((item) => (
+    <div class="ink-desc__row">
+      <dt class="ink-desc__term">{item.term}</dt>
+      <dd class="ink-desc__desc">{item.description}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .ink-desc {
+    margin: 0;
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-desc__row {
+    display: grid;
+    gap: 2px;
+  }
+
+  .ink-desc--horizontal .ink-desc__row {
+    grid-template-columns: minmax(8rem, 12rem) 1fr;
+    gap: var(--ink-space-4);
+  }
+
+  .ink-desc__term {
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+
+  .ink-desc__desc {
+    margin: 0;
+    font-size: var(--ink-text-sm);
+  }
+</style>

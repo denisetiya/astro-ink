@@ -1,0 +1,41 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Skeleton } from "astro-ink";
+---
+<Base title="Skeleton">
+  <div class="docs-page">
+    <h1>Skeleton</h1>
+    <p class="docs-lede">
+      A loading stand-in that matches the shape of what is coming: text
+      lines, rectangles, circles.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Skeleton variant="text" lines={3} label="Loading article…" />
+      <Skeleton variant="rect" width="100%" height="6rem" label="Loading card…" />
+      <Skeleton variant="circular" label="Loading avatar…" />
+    </div>
+    <pre class="docs-code"><code>&lt;Skeleton variant="text" lines=&#123;3&#125; label="Loading article…" /&gt;
+&lt;Skeleton variant="rect" width="100%" height="6rem" label="Loading card…" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>variant</code></td><td><code>text | rect | circular</code></td><td><code>text</code></td><td>Shape.</td></tr>
+        <tr><td><code>lines</code></td><td><code>number</code></td><td><code>3</code></td><td>Text lines.</td></tr>
+        <tr><td><code>width / height</code></td><td><code>string</code></td><td>-</td><td>Box size.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Loading…</code></td><td>Announced text (explicit aria-label).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>role="status"</code> with an explicit label naming WHAT loads.</li>
+      <li>Animation pauses under reduced motion.</li>
+    </ul>
+  </div>
+</Base>

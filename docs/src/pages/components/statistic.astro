@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Statistic } from "astro-ink";
+---
+<Base title="Statistic">
+  <div class="docs-page">
+    <h1>Statistic</h1>
+    <p class="docs-lede">
+      One number that matters, with its label, its direction, and its
+      context. Real numbers only.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Statistic label="Monthly readers" value="12,408" trend="up" trendLabel="+8.2%" hint="vs last month" />
+      <Statistic label="Error budget" value="0.4" suffix="%" trend="down" trendLabel="-0.1pp" />
+    </div>
+    <pre class="docs-code"><code>&lt;Statistic
+  label="Monthly readers"
+  value="12,408"
+  trend="up"
+  trendLabel="+8.2%"
+  hint="vs last month"
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label / value</code></td><td><code>string</code></td><td>-</td><td>What it is, and the number.</td></tr>
+        <tr><td><code>prefix / suffix</code></td><td><code>string</code></td><td>-</td><td>Unit dressing ($, %).</td></tr>
+        <tr><td><code>trend / trendLabel</code></td><td><code>up | down | flat / string</code></td><td>-</td><td>Direction + delta text.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Comparison basis.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trend arrows are decorative; the words carry the delta.</li>
+      <li>Tabular numerals keep columns aligned.</li>
+    </ul>
+  </div>
+</Base>

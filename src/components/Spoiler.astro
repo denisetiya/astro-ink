@@ -1,0 +1,83 @@
+---
+interface Props {
+  lines?: number;
+  showLabel?: string;
+  hideLabel?: string;
+  class?: string;
+}
+
+const { lines = 3, showLabel = "Show more", hideLabel = "Show less", class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-spoiler", className]} data-ink-spoiler data-lines={lines} {...rest}>
+  <div class="ink-spoiler__text" data-ink-spoiler-text>
+    <slot />
+  </div>
+  <button
+    type="button"
+    class="ink-spoiler__toggle"
+    data-ink-spoiler-toggle
+    data-hide={hideLabel}
+    aria-expanded="false"
+  >
+    {showLabel}
+  </button>
+</div>
+
+<style>
+  .ink-spoiler__text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ink-spoiler[data-open] .ink-spoiler__text {
+    display: block;
+  }
+
+  .ink-spoiler__toggle {
+    margin-top: var(--ink-space-2);
+    border: none;
+    background: transparent;
+    color: var(--ink-accent);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .ink-spoiler__toggle:hover { text-decoration: underline; }
+</style>
+
+<script>
+  function initSpoilers(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-spoiler]").forEach((spoiler) => {
+      if (spoiler.dataset.inkBound) return;
+      spoiler.dataset.inkBound = "true";
+      const textEl = spoiler.querySelector<HTMLElement>("[data-ink-spoiler-text]");
+      const toggle = spoiler.querySelector<HTMLButtonElement>("[data-ink-spoiler-toggle]");
+      if (!textEl || !toggle) return;
+      const lines = Number(spoiler.dataset.lines ?? 3);
+      textEl.style.webkitLineClamp = String(lines);
+      const showLabel = toggle.textContent?.trim() ?? "Show more";
+      const hideLabel = toggle.dataset.hide ?? "Show less";
+      toggle.addEventListener("click", () => {
+        const open = spoiler.hasAttribute("data-open");
+        if (open) {
+          spoiler.removeAttribute("data-open");
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.textContent = showLabel;
+        } else {
+          spoiler.setAttribute("data-open", "");
+          toggle.setAttribute("aria-expanded", "true");
+          toggle.textContent = hideLabel;
+        }
+      });
+    });
+  }
+
+  initSpoilers();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initSpoilers(root ?? document); } };
+</script>

@@ -1,0 +1,37 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Highlight } from "astro-ink";
+---
+<Base title="Highlight">
+  <div class="docs-page">
+    <h1>Highlight</h1>
+    <p class="docs-lede">
+      Search results that show their work: the matching words glow, the rest
+      stays calm.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Highlight text="astro-ink ships ink tokens" query="ink" />
+    </div>
+    <pre class="docs-code"><code>&lt;Highlight text="astro-ink ships ink tokens" query="ink" /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>text</code></td><td><code>string</code></td><td>-</td><td>Full text.</td></tr>
+        <tr><td><code>query</code></td><td><code>string</code></td><td>-</td><td>Substring to mark.</td></tr>
+        <tr><td><code>caseSensitive</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Match case exactly.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Marks use the native <code>mark</code> element: announced as highlighted text.</li>
+      <li>Highlighting is computed server-side: no layout shift on load.</li>
+    </ul>
+  </div>
+</Base>

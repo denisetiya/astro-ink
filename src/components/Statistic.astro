@@ -1,0 +1,62 @@
+---
+interface Props {
+  label: string;
+  value: string;
+  prefix?: string;
+  suffix?: string;
+  trend?: "up" | "down" | "flat";
+  trendLabel?: string;
+  hint?: string;
+  class?: string;
+}
+
+const { label, value, prefix, suffix, trend, trendLabel, hint, class: className, ...rest } = Astro.props;
+---
+<div class:list={["ink-stat", className]} {...rest}>
+  <p class="ink-stat__label">{label}</p>
+  <p class="ink-stat__value">
+    {prefix && <span class="ink-stat__affix">{prefix}</span>}
+    {value}
+    {suffix && <span class="ink-stat__affix">{suffix}</span>}
+  </p>
+  {(trend || trendLabel) && (
+    <p class:list={["ink-stat__trend", trend && `ink-stat__trend--${trend}`]}>
+      {trend === "up" && <span aria-hidden="true">▲ </span>}
+      {trend === "down" && <span aria-hidden="true">▼ </span>}
+      {trendLabel}
+    </p>
+  )}
+  {hint && <p class="ink-stat__hint">{hint}</p>}
+</div>
+
+<style>
+  .ink-stat__label {
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+
+  .ink-stat__value {
+    font-size: var(--ink-text-2xl);
+    font-weight: var(--ink-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ink-stat__affix {
+    font-size: var(--ink-text-lg);
+    color: var(--ink-muted);
+    font-weight: var(--ink-font-weight-normal);
+  }
+
+  .ink-stat__trend {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-stat__trend--up { color: var(--ink-success); }
+  .ink-stat__trend--down { color: var(--ink-danger); }
+
+  .ink-stat__hint {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+</style>

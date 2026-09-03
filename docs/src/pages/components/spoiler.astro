@@ -1,0 +1,40 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Spoiler } from "astro-ink";
+---
+<Base title="Spoiler">
+  <div class="docs-page">
+    <h1>Spoiler</h1>
+    <p class="docs-lede">
+      Long text, clamped to a few lines, with an honest way out. No fade
+      tricks hiding the rest.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Spoiler lines={3}>
+        <p>Plot twist the first: the butler refactored the codebase at midnight, and every test passed on the first run. Plot twist the second: the code review found nothing to complain about. Plot twist the third: it shipped on a Friday and the weekend stayed quiet.</p>
+      </Spoiler>
+    </div>
+    <pre class="docs-code"><code>&lt;Spoiler lines=&#123;3&#125;&gt;
+  &lt;p&gt;Plot twist the first...&lt;/p&gt;
+&lt;/Spoiler&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>lines</code></td><td><code>number</code></td><td><code>3</code></td><td>Visible lines when closed.</td></tr>
+        <tr><td><code>showLabel / hideLabel</code></td><td><code>string</code></td><td><code>Show more / Show less</code></td><td>Toggle text.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Toggle is a button with <code>aria-expanded</code>.</li>
+      <li>Full text stays in the DOM: screen readers can reach it either way.</li>
+    </ul>
+  </div>
+</Base>
