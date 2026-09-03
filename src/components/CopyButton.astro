@@ -74,12 +74,15 @@ const { text, label = "Copy to clipboard", copiedLabel = "Copied", class: classN
       const original = label?.textContent ?? "";
       btn.addEventListener("click", async () => {
         const ok = await copyText(btn.dataset.text ?? "");
-        if (!ok || !label) return;
+        if (!label) return;
         const done = btn.dataset.copiedLabel ?? "Copied";
-        label.textContent = done;
-        btn.setAttribute("aria-label", done);
+        label.textContent = ok ? done : "Copy failed";
+        btn.setAttribute("aria-label", ok ? done : "Copy failed");
         btn.dispatchEvent(
-          new CustomEvent("ink:copy", { bubbles: true, detail: { text: btn.dataset.text } }),
+          new CustomEvent("ink:copy", {
+            bubbles: true,
+            detail: { text: btn.dataset.text, ok },
+          }),
         );
         setTimeout(() => {
           label.textContent = original;

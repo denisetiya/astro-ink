@@ -30,7 +30,7 @@ import { CopyButton } from "astro-ink";
 
     <h2>Events</h2>
     <pre class="docs-code"><code>document.addEventListener("ink:copy", (event) =&gt; &#123;
-  console.log("copied: " + event.detail.text);
+  console.log("copied: " + event.detail.text + " (ok: " + event.detail.ok + ")");
 &#125;);</code></pre>
 
     <h2>Accessibility</h2>
