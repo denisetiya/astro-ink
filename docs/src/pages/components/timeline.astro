@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Timeline, TimelineItem } from "astro-ink";
+---
+<Base title="Timeline">
+  <div class="docs-page">
+    <h1>Timeline</h1>
+    <p class="docs-lede">
+      Events in order, with real dates. A rail on the left, meaning on the
+      right.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Timeline label="Release history">
+        <TimelineItem time="12 Sep 2026" datetime="2026-09-12">
+          <p><strong>v0.1.</strong> Foundation ships with Button, Badge, Alert.</p>
+        </TimelineItem>
+        <TimelineItem time="5 Sep 2026" datetime="2026-09-05">
+          <p><strong>v0.2.</strong> Forms land with validation states.</p>
+        </TimelineItem>
+        <TimelineItem time="29 Aug 2026" datetime="2026-08-29">
+          <p><strong>v0.3.</strong> Navigation across the board.</p>
+        </TimelineItem>
+      </Timeline>
+    </div>
+    <pre class="docs-code"><code>&lt;Timeline label="Release history"&gt;
+  &lt;TimelineItem time="12 Sep 2026" datetime="2026-09-12"&gt;
+    &lt;p&gt;&lt;strong&gt;v0.1.&lt;/strong&gt; Foundation ships.&lt;/p&gt;
+  &lt;/TimelineItem&gt;
+  ...
+&lt;/Timeline&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>align</code> (Timeline)</td><td><code>left | alternate</code></td><td><code>left</code></td><td>Alternate right-aligns even content on desktop.</td></tr>
+        <tr><td><code>time / datetime</code></td><td><code>string</code></td><td>-</td><td>Display date + machine date.</td></tr>
+        <tr><td><code>dotLabel</code></td><td><code>string</code></td><td>-</td><td>Names the dot as an image when it means something.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Real list with real <code>time[datetime]</code> elements.</li>
+      <li>Dots are decorative unless <code>dotLabel</code> gives them meaning.</li>
+    </ul>
+  </div>
+</Base>

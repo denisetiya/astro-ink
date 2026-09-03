@@ -1,0 +1,59 @@
+---
+interface Props {
+  time?: string;
+  datetime?: string;
+  dotLabel?: string;
+  class?: string;
+}
+
+const { time, datetime, dotLabel, class: className, ...rest } = Astro.props;
+---
+<li class:list={["ink-timeline__item", className]} {...rest}>
+  <span
+    class="ink-timeline__dot"
+    role={dotLabel ? "img" : undefined}
+    aria-label={dotLabel}
+    aria-hidden={dotLabel ? undefined : "true"}
+  ></span>
+  <div class="ink-timeline__content">
+    {time && <time class="ink-timeline__time" datetime={datetime}>{time}</time>}
+    <slot />
+  </div>
+</li>
+
+<style>
+  .ink-timeline__item {
+    position: relative;
+    padding-inline-start: var(--ink-space-6);
+  }
+
+  .ink-timeline__dot {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--ink-surface);
+    border: 2px solid var(--ink-accent);
+  }
+
+  .ink-timeline__time {
+    display: block;
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ink-timeline__content {
+    display: grid;
+    gap: var(--ink-space-1);
+    font-size: var(--ink-text-sm);
+  }
+
+  @media (min-width: 48rem) {
+    .ink-timeline--alternate .ink-timeline__item:nth-child(even) .ink-timeline__content {
+      text-align: end;
+    }
+  }
+</style>

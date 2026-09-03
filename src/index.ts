@@ -90,3 +90,5 @@ export { default as Highlight } from "./components/Highlight.astro";
 export { default as Statistic } from "./components/Statistic.astro";
 export { default as Descriptions } from "./components/Descriptions.astro";
 export { default as Skeleton } from "./components/Skeleton.astro";
+export { default as Timeline } from "./components/Timeline.astro";
+export { default as TimelineItem } from "./components/TimelineItem.astro";
