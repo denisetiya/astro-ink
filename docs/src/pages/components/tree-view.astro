@@ -1,0 +1,49 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Tree, TreeItem } from "astro-ink";
+---
+<Base title="TreeView">
+  <div class="docs-page">
+    <h1>TreeView</h1>
+    <p class="docs-lede">
+      Nested things: file trees, category trees, org charts. Right expands,
+      Left collapses, arrows travel what you can see.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example" style="display: grid;">
+      <Tree label="Project files">
+        <TreeItem id="node-src" label="src">
+          <TreeItem id="node-button" label="Button.astro" />
+          <TreeItem id="node-alert" label="Alert.astro" />
+        </TreeItem>
+        <TreeItem id="node-docs" label="docs" />
+        <TreeItem id="node-pkg" label="package.json" />
+      </Tree>
+    </div>
+    <pre class="docs-code"><code>&lt;Tree label="Project files"&gt;
+  &lt;TreeItem id="node-src" label="src"&gt;
+    &lt;TreeItem id="node-button" label="Button.astro" /&gt;
+  &lt;/TreeItem&gt;
+  &lt;TreeItem id="node-docs" label="docs" /&gt;
+&lt;/Tree&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code> (Tree)</td><td><code>string</code></td><td><code>Tree</code></td><td>Landmark name.</td></tr>
+        <tr><td><code>id / label</code> (Item)</td><td><code>string</code></td><td>-</td><td>Node identity + text.</td></tr>
+        <tr><td><code>expanded</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Open on load.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Full tree pattern: arrows, Home/End, Enter toggles, roving tabindex.</li>
+      <li>Only visible nodes are reachable; collapsed branches leave the Tab order.</li>
+    </ul>
+  </div>
+</Base>

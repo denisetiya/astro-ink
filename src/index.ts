@@ -92,3 +92,5 @@ export { default as Descriptions } from "./components/Descriptions.astro";
 export { default as Skeleton } from "./components/Skeleton.astro";
 export { default as Timeline } from "./components/Timeline.astro";
 export { default as TimelineItem } from "./components/TimelineItem.astro";
+export { default as Tree } from "./components/Tree.astro";
+export { default as TreeItem } from "./components/TreeItem.astro";

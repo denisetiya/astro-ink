@@ -1,0 +1,144 @@
+---
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = "Tree", class: className, ...rest } = Astro.props;
+---
+<ul class:list={["ink-tree", className]} role="tree" aria-label={label} data-ink-tree {...rest}>
+  <slot />
+</ul>
+
+<style>
+  .ink-tree {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 2px;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-tree :global(ul[role="group"]) {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 var(--ink-space-4);
+    display: grid;
+    gap: 2px;
+    border-inline-start: 1px solid var(--ink-border);
+    padding-inline-start: var(--ink-space-3);
+  }
+
+  .ink-tree :global(ul[role="group"][hidden]) { display: none; }
+</style>
+
+<script>
+  function visibleItems(tree: HTMLElement): HTMLElement[] {
+    return Array.from(tree.querySelectorAll<HTMLElement>('[role="treeitem"]')).filter(
+      (el) => el.offsetParent !== null || el === document.activeElement,
+    );
+  }
+
+  function syncTabindex(tree: HTMLElement, active: HTMLElement | null) {
+    for (const el of tree.querySelectorAll<HTMLElement>('[role="treeitem"]')) {
+      el.tabIndex = el === active ? 0 : -1;
+    }
+  }
+
+  function initTrees(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-tree]").forEach((tree) => {
+      if (tree.dataset.inkBound) return;
+      tree.dataset.inkBound = "true";
+      const first = visibleItems(tree)[0];
+      if (first) syncTabindex(tree, first);
+
+      const setExpanded = (item: HTMLElement, open: boolean) => {
+        item.setAttribute("aria-expanded", String(open));
+        const group = item.querySelector(":scope > ul[role='group']");
+        if (group instanceof HTMLElement) group.hidden = !open;
+      };
+
+      tree.addEventListener("keydown", (event: KeyboardEvent) => {
+        const el = document.activeElement;
+        if (!(el instanceof HTMLElement) || el.getAttribute("role") !== "treeitem") return;
+        const items = visibleItems(tree);
+        const at = items.indexOf(el);
+        const hasChildren = el.hasAttribute("aria-expanded");
+        const open = el.getAttribute("aria-expanded") === "true";
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          const next = items[at + 1];
+          if (next) {
+            syncTabindex(tree, next);
+            next.focus();
+          }
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          const prevItem = items[at - 1];
+          if (prevItem) {
+            syncTabindex(tree, prevItem);
+            prevItem.focus();
+          }
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          if (hasChildren && !open) {
+            setExpanded(el, true);
+          } else {
+            const firstChild = el.querySelector(":scope > ul[role='group'] [role='treeitem']");
+            if (firstChild instanceof HTMLElement) {
+              syncTabindex(tree, firstChild);
+              firstChild.focus();
+            }
+          }
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          if (hasChildren && open) {
+            setExpanded(el, false);
+          } else {
+            const parent = el.parentElement?.closest?.('[role="treeitem"]');
+            if (parent instanceof HTMLElement) {
+              syncTabindex(tree, parent);
+              parent.focus();
+            }
+          }
+        } else if (event.key === "Enter" || event.key === " ") {
+          if (hasChildren) {
+            event.preventDefault();
+            setExpanded(el, !open);
+          }
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          const head = items[0];
+          if (head) {
+            syncTabindex(tree, head);
+            head.focus();
+          }
+        } else if (event.key === "End") {
+          event.preventDefault();
+          const tail = items[items.length - 1];
+          if (tail) {
+            syncTabindex(tree, tail);
+            tail.focus();
+          }
+        }
+      });
+
+      tree.addEventListener("click", (event: Event) => {
+        const item = (event.target as HTMLElement).closest?.('[role="treeitem"]');
+        if (!(item instanceof HTMLElement)) return;
+        if (item.hasAttribute("aria-expanded")) {
+          setExpanded(item, item.getAttribute("aria-expanded") !== "true");
+          syncTabindex(tree, item);
+          item.focus();
+        }
+      });
+    });
+  }
+
+  initTrees();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTrees(root ?? document); } };
+</script>

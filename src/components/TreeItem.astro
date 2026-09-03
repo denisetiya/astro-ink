@@ -1,0 +1,70 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  expanded?: boolean;
+  class?: string;
+}
+
+const { id, label, expanded = false, class: className, ...rest } = Astro.props;
+const hasChildren = Astro.slots.has("default");
+---
+<li
+  class:list={["ink-treeitem", className]}
+  role="treeitem"
+  id={id}
+  aria-expanded={hasChildren ? String(expanded) : undefined}
+  aria-level={1}
+  tabindex={-1}
+  data-ink-treeitem
+  {...rest}
+>
+  <span class="ink-treeitem__row">
+    {hasChildren && (
+      <svg class="ink-treeitem__chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+        <path d="M3.5 2l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    )}
+    <span class="ink-treeitem__label">{label}</span>
+  </span>
+  {hasChildren && (
+    <ul role="group" aria-label={`${label} contents`} hidden={!expanded || undefined}>
+      <slot />
+    </ul>
+  )}
+</li>
+
+<style>
+  .ink-treeitem__row {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+    padding: var(--ink-space-1) var(--ink-space-2);
+    min-height: 2.25rem;
+    border-radius: var(--ink-radius-sm);
+    cursor: default;
+  }
+
+  .ink-treeitem__row:hover {
+    background: color-mix(in srgb, var(--ink-ink) 4%, transparent);
+  }
+
+  .ink-treeitem:focus {
+    outline: none;
+  }
+
+  .ink-treeitem:focus-visible > .ink-treeitem__row {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 1px;
+  }
+
+  .ink-treeitem__chevron {
+    color: var(--ink-muted);
+    transition: rotate var(--ink-duration-fast) var(--ink-ease);
+    flex-shrink: 0;
+  }
+
+  .ink-treeitem[aria-expanded="true"] > .ink-treeitem__row > .ink-treeitem__chevron {
+    rotate: 90deg;
+  }
+</style>
