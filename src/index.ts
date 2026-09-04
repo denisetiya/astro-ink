@@ -97,3 +97,4 @@ export { default as TreeItem } from "./components/TreeItem.astro";
 export { default as Fab } from "./components/Fab.astro";
 export { default as IconButton } from "./components/IconButton.astro";
 export { default as SegmentedControl } from "./components/SegmentedControl.astro";
+export { default as Rating } from "./components/Rating.astro";

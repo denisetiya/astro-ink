@@ -1,0 +1,129 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  max?: number;
+  value?: number;
+  readOnly?: boolean;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  class?: string;
+}
+
+const {
+  name, label, max = 5, value = 0, readOnly = false,
+  hint, error, required = false, class: className, ...rest
+} = Astro.props;
+
+const stars = Array.from({ length: max }, (_, i) => i + 1);
+const current = Math.min(Math.max(Math.round(value), 0), max);
+const describedBy = [hint && `${name}-hint`, error && `${name}-error`].filter(Boolean).join(" ") || undefined;
+const starPath = "M12 2.5l2.9 6.26 6.6.7-4.9 4.5 1.35 6.54L12 17.3 6.05 20.5l1.35-6.54-4.9-4.5 6.6-.7L12 2.5z";
+---
+{readOnly ? (
+  <div class:list={["ink-rating", className]} role="img" aria-label={`Rated ${current} out of ${max}`} {...rest}>
+    {stars.map((n) => (
+      <svg class:list={["ink-rating__star", n <= current && "ink-rating__star--on"]} width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d={starPath} fill={n <= current ? "currentColor" : "none"} stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+      </svg>
+    ))}
+  </div>
+) : (
+  <div class:list={["ink-rating", className]} {...rest}>
+    <p class="ink-rating__label" id={`${name}-label`}>
+      {label}{required && <span class="ink-rating__required" aria-hidden="true"> *</span>}
+    </p>
+    <div class="ink-rating__stars" role="radiogroup" aria-labelledby={`${name}-label`} aria-describedby={describedBy} data-ink-rating>
+      {stars.map((n) => (
+        <label class="ink-rating__option" data-ink-rating-option data-value={n}>
+          <input
+            type="radio"
+            class="ink-visually-hidden"
+            name={name}
+            value={n}
+            checked={n === current || undefined}
+            required={required || undefined}
+            aria-label={`${n} star${n === 1 ? "" : "s"}`}
+          />
+          <svg class="ink-rating__star" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d={starPath} fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+        </label>
+      ))}
+    </div>
+    {hint && <p class="ink-rating__hint" id={`${name}-hint`}>{hint}</p>}
+    {error && <p class="ink-rating__error" id={`${name}-error`}>{error}</p>}
+  </div>
+)}
+
+<script>
+  function initRatings(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-rating]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const sync = () => {
+        const checked = box.querySelector<HTMLInputElement>("input:checked");
+        const at = checked ? Number(checked.value) : 0;
+        box.querySelectorAll<HTMLElement>("[data-ink-rating-option]").forEach((opt) => {
+          opt.classList.toggle("ink-rating__option--on", Number(opt.dataset.value ?? 0) <= at);
+        });
+      };
+      box.addEventListener("change", sync);
+      sync();
+    });
+  }
+
+  initRatings();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initRatings(root ?? document); } };
+</script>
+
+<style>
+  .ink-rating { display: grid; gap: var(--ink-space-1); }
+
+  .ink-rating__label {
+    margin: 0;
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-rating__required { color: var(--ink-danger); }
+
+  .ink-rating__stars { display: inline-flex; gap: 2px; }
+
+  .ink-rating__star { color: var(--ink-border-strong); }
+
+  .ink-rating__option { position: relative; cursor: pointer; display: inline-flex; }
+
+  .ink-rating__option > .ink-visually-hidden {
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    margin: 0;
+    clip: auto;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .ink-rating__option > .ink-visually-hidden:disabled {
+    cursor: not-allowed;
+  }
+
+  .ink-rating__option > input:focus-visible + .ink-rating__star {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .ink-rating__option--on .ink-rating__star { color: var(--ink-warning); }
+  .ink-rating__option--on .ink-rating__star path { fill: currentColor; }
+
+  .ink-rating__star--on { color: var(--ink-warning); }
+  .ink-rating__star--on path { fill: currentColor; }
+
+  .ink-rating__hint { font-size: var(--ink-text-xs); color: var(--ink-muted); }
+  .ink-rating__error { font-size: var(--ink-text-xs); color: var(--ink-danger); font-weight: var(--ink-font-weight-medium); }
+</style>

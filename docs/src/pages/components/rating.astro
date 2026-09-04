@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Rating } from "astro-ink";
+---
+<Base title="Rating">
+  <div class="docs-page">
+    <h1>Rating</h1>
+    <p class="docs-lede">
+      Star rating: real radios in a radiogroup when editable, static image
+      with a text alternative when readonly.
+    </p>
+
+    <h2>Editable</h2>
+    <div class="docs-example">
+      <Rating name="quality" label="Quality" />
+    </div>
+    <pre class="docs-code"><code>&lt;Rating name="quality" label="Quality" /&gt;</code></pre>
+
+    <h2>Readonly</h2>
+    <div class="docs-example">
+      <Rating name="quality-readonly" label="Quality" value={4} readOnly />
+    </div>
+    <pre class="docs-code"><code>&lt;Rating name="quality-readonly" label="Quality" value=&#123;4&#125; readOnly /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Form field name (shared radio group name).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Group label.</td></tr>
+        <tr><td><code>max</code></td><td><code>number</code></td><td><code>5</code></td><td>Number of stars.</td></tr>
+        <tr><td><code>value</code></td><td><code>number</code></td><td><code>0</code></td><td>Initial (editable) or displayed (readonly) rating.</td></tr>
+        <tr><td><code>readOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Static display instead of radios.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Renders <code>#&#123;name&#125;-hint</code>.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Renders <code>#&#123;name&#125;-error</code>.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the group required.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Editable stars are native radios: arrow keys move, click selects, label announces "N stars".</li>
+      <li>Readonly exposes <code>role="img"</code> with a text alternative ("Rated X out of N").</li>
+    </ul>
+  </div>
+</Base>
