@@ -1,0 +1,50 @@
+---
+interface Props {
+  href?: string;
+  label: string;
+  variant?: "secondary" | "ghost";
+  size?: "sm" | "md";
+  disabled?: boolean;
+  class?: string;
+}
+
+const { href, label, variant = "secondary", size = "md", disabled = false, class: className, ...rest } = Astro.props;
+const Tag = href ? "a" : "button";
+---
+<Tag
+  class:list={["ink-iconbtn", `ink-iconbtn--${variant}`, `ink-iconbtn--${size}`, className]}
+  href={href}
+  type={href ? undefined : "button"}
+  aria-label={label}
+  disabled={href ? undefined : disabled || undefined}
+  aria-disabled={href && disabled ? "true" : undefined}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .ink-iconbtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    background: var(--ink-surface);
+    color: var(--ink-ink);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .ink-iconbtn--sm { width: 2.25rem; height: 2.25rem; }
+  .ink-iconbtn--ghost { border-color: transparent; background: transparent; }
+
+  .ink-iconbtn:hover { border-color: var(--ink-ink); }
+
+  .ink-iconbtn:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+</style>

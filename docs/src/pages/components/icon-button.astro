@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { IconButton } from "astro-ink";
+---
+<Base title="IconButton">
+  <div class="docs-page">
+    <h1>IconButton</h1>
+    <p class="docs-lede">
+      A square button for icon-only actions. The label is required and becomes
+      the accessible name.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <IconButton label="Search">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.75" />
+          <path d="m12.5 12.5 3 3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+        </svg>
+      </IconButton>
+      <IconButton label="Settings" variant="ghost" size="sm">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.75" />
+          <path d="M9 1.5v2.5M9 14v2.5M1.5 9H4M14 9h2.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+        </svg>
+      </IconButton>
+    </div>
+    <pre class="docs-code"><code>&lt;IconButton label="Search"&gt;
+  &lt;svg ...&gt;...&lt;/svg&gt;
+&lt;/IconButton&gt;
+&lt;IconButton label="Settings" variant="ghost" size="sm"&gt;
+  &lt;svg ...&gt;...&lt;/svg&gt;
+&lt;/IconButton&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Accessible name (required).</td></tr>
+        <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Renders a link; otherwise a button.</td></tr>
+        <tr><td><code>variant</code></td><td><code>secondary | ghost</code></td><td><code>secondary</code></td><td>Visual style.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md</code></td><td><code>md</code></td><td>Button size.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disabled state.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Always pass a meaningful <code>label</code>; icons alone convey nothing.</li>
+      <li>Link + disabled uses <code>aria-disabled</code> since links have no disabled state.</li>
+    </ul>
+  </div>
+</Base>

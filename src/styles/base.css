@@ -50,6 +50,20 @@ button {
   outline-offset: 2px;
 }
 
+/* Global visually-hidden utility: hides content visually while keeping it
+   accessible to assistive tech and keyboard focus (e.g. SegmentedControl radios). */
+.ink-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Deliberate !important: reduced-motion users get near-zero motion regardless
    of any duration token or inline animation duration. */
 @media (prefers-reduced-motion: reduce) {

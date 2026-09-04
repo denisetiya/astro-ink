@@ -1,0 +1,72 @@
+---
+interface Props {
+  href?: string;
+  label: string;
+  extended?: boolean;
+  placement?: "bottom-end" | "bottom-start" | "top-end" | "top-start";
+  size?: "md" | "lg";
+  class?: string;
+}
+
+const {
+  href, label, extended = false, placement = "bottom-end", size = "md",
+  class: className, ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+---
+<Tag
+  class:list={["ink-fab", `ink-fab--${size}`, `ink-fab--${placement}`, extended && "ink-fab--extended", className]}
+  href={href}
+  type={href ? undefined : "button"}
+  aria-label={label}
+  {...rest}
+>
+  <slot />
+  {extended && <span class="ink-fab__text">{label}</span>}
+</Tag>
+
+<style>
+  .ink-fab {
+    position: fixed;
+    z-index: var(--ink-z-overlay, 40);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ink-space-2);
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    padding: var(--ink-space-3);
+    border: none;
+    border-radius: 50%;
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+    box-shadow: var(--ink-shadow-2);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .ink-fab--lg { min-width: 4rem; min-height: 4rem; }
+
+  .ink-fab--extended {
+    border-radius: var(--ink-radius-lg);
+    padding-inline: var(--ink-space-4);
+  }
+
+  .ink-fab--bottom-end { inset-inline-end: var(--ink-space-5); bottom: var(--ink-space-5); }
+  .ink-fab--bottom-start { inset-inline-start: var(--ink-space-5); bottom: var(--ink-space-5); }
+  .ink-fab--top-end { inset-inline-end: var(--ink-space-5); top: var(--ink-space-5); }
+  .ink-fab--top-start { inset-inline-start: var(--ink-space-5); top: var(--ink-space-5); }
+
+  .ink-fab:hover { filter: brightness(1.08); }
+
+  .ink-fab:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-fab__text {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>

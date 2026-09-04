@@ -1,0 +1,39 @@
+---
+import Base from "../../layouts/Base.astro";
+import { SegmentedControl } from "astro-ink";
+---
+<Base title="SegmentedControl">
+  <div class="docs-page">
+    <h1>SegmentedControl</h1>
+    <p class="docs-lede">
+      One choice out of a few, shown as a joined strip of options. Real radios
+      under the hood — no JavaScript.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <SegmentedControl name="range" label="Date range" options={["Day", "Week", "Month"]} />
+    </div>
+    <pre class="docs-code"><code>&lt;SegmentedControl name="range" label="Date range" options=&#123;["Day", "Week", "Month"]&#125; /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Shared radio name; message ids derive from it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Legend text.</td></tr>
+        <tr><td><code>options</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td>-</td><td>Options as strings or value/label objects.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code></td><td>first option</td><td>Initially checked value.</td></tr>
+        <tr><td><code>hint / error</code></td><td><code>string</code></td><td>-</td><td>Wired via <code>aria-describedby</code> on the fieldset.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Arrow keys move between options natively; Tab enters and leaves the group once.</li>
+      <li><code>fieldset</code> + <code>legend</code> gives each radio its group context.</li>
+    </ul>
+  </div>
+</Base>

@@ -94,3 +94,6 @@ export { default as Timeline } from "./components/Timeline.astro";
 export { default as TimelineItem } from "./components/TimelineItem.astro";
 export { default as Tree } from "./components/Tree.astro";
 export { default as TreeItem } from "./components/TreeItem.astro";
+export { default as Fab } from "./components/Fab.astro";
+export { default as IconButton } from "./components/IconButton.astro";
+export { default as SegmentedControl } from "./components/SegmentedControl.astro";

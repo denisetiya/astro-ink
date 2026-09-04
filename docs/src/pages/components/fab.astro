@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Fab } from "astro-ink";
+---
+<Base title="Fab">
+  <div class="docs-page">
+    <h1>Fab</h1>
+    <p class="docs-lede">
+      A floating action button for the primary action on a page. Icon-only, or
+      extended with a visible label.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Fab href="/components" label="Create note">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </Fab>
+      <Fab label="New message" extended placement="bottom-start">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </Fab>
+    </div>
+    <pre class="docs-code"><code>&lt;Fab href="/components" label="Create note"&gt;
+  &lt;svg ...&gt;...&lt;/svg&gt;
+&lt;/Fab&gt;
+&lt;Fab label="New message" extended placement="bottom-start"&gt;
+  &lt;svg ...&gt;...&lt;/svg&gt;
+&lt;/Fab&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Accessible name; visible text when <code>extended</code>.</td></tr>
+        <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Renders a link; otherwise a button.</td></tr>
+        <tr><td><code>extended</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the label as visible text.</td></tr>
+        <tr><td><code>placement</code></td><td><code>bottom-end | bottom-start | top-end | top-start</code></td><td><code>bottom-end</code></td><td>Fixed viewport corner.</td></tr>
+        <tr><td><code>size</code></td><td><code>md | lg</code></td><td><code>md</code></td><td>Button size.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>label</code> is required and always exposed as <code>aria-label</code>.</li>
+      <li>Fixed position is announced once; use one FAB per page.</li>
+    </ul>
+  </div>
+</Base>
