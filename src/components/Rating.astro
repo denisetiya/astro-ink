@@ -34,7 +34,7 @@ const starPath = "M12 2.5l2.9 6.26 6.6.7-4.9 4.5 1.35 6.54L12 17.3 6.05 20.5l1.3
     <p class="ink-rating__label" id={`${name}-label`}>
       {label}{required && <span class="ink-rating__required" aria-hidden="true"> *</span>}
     </p>
-    <div class="ink-rating__stars" role="radiogroup" aria-labelledby={`${name}-label`} aria-describedby={describedBy} data-ink-rating>
+    <div class="ink-rating__stars" role="radiogroup" aria-labelledby={`${name}-label`} aria-describedby={describedBy} aria-invalid={error ? "true" : undefined} data-ink-rating>
       {stars.map((n) => (
         <label class="ink-rating__option" data-ink-rating-option data-value={n}>
           <input
@@ -106,10 +106,6 @@ const starPath = "M12 2.5l2.9 6.26 6.6.7-4.9 4.5 1.35 6.54L12 17.3 6.05 20.5l1.3
     clip: auto;
     opacity: 0;
     cursor: pointer;
-  }
-
-  .ink-rating__option > .ink-visually-hidden:disabled {
-    cursor: not-allowed;
   }
 
   .ink-rating__option > input:focus-visible + .ink-rating__star {
