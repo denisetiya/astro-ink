@@ -21,7 +21,7 @@ const items: Option[] = options.map((o) => (typeof o === "string" ? { value: o, 
 const current = value ?? items[0]?.value;
 const describedBy = [hint && `${name}-hint`, error && `${name}-error`].filter(Boolean).join(" ") || undefined;
 ---
-<fieldset class:list={["ink-segmented", className]} aria-describedby={describedBy} {...rest}>
+<fieldset class:list={["ink-segmented", className]} aria-describedby={describedBy} aria-invalid={error ? "true" : undefined} {...rest}>
   <legend class="ink-segmented__legend">
     {label}{required && <span class="ink-segmented__required" aria-hidden="true"> *</span>}
   </legend>
@@ -77,6 +77,10 @@ const describedBy = [hint && `${name}-hint`, error && `${name}-error`].filter(Bo
     clip: auto;
     opacity: 0;
     cursor: pointer;
+  }
+
+  .ink-segmented__option > .ink-visually-hidden:disabled {
+    cursor: not-allowed;
   }
 
   .ink-segmented__label {
