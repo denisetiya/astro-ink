@@ -99,3 +99,4 @@ export { default as IconButton } from "./components/IconButton.astro";
 export { default as SegmentedControl } from "./components/SegmentedControl.astro";
 export { default as Rating } from "./components/Rating.astro";
 export { default as Combobox } from "./components/Combobox.astro";
+export { default as Autocomplete } from "./components/Autocomplete.astro";

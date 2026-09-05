@@ -1,0 +1,60 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Autocomplete } from "astro-ink";
+---
+<Base title="Autocomplete">
+  <div class="docs-page">
+    <h1>Autocomplete</h1>
+    <p class="docs-lede">
+      Type to filter suggestions, pick with keyboard or pointer — or keep
+      typing. Any text submits: the visible input itself carries the form
+      name.
+    </p>
+    <p>
+      Combobox vs Autocomplete: Combobox values must come from the list (a
+      hidden input carries the value; stray text reverts on blur).
+      Autocomplete allows free text (the named input carries the value;
+      blur keeps whatever is typed).
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Autocomplete
+        id="city"
+        label="City"
+        name="city"
+        options={["New York", "York", "Newark"]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Autocomplete
+  id="city"
+  label="City"
+  name="city"
+  options=&#123;["New York", "York", "Newark"]&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Input id; label targets it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Visible input form name; submits free text.</td></tr>
+        <tr><td><code>options</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td>-</td><td>Suggestion items.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code></td><td><code>""</code></td><td>Initial text; option values resolve to labels.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td>-</td><td>Input placeholder.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+        <tr><td colspan="4">Plus the Field API (hint, error, required, disabled).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Plain textbox with <code>aria-expanded</code>, <code>aria-controls</code>, <code>aria-autocomplete="list"</code>, <code>aria-activedescendant</code> for the suggestion relationship.</li>
+      <li>Free text is kept on blur; Enter with no highlight submits the form naturally.</li>
+      <li>Escape closes the suggestion list.</li>
+    </ul>
+  </div>
+</Base>
