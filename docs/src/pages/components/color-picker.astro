@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ColorPicker } from "astro-ink";
+---
+<Base title="ColorPicker">
+  <div class="docs-page">
+    <h1>ColorPicker</h1>
+    <p class="docs-lede">
+      Native color well plus an editable hex field and optional preset
+      swatches, all two-way synced. The hex text input carries the form
+      name, so the value submits natively.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <ColorPicker
+        id="theme-color"
+        label="Theme color"
+        name="theme-color"
+        presets={["#4f46e5", "#16a34a", "#dc2626"]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;ColorPicker
+  id="theme-color"
+  label="Theme color"
+  name="theme-color"
+  presets=&#123;["#4f46e5", "#16a34a", "#dc2626"]&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Base for the hex input id and message ids.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; also names the picker and preset group.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hex input form name.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code></td><td><code>#4f46e5</code></td><td>Initial <code>#rrggbb</code> color.</td></tr>
+        <tr><td><code>presets</code></td><td><code>string[]</code></td><td><code>[]</code></td><td>Swatch colors; each renders a <code>Use color …</code> button.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the control.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the hex input.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Hex field uses the Field label; the native well is named <code>&lt;label&gt; picker</code> so the two names differ.</li>
+      <li>Swatches are real buttons named <code>Use color …</code> inside a named presets group.</li>
+      <li>An unparseable hex value flags the field with <code>aria-invalid="true"</code> until it validates.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,166 @@
+---
+// NOTE: Field doesn't fit OTP — Field renders a single `<label for>` but OTP
+// has N boxes, so we hand-roll label+hint+error with `for` pointing at the
+// first box (`${id}-0`) and matching `${id}-hint/error` message ids.
+interface Props {
+  id: string;
+  label?: string;
+  name?: string;
+  length?: number;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label = "Verification code", name = id, length = 6,
+  hint, error, required = false, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const boxes = Array.from({ length }, (_, i) => i);
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+---
+<div class:list={["ink-otp", className]} data-ink-otp {...rest}>
+  <label class="ink-otp__label" for={`${id}-0`}>
+    {label}{required && <span aria-hidden="true"> *</span>}
+  </label>
+  <div class="ink-otp__boxes" role="group">
+    {boxes.map((i) => (
+      <input
+        id={`${id}-${i}`}
+        class="ink-otp__box"
+        type="text"
+        inputmode="numeric"
+        autocomplete={i === 0 ? "one-time-code" : undefined}
+        maxlength={1}
+        data-ink-otp-box
+        data-index={i}
+        required={required || undefined}
+        disabled={disabled || undefined}
+        aria-invalid={error ? "true" : undefined}
+        aria-describedby={describedBy}
+      />
+    ))}
+  </div>
+  <input type="hidden" name={name} value="" data-ink-otp-value />
+  {hint && <p class="ink-otp__hint" id={`${id}-hint`}>{hint}</p>}
+  {error && <p class="ink-otp__error" id={`${id}-error`}>{error}</p>}
+</div>
+
+<style>
+  .ink-otp {
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-otp__label {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-otp__boxes {
+    display: flex;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-otp__box {
+    width: 2.75rem;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2);
+    text-align: center;
+    font-size: var(--ink-text-base);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-ink);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-input-radius, var(--ink-radius-md));
+    transition:
+      border-color var(--ink-duration-fast) var(--ink-ease),
+      box-shadow var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-otp__box:hover {
+    border-color: var(--ink-ink);
+  }
+
+  .ink-otp__box:focus {
+    outline: none;
+    border-color: var(--ink-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-accent) 25%, transparent);
+  }
+
+  .ink-otp__box:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));
+  }
+
+  .ink-otp__box[aria-invalid="true"] {
+    border-color: var(--ink-danger);
+  }
+
+  .ink-otp__box[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-danger) 25%, transparent);
+  }
+
+  .ink-otp__hint {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-otp__error {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-danger);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>
+
+<script>
+  function initOtps(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-otp]").forEach((otp) => {
+      if (otp.dataset.inkBound) return;
+      otp.dataset.inkBound = "true";
+      const boxes = Array.from(otp.querySelectorAll<HTMLInputElement>("[data-ink-otp-box]"));
+      const hidden = otp.querySelector<HTMLInputElement>("[data-ink-otp-value]");
+      if (!hidden) return;
+
+      const sync = () => {
+        hidden.value = boxes.map((b) => b.value).join("");
+      };
+
+      boxes.forEach((box, i) => {
+        box.addEventListener("input", () => {
+          box.value = box.value.replace(/[^0-9]/g, "").slice(-1);
+          if (box.value && i + 1 < boxes.length) boxes[i + 1]!.focus();
+          sync();
+        });
+        box.addEventListener("keydown", (event: KeyboardEvent) => {
+          if (event.key === "Backspace" && !box.value && i > 0) {
+            event.preventDefault();
+            boxes[i - 1]!.focus();
+            boxes[i - 1]!.select();
+          }
+        });
+        box.addEventListener("paste", (event: ClipboardEvent) => {
+          event.preventDefault();
+          const text = (event.clipboardData?.getData("text") ?? "").replace(/[^0-9]/g, "");
+          if (!text) return;
+          text.split("").forEach((ch, k) => {
+            if (i + k < boxes.length) boxes[i + k]!.value = ch;
+          });
+          const last = Math.min(i + text.length, boxes.length - 1);
+          boxes[last]!.focus();
+          sync();
+        });
+      });
+    });
+  }
+
+  initOtps();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initOtps(root ?? document); } };
+</script>

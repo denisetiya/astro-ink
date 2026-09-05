@@ -1,0 +1,64 @@
+---
+import Base from "../../layouts/Base.astro";
+import { OtpInput } from "astro-ink";
+---
+<Base title="OtpInput">
+  <div class="docs-page">
+    <h1>OtpInput</h1>
+    <p class="docs-lede">
+      One-time-code entry as single-character boxes with a synced hidden
+      input for native form submit. Typing auto-advances, Backspace steps
+      back, pasting a code fills every box.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <OtpInput id="code" label="Verification code" name="code" length={6} hint="Enter the 6-digit code we sent you." />
+    </div>
+    <pre class="docs-code"><code>&lt;OtpInput
+  id="code"
+  label="Verification code"
+  name="code"
+  length=&#123;6&#125;
+  hint="Enter the 6-digit code we sent you."
+/&gt;</code></pre>
+
+    <h2>Error state</h2>
+    <div class="docs-example">
+      <OtpInput id="pin" label="PIN" name="pin" length={4} error="That code has expired." />
+    </div>
+    <pre class="docs-code"><code>&lt;OtpInput
+  id="pin"
+  label="PIN"
+  name="pin"
+  length=&#123;4&#125;
+  error="That code has expired."
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Base for box ids (<code>#&#123;id&#125;-0</code>…) and message ids.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>Verification code</code></td><td>Visible label; targets the first box.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden input form name; submits the joined digits.</td></tr>
+        <tr><td><code>length</code></td><td><code>number</code></td><td><code>6</code></td><td>Number of digit boxes.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the boxes.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on every box.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks and enforces required on each box.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Label is a real <code>&lt;label for&gt;</code> pointing at the first box; boxes share one unlabelled group.</li>
+      <li>Hint and error connect to every box via <code>aria-describedby</code>; error sets <code>aria-invalid="true"</code>.</li>
+      <li>First box carries <code>autocomplete="one-time-code"</code> so platforms can autofill the code.</li>
+      <li>Boxes use <code>inputmode="numeric"</code> for a digit keyboard on touch devices.</li>
+    </ul>
+  </div>
+</Base>

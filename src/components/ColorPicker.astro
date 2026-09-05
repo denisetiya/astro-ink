@@ -1,0 +1,182 @@
+---
+import Field from "./Field.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  value?: string;
+  presets?: string[];
+  hint?: string;
+  error?: string;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, value = "#4f46e5", presets = [],
+  hint, error, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+---
+<Field id={`${id}-hex`} label={label} hint={hint} error={error} class={className}>
+  <div class="ink-color" data-ink-color>
+    <input
+      type="color"
+      class="ink-color__native"
+      value={value}
+      disabled={disabled || undefined}
+      aria-label={`${label} picker`}
+      data-ink-color-native
+    />
+    <input
+      id={`${id}-hex`}
+      name={name}
+      class="ink-input ink-color__hex"
+      type="text"
+      value={value}
+      spellcheck={false}
+      pattern="#[0-9a-fA-F]{6}"
+      disabled={disabled || undefined}
+      aria-invalid={error ? "true" : undefined}
+      aria-describedby={describedBy}
+      data-ink-color-hex
+      {...rest}
+    />
+    {presets.length > 0 && (
+      <div class="ink-color__swatches" role="group" aria-label={`${label} presets`}>
+        {presets.map((hex) => (
+          <button
+            type="button"
+            class="ink-color__swatch"
+            style={`background: ${hex};`}
+            aria-label={`Use color ${hex}`}
+            data-color={hex}
+            data-ink-color-swatch
+            disabled={disabled || undefined}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</Field>
+
+<style>
+  .ink-color {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-color__native {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: var(--ink-space-1);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-input-radius, var(--ink-radius-md));
+    background: var(--ink-surface);
+    cursor: pointer;
+  }
+
+  .ink-color__native:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .ink-color__hex {
+    max-width: 8rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ink-color__swatches {
+    display: flex;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-color__swatch {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 2px solid var(--ink-surface);
+    border-radius: 50%;
+    outline: 1px solid var(--ink-border-strong);
+    cursor: pointer;
+  }
+
+  .ink-color__swatch:hover {
+    outline-color: var(--ink-ink);
+  }
+
+  .ink-color__swatch:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-color__swatch:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  const HEX6 = /^#[0-9a-fA-F]{6}$/;
+  const HEX3 = /^#[0-9a-fA-F]{3}$/;
+
+  function normalizeHex(raw: string): string | null {
+    const v = raw.trim();
+    if (HEX6.test(v)) return v.toLowerCase();
+    if (HEX3.test(v)) {
+      const [r, g, b] = [v[1], v[2], v[3]];
+      return `#${r}${r}${g}${g}${b}${b}`.toLowerCase();
+    }
+    return null;
+  }
+
+  function initColors(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-color]").forEach((wrap) => {
+      if (wrap.dataset.inkBound) return;
+      wrap.dataset.inkBound = "true";
+      const native = wrap.querySelector<HTMLInputElement>("[data-ink-color-native]");
+      const hex = wrap.querySelector<HTMLInputElement>("[data-ink-color-hex]");
+      if (!native || !hex) return;
+
+      const setBoth = (value: string) => {
+        native.value = value;
+        hex.value = value;
+        hex.removeAttribute("aria-invalid");
+      };
+
+      hex.addEventListener("input", () => {
+        const next = normalizeHex(hex.value);
+        if (next) {
+          native.value = next;
+          hex.removeAttribute("aria-invalid");
+        } else {
+          hex.setAttribute("aria-invalid", "true");
+        }
+      });
+      hex.addEventListener("change", () => {
+        const next = normalizeHex(hex.value);
+        if (next) setBoth(next);
+      });
+      native.addEventListener("input", () => {
+        hex.value = native.value;
+        hex.removeAttribute("aria-invalid");
+      });
+      wrap.querySelectorAll<HTMLElement>("[data-ink-color-swatch]").forEach((swatch) => {
+        swatch.addEventListener("click", () => {
+          const color = swatch.dataset.color ?? "";
+          const next = normalizeHex(color);
+          if (next) setBoth(next);
+        });
+      });
+    });
+  }
+
+  initColors();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initColors(root ?? document); } };
+</script>
