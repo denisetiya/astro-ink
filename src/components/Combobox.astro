@@ -52,7 +52,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
       aria-autocomplete="list"
       {...rest}
     />
-    <button type="button" class="ink-combo__clear" data-ink-combo-clear aria-label={`Clear ${label}`} hidden={!initial || undefined}>×</button>
+    <button type="button" class="ink-combo__clear" data-ink-combo-clear aria-label={`Clear ${label}`} hidden={!initial || undefined} disabled={disabled || undefined}>×</button>
     <ul class="ink-combo__list" role="listbox" id={`${id}-list`} aria-label={`${label} options`} data-ink-combo-list hidden>
       {items.map((o, i) => (
         <li
