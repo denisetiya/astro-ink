@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import { MultiSelect } from "astro-ink";
+---
+<Base title="MultiSelect">
+  <div class="docs-page">
+    <h1>MultiSelect</h1>
+    <p class="docs-lede">
+      Pick several items from a popup panel of checkboxes. Real checkbox
+      inputs carry the form name, so selections submit natively. The trigger
+      shows one label, a count, or the placeholder.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <MultiSelect
+        id="toppings"
+        label="Toppings"
+        name="toppings"
+        options={["Pepperoni", "Mushrooms", "Olives"]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;MultiSelect
+  id="toppings"
+  label="Toppings"
+  name="toppings"
+  options=&#123;["Pepperoni", "Mushrooms", "Olives"]&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Trigger id; Field label targets it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; also names the trigger and panel.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Checkbox form name; submits every checked value.</td></tr>
+        <tr><td><code>options</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td>-</td><td>Selectable items.</td></tr>
+        <tr><td><code>values</code></td><td><code>string[]</code></td><td><code>[]</code></td><td>Preselected option values.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Select …"</code></td><td>Empty-state trigger text; defaults to the lowercased label.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+        <tr><td colspan="4">Plus the Field API (hint, error, required, disabled).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger keeps the label in its accessible name, then the state (<code>aria-expanded</code>, <code>aria-controls</code>).</li>
+      <li>Panel is a named group of real checkboxes — native keyboard and form behavior, no synthetic listbox.</li>
+      <li>Escape closes the panel; clicking away closes it; Clear unchecks all and keeps focus.</li>
+    </ul>
+  </div>
+</Base>

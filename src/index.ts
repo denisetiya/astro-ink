@@ -100,3 +100,4 @@ export { default as SegmentedControl } from "./components/SegmentedControl.astro
 export { default as Rating } from "./components/Rating.astro";
 export { default as Combobox } from "./components/Combobox.astro";
 export { default as Autocomplete } from "./components/Autocomplete.astro";
+export { default as MultiSelect } from "./components/MultiSelect.astro";
