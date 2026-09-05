@@ -1,0 +1,275 @@
+---
+import Field from "./Field.astro";
+import { normalizeOptions } from "../scripts/listbox";
+
+interface Option {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  options: Array<string | Option>;
+  value?: string;
+  placeholder?: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, options, value = "", placeholder,
+  hint, error, required = false, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const items = normalizeOptions(options);
+const initial = items.find((o) => o.value === value);
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+---
+<Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
+  <div class="ink-combo" data-ink-combo>
+    <input
+      id={id}
+      class="ink-input ink-combo__input"
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck={false}
+      placeholder={placeholder}
+      value={initial?.label ?? ""}
+      required={required || undefined}
+      disabled={disabled || undefined}
+      aria-invalid={error ? "true" : undefined}
+      aria-describedby={describedBy}
+      aria-expanded="false"
+      aria-controls={`${id}-list`}
+      aria-autocomplete="list"
+      {...rest}
+    />
+    <button type="button" class="ink-combo__clear" data-ink-combo-clear aria-label={`Clear ${label}`} hidden={!initial || undefined}>×</button>
+    <ul class="ink-combo__list" role="listbox" id={`${id}-list`} aria-label={`${label} options`} data-ink-combo-list hidden>
+      {items.map((o, i) => (
+        <li
+          class="ink-combo__option"
+          role="option"
+          id={`${id}-opt-${i}`}
+          data-value={o.value}
+          data-label={o.label}
+          aria-selected={o.value === value ? "true" : "false"}
+          aria-disabled={o.disabled ? "true" : undefined}
+        >
+          {o.label}
+        </li>
+      ))}
+    </ul>
+    <input type="hidden" name={name} value={value} data-ink-combo-value />
+  </div>
+</Field>
+
+<style>
+  .ink-combo {
+    position: relative;
+  }
+
+  .ink-combo__input {
+    padding-right: var(--ink-space-7);
+  }
+
+  .ink-combo__clear {
+    position: absolute;
+    top: 50%;
+    right: var(--ink-space-2);
+    translate: 0 -50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-muted);
+    font-size: var(--ink-text-lg);
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .ink-combo__clear:hover {
+    color: var(--ink-ink);
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+  }
+
+  .ink-combo__clear[hidden] { display: none; }
+
+  .ink-combo__list {
+    position: absolute;
+    top: calc(100% + var(--ink-space-1));
+    inset-inline: 0;
+    max-height: 16rem;
+    overflow: auto;
+    margin: 0;
+    padding: var(--ink-space-1);
+    list-style: none;
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-combo__list[hidden] { display: none; }
+
+  .ink-combo__option {
+    display: flex;
+    align-items: center;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    min-height: 2.75rem;
+    border-radius: var(--ink-radius-sm);
+    font-size: var(--ink-text-sm);
+    color: var(--ink-ink);
+    cursor: pointer;
+  }
+
+  .ink-combo__option[aria-selected="true"] {
+    background: color-mix(in srgb, var(--ink-accent) 12%, transparent);
+  }
+
+  .ink-combo__option[data-active="true"] {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+    outline: none;
+  }
+
+  .ink-combo__option[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .ink-combo__option[hidden] { display: none; }
+</style>
+
+<script>
+  function initCombos(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-combo]").forEach((combo) => {
+      if (combo.dataset.inkBound) return;
+      combo.dataset.inkBound = "true";
+      const input = combo.querySelector<HTMLInputElement>('input[role="combobox"]');
+      const list = combo.querySelector<HTMLElement>("[data-ink-combo-list]");
+      const hidden = combo.querySelector<HTMLInputElement>("[data-ink-combo-value]");
+      const clear = combo.querySelector<HTMLElement>("[data-ink-combo-clear]");
+      if (!input || !list || !hidden) return;
+      const options = Array.from(list.querySelectorAll<HTMLElement>('[role="option"]'));
+
+      const isOpen = () => !list.hidden;
+      const open = () => { list.hidden = false; input.setAttribute("aria-expanded", "true"); };
+      const close = () => {
+        list.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        input.removeAttribute("aria-activedescendant");
+      };
+
+      const visible = () => options.filter((o) => !o.hidden && o.getAttribute("aria-disabled") !== "true");
+
+      const setActive = (el: HTMLElement | null) => {
+        options.forEach((o) => o.removeAttribute("data-active"));
+        input.removeAttribute("aria-activedescendant");
+        if (el) {
+          el.setAttribute("data-active", "true");
+          input.setAttribute("aria-activedescendant", el.id);
+          el.scrollIntoView({ block: "nearest" });
+        }
+      };
+
+      const applyFilter = () => {
+        const q = input.value.trim().toLowerCase();
+        for (const o of options) {
+          const hay = `${o.dataset.label ?? ""} ${o.dataset.value ?? ""}`.toLowerCase();
+          o.hidden = q !== "" && !hay.includes(q);
+        }
+        const first = visible()[0] ?? null;
+        setActive(first);
+      };
+
+      const select = (el: HTMLElement) => {
+        const v = el.dataset.value ?? "";
+        hidden.value = v;
+        input.value = el.dataset.label ?? "";
+        options.forEach((o) => o.setAttribute("aria-selected", String(o === el)));
+        if (clear) clear.hidden = false;
+        close();
+        input.focus();
+        combo.dispatchEvent(new CustomEvent("ink:combo:change", { bubbles: true, detail: { value: v } }));
+      };
+
+      input.addEventListener("focus", () => { applyFilter(); open(); });
+      input.addEventListener("click", () => { if (!isOpen()) { applyFilter(); open(); } });
+      input.addEventListener("input", () => { applyFilter(); open(); });
+
+      input.addEventListener("keydown", (event: KeyboardEvent) => {
+        const items = visible();
+        const at = items.findIndex((o) => o.getAttribute("data-active") === "true");
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          if (!isOpen()) { applyFilter(); open(); return; }
+          setActive(items[(at + 1) % items.length] ?? null);
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          if (isOpen()) setActive(items[(at - 1 + items.length) % items.length] ?? null);
+        } else if (event.key === "Enter") {
+          const active = items.find((o) => o.getAttribute("data-active") === "true");
+          if (isOpen() && active) { event.preventDefault(); select(active); }
+        } else if (event.key === "Escape") {
+          if (isOpen()) { event.preventDefault(); close(); }
+        }
+      });
+
+      list.addEventListener("mousedown", (event: Event) => {
+        // mousedown fires before input blur; prevent blur so click lands
+        event.preventDefault();
+      });
+      list.addEventListener("click", (event: Event) => {
+        const el = (event.target as HTMLElement).closest?.('[role="option"]');
+        if (!(el instanceof HTMLElement) || el.hidden || el.getAttribute("aria-disabled") === "true") return;
+        select(el);
+      });
+
+      input.addEventListener("blur", () => {
+        // commit only exact label matches; otherwise revert to selected label
+        const typed = input.value.trim().toLowerCase();
+        const exact = options.find((o) => (o.dataset.label ?? "").toLowerCase() === typed && o.getAttribute("aria-disabled") !== "true");
+        if (exact) { select(exact); }
+        else {
+          const sel = options.find((o) => o.getAttribute("aria-selected") === "true");
+          input.value = sel?.dataset.label ?? "";
+          close();
+        }
+      });
+
+      document.addEventListener("click", (event: Event) => {
+        if (!combo.contains(event.target as Node)) close();
+      });
+
+      clear?.addEventListener("click", () => {
+        hidden.value = "";
+        input.value = "";
+        options.forEach((o) => o.setAttribute("aria-selected", "false"));
+        clear.hidden = true;
+        input.focus();
+        applyFilter();
+        open();
+      });
+    });
+  }
+
+  initCombos();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initCombos(root ?? document); } };
+</script>

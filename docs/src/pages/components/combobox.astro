@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Combobox } from "astro-ink";
+---
+<Base title="Combobox">
+  <div class="docs-page">
+    <h1>Combobox</h1>
+    <p class="docs-lede">
+      Type to filter a list, pick with keyboard or pointer. Values come from
+      the list only — free text reverts on blur. A hidden input carries the
+      form value.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Combobox
+        id="ship-to"
+        label="Ship to"
+        name="ship-to"
+        options={["Ada Lovelace", { value: "gk", label: "Grace Hopper" }, "Alan Turing"]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Combobox
+  id="ship-to"
+  label="Ship to"
+  name="ship-to"
+  options=&#123;["Ada Lovelace", &#123; value: "gk", label: "Grace Hopper" &#125;, "Alan Turing"]&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Input id; label targets it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label and clear-button name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden input form name.</td></tr>
+        <tr><td><code>options</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td>-</td><td>Selectable items.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code></td><td><code>""</code></td><td>Preselected option value.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td>-</td><td>Input placeholder.</td></tr>
+        <tr><td colspan="4">Plus the Field API (hint, error, required, disabled).</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Combobox pattern: <code>aria-expanded</code>, <code>aria-controls</code>, <code>aria-activedescendant</code>.</li>
+      <li>List-only values: stray text reverts to the selected label on blur.</li>
+      <li>Clear button is named (<code>Clear …</code>); Escape closes the list.</li>
+    </ul>
+  </div>
+</Base>
