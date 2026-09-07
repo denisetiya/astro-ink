@@ -1,0 +1,292 @@
+---
+import { normalizeOptions, type OptionInput } from "../scripts/listbox";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  available?: OptionInput[];
+  chosen?: OptionInput[];
+  titles?: [string, string];
+  hint?: string;
+  class?: string;
+}
+
+const {
+  id, label, name = id, available = [], chosen = [],
+  titles = ["Available", "Chosen"], hint, class: className, ...rest
+} = Astro.props;
+
+const left = normalizeOptions(available);
+const right = normalizeOptions(chosen);
+const describedBy = hint ? `${id}-hint` : undefined;
+---
+<div class:list={["ink-transfer", className]} role="group" aria-labelledby={`${id}-label`} aria-describedby={describedBy} data-ink-transfer data-name={name} {...rest}>
+  <p class="ink-transfer__label" id={`${id}-label`}>{label}</p>
+  {hint && <p class="ink-transfer__hint" id={`${id}-hint`}>{hint}</p>}
+  <div class="ink-transfer__panes">
+    <fieldset class="ink-transfer__pane ink-transfer__pane--available">
+      <legend>{titles[0]}</legend>
+      <input type="search" class="ink-transfer__filter" aria-label={`Filter ${titles[0].toLowerCase()}`} placeholder={`Filter ${titles[0].toLowerCase()}`} data-ink-transfer-filter />
+      <div class="ink-transfer__list" data-ink-transfer-list="available">
+        {left.map((o) => (
+          <label class="ink-transfer__item" data-ink-transfer-item>
+            <input type="checkbox" class="ink-transfer__check" value={o.value} disabled={o.disabled || undefined} />
+            <span>{o.label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+    <div class="ink-transfer__moves" role="group" aria-label={`${label} move actions`}>
+      <button type="button" class="ink-transfer__move" aria-label="Add selected" data-ink-transfer-add disabled>Add <span aria-hidden="true">›</span></button>
+      <button type="button" class="ink-transfer__move" aria-label="Add all" data-ink-transfer-add-all disabled={left.length === 0 || undefined}>Add all <span aria-hidden="true">»</span></button>
+      <button type="button" class="ink-transfer__move" aria-label="Remove selected" data-ink-transfer-remove disabled><span aria-hidden="true">‹</span> Remove</button>
+      <button type="button" class="ink-transfer__move" aria-label="Remove all" data-ink-transfer-remove-all disabled={right.length === 0 || undefined}><span aria-hidden="true">«</span> Remove all</button>
+    </div>
+    <fieldset class="ink-transfer__pane ink-transfer__pane--chosen">
+      <legend>{titles[1]}</legend>
+      <input type="search" class="ink-transfer__filter" aria-label={`Filter ${titles[1].toLowerCase()}`} placeholder={`Filter ${titles[1].toLowerCase()}`} data-ink-transfer-filter />
+      <div class="ink-transfer__list" data-ink-transfer-list="chosen">
+        {right.map((o) => (
+          <label class="ink-transfer__item" data-ink-transfer-item>
+            <input type="checkbox" class="ink-transfer__check" value={o.value} disabled={o.disabled || undefined} />
+            <span>{o.label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  </div>
+  <div data-ink-transfer-hidden hidden>
+    {right.map((o) => (
+      <input type="hidden" name={name} value={o.value} />
+    ))}
+  </div>
+</div>
+
+<style>
+  .ink-transfer {
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-transfer__label {
+    margin: 0;
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    color: var(--ink-ink);
+  }
+
+  .ink-transfer__hint {
+    margin: 0;
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+
+  .ink-transfer__panes {
+    display: grid;
+    gap: var(--ink-space-2);
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+  }
+
+  .ink-transfer__pane {
+    display: grid;
+    gap: var(--ink-space-2);
+    align-content: start;
+    margin: 0;
+    padding: var(--ink-space-3);
+    min-width: 0;
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+  }
+
+  .ink-transfer__pane legend {
+    padding: 0 var(--ink-space-1);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    color: var(--ink-ink);
+  }
+
+  .ink-transfer__filter {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    font-size: var(--ink-text-sm);
+    color: var(--ink-ink);
+    background: var(--ink-bg);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-input-radius, var(--ink-radius-md));
+  }
+
+  .ink-transfer__filter:focus {
+    outline: none;
+    border-color: var(--ink-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-accent) 25%, transparent);
+  }
+
+  .ink-transfer__list {
+    display: grid;
+    gap: var(--ink-space-1);
+    min-height: 2.75rem;
+  }
+
+  .ink-transfer__item {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    padding: var(--ink-space-2) var(--ink-space-3);
+    min-height: 2.75rem;
+    border-radius: var(--ink-radius-sm);
+    font-size: var(--ink-text-sm);
+    color: var(--ink-ink);
+    cursor: pointer;
+  }
+
+  .ink-transfer__item:hover {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+  }
+
+  .ink-transfer__item[hidden] { display: none; }
+
+  .ink-transfer__check {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    accent-color: var(--ink-accent);
+  }
+
+  .ink-transfer__moves {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-transfer__move {
+    padding: var(--ink-space-2) var(--ink-space-3);
+    min-height: 2.75rem;
+    font-size: var(--ink-text-sm);
+    color: var(--ink-ink);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .ink-transfer__move:hover:not(:disabled) { border-color: var(--ink-ink); }
+
+  .ink-transfer__move:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 640px) {
+    .ink-transfer__panes { grid-template-columns: 1fr; }
+    .ink-transfer__moves { flex-direction: row; flex-wrap: wrap; }
+  }
+</style>
+
+<script>
+  function initTransfers(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-transfer]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const fieldName = box.dataset.name ?? "";
+      const availableList = box.querySelector<HTMLElement>('[data-ink-transfer-list="available"]');
+      const chosenList = box.querySelector<HTMLElement>('[data-ink-transfer-list="chosen"]');
+      const hiddenWrap = box.querySelector<HTMLElement>("[data-ink-transfer-hidden]");
+      const addBtn = box.querySelector<HTMLButtonElement>("[data-ink-transfer-add]");
+      const addAllBtn = box.querySelector<HTMLButtonElement>("[data-ink-transfer-add-all]");
+      const removeBtn = box.querySelector<HTMLButtonElement>("[data-ink-transfer-remove]");
+      const removeAllBtn = box.querySelector<HTMLButtonElement>("[data-ink-transfer-remove-all]");
+      if (!availableList || !chosenList || !hiddenWrap || !addBtn || !addAllBtn || !removeBtn || !removeAllBtn) return;
+
+      const itemsOf = (list: HTMLElement) =>
+        Array.from(list.querySelectorAll<HTMLElement>("[data-ink-transfer-item]"));
+
+      const checksOf = (list: HTMLElement) =>
+        itemsOf(list).map((item) => item.querySelector<HTMLInputElement>('input[type="checkbox"]')).filter((c): c is HTMLInputElement => c !== null);
+
+      const checkedIn = (list: HTMLElement) => checksOf(list).filter((c) => c.checked && !c.disabled);
+
+      const syncButtons = () => {
+        addBtn.disabled = checkedIn(availableList).length === 0;
+        removeBtn.disabled = checkedIn(chosenList).length === 0;
+        addAllBtn.disabled = itemsOf(availableList).length === 0;
+        removeAllBtn.disabled = itemsOf(chosenList).length === 0;
+      };
+
+      const syncHidden = () => {
+        hiddenWrap.innerHTML = "";
+        for (const c of checksOf(chosenList)) {
+          const h = document.createElement("input");
+          h.type = "hidden";
+          h.name = fieldName;
+          h.value = c.value;
+          hiddenWrap.appendChild(h);
+        }
+      };
+
+      const emit = () => {
+        const chosen = checksOf(chosenList).map((c) => c.value);
+        box.dispatchEvent(new CustomEvent("ink:transfer:change", { bubbles: true, detail: { chosen } }));
+      };
+
+      const move = (items: HTMLElement[], target: HTMLElement) => {
+        for (const item of items) {
+          const check = item.querySelector<HTMLInputElement>('input[type="checkbox"]');
+          if (check) check.checked = false;
+          item.hidden = false;
+          target.appendChild(item);
+        }
+        syncHidden();
+        syncButtons();
+        emit();
+      };
+
+      const visibleItems = (list: HTMLElement) =>
+        itemsOf(list).filter((item) => !item.hidden);
+
+      addBtn.addEventListener("click", () => {
+        const picked = checkedIn(availableList).map((c) => c.closest<HTMLElement>("[data-ink-transfer-item]")).filter((el): el is HTMLElement => el !== null);
+        move(picked, chosenList);
+      });
+
+      removeBtn.addEventListener("click", () => {
+        const picked = checkedIn(chosenList).map((c) => c.closest<HTMLElement>("[data-ink-transfer-item]")).filter((el): el is HTMLElement => el !== null);
+        move(picked, availableList);
+      });
+
+      addAllBtn.addEventListener("click", () => move(visibleItems(availableList), chosenList));
+      removeAllBtn.addEventListener("click", () => move(visibleItems(chosenList), availableList));
+
+      box.querySelectorAll<HTMLInputElement>("[data-ink-transfer-filter]").forEach((filter) => {
+        filter.addEventListener("input", () => {
+          const q = filter.value.trim().toLowerCase();
+          const pane = filter.closest<HTMLElement>("fieldset");
+          const list = pane?.querySelector<HTMLElement>("[data-ink-transfer-list]");
+          if (!list) return;
+          for (const item of itemsOf(list)) {
+            const text = item.textContent?.toLowerCase() ?? "";
+            item.hidden = q !== "" && !text.includes(q);
+          }
+        });
+      });
+
+      box.addEventListener("change", (event: Event) => {
+        if ((event.target as HTMLElement).closest?.('[data-ink-transfer-filter]')) return;
+        syncButtons();
+      });
+
+      syncButtons();
+    });
+  }
+
+  initTransfers();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTransfers(root ?? document); } };
+</script>

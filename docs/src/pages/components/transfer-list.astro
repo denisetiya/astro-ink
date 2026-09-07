@@ -1,0 +1,87 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TransferList } from "astro-ink";
+---
+<Base title="TransferList">
+  <div class="docs-page">
+    <h1>TransferList</h1>
+    <p class="docs-lede">
+      Two filtered panes with move buttons. Check items on the left and add
+      them to the chosen pane; remove moves them back. One hidden input per
+      chosen value carries the form name for native submit.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <TransferList
+        id="tools"
+        label="Tools"
+        name="tools"
+        available={[{ value: "git", label: "Git" }, { value: "figma", label: "Figma" }, { value: "docker", label: "Docker" }]}
+        chosen={[]}
+        hint="Pick the tools this project uses."
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TransferList
+  id="tools"
+  label="Tools"
+  name="tools"
+  available=&#123;[&#123; value: "git", label: "Git" &#125;, &#123; value: "figma", label: "Figma" &#125;, &#123; value: "docker", label: "Docker" &#125;]&#125;
+  chosen=&#123;[]&#125;
+  hint="Pick the tools this project uses."
+/&gt;</code></pre>
+
+    <h2>Preselected</h2>
+    <div class="docs-example">
+      <TransferList
+        id="editors"
+        label="Editors"
+        name="editors"
+        available={[{ value: "vim", label: "Vim" }, { value: "emacs", label: "Emacs" }]}
+        chosen={[{ value: "vscode", label: "VS Code" }]}
+        titles={["Candidates", "Picked"]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TransferList
+  id="editors"
+  label="Editors"
+  name="editors"
+  available=&#123;[&#123; value: "vim", label: "Vim" &#125;, &#123; value: "emacs", label: "Emacs" &#125;]&#125;
+  chosen=&#123;[&#123; value: "vscode", label: "VS Code" &#125;]&#125;
+  titles=&#123;["Candidates", "Picked"]&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Group label id prefix.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible group title; names the move-action group.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; one input per chosen value.</td></tr>
+        <tr><td><code>available</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td><code>[]</code></td><td>Items in the left pane.</td></tr>
+        <tr><td><code>chosen</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td><code>[]</code></td><td>Items in the right pane; also the initial hidden inputs.</td></tr>
+        <tr><td><code>titles</code></td><td><code>[string, string]</code></td><td><code>["Available", "Chosen"]</code></td><td>Pane legends; filters are named <code>"Filter &#123;title&#125;"</code>.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the title, linked via <code>aria-describedby</code>.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Behavior</h2>
+    <ul class="docs-list">
+      <li>Add and Remove move checked items; Add all and Remove all move only the <em>visible</em> (filter-respecting) items, so a filter narrows bulk moves.</li>
+      <li>Move buttons stay disabled until their source pane has checked items (Add all / Remove all disable when their pane is empty); the script re-syncs on every change.</li>
+      <li>There is no <code>error</code> prop: with two panes and four move actions there is no single control to invalidate, so invalid-state messaging belongs to the surrounding form, not this component.</li>
+    </ul>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Group wrapper carries <code>role="group"</code> named by the title; each pane is a <code>fieldset</code> with its title as <code>legend</code>.</li>
+      <li>Each pane has a search box named <code>"Filter &#123;title&#125;"</code>; filtering hides non-matching items with <code>hidden</code>.</li>
+      <li>Item checkboxes carry the option value and are named by their label; pane checkboxes carry no <code>name</code>, submit flows through the synced hidden inputs.</li>
+      <li>Move buttons are named <code>"Add selected"</code>, <code>"Add all"</code>, <code>"Remove selected"</code>, <code>"Remove all"</code>.</li>
+      <li>Moving items dispatches <code>ink:transfer:change</code> with <code>&#123; chosen &#125;</code>.</li>
+    </ul>
+  </div>
+</Base>
