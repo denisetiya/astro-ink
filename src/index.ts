@@ -103,3 +103,4 @@ export { default as Autocomplete } from "./components/Autocomplete.astro";
 export { default as MultiSelect } from "./components/MultiSelect.astro";
 export { default as OtpInput } from "./components/OtpInput.astro";
 export { default as ColorPicker } from "./components/ColorPicker.astro";
+export { default as TagInput } from "./components/TagInput.astro";

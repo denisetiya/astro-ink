@@ -1,0 +1,229 @@
+---
+import Field from "./Field.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  values?: string[];
+  placeholder?: string;
+  max?: number;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, values = [], placeholder = "Add a tag",
+  max, hint, error, required = false, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+---
+<Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
+  <div class="ink-tags" data-ink-tags data-max={max} data-name={name}>
+    <ul class="ink-tags__list" data-ink-tags-list aria-label={`${label} tags`}>
+      {values.map((v) => (
+        <li class="ink-tags__chip" data-ink-tags-chip data-value={v}>
+          <span>{v}</span>
+          <button type="button" class="ink-tags__remove" aria-label={`Remove ${v}`} data-ink-tags-remove disabled={disabled || undefined}>×</button>
+        </li>
+      ))}
+    </ul>
+    <input
+      id={id}
+      class="ink-tags__input"
+      type="text"
+      placeholder={placeholder}
+      disabled={disabled || undefined}
+      aria-invalid={error ? "true" : undefined}
+      aria-describedby={describedBy}
+      data-ink-tags-input
+      {...rest}
+    />
+    <div data-ink-tags-hidden hidden>
+      {values.map((v) => (
+        <input type="hidden" name={name} value={v} />
+      ))}
+    </div>
+  </div>
+</Field>
+
+<style>
+  .ink-tags {
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-tags__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ink-space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ink-tags__list:empty { display: none; }
+
+  .ink-tags__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+    padding: var(--ink-space-1) var(--ink-space-2);
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    line-height: 1;
+    border-radius: var(--ink-chip-radius, 999px);
+    border: 1px solid transparent;
+    color: var(--ink-ink);
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+  }
+
+  .ink-tags__remove {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: var(--ink-text-base);
+    line-height: 1;
+    padding: 0 var(--ink-space-1);
+    border-radius: var(--ink-radius-sm);
+    cursor: pointer;
+  }
+
+  .ink-tags__remove:hover { text-decoration: underline; }
+
+  .ink-tags__remove:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    text-decoration: none;
+  }
+
+  .ink-tags__input {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    font-size: var(--ink-text-base);
+    color: var(--ink-ink);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-input-radius, var(--ink-radius-md));
+    transition:
+      border-color var(--ink-duration-fast) var(--ink-ease),
+      box-shadow var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-tags__input:hover { border-color: var(--ink-ink); }
+
+  .ink-tags__input:focus {
+    outline: none;
+    border-color: var(--ink-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-accent) 25%, transparent);
+  }
+
+  .ink-tags__input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));
+  }
+
+  .ink-tags__input[aria-invalid="true"] { border-color: var(--ink-danger); }
+
+  .ink-tags__input[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink-danger) 25%, transparent);
+  }
+</style>
+
+<script>
+  function initTagInputs(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-tags]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const list = box.querySelector<HTMLElement>("[data-ink-tags-list]");
+      const input = box.querySelector<HTMLInputElement>("[data-ink-tags-input]");
+      const hiddenWrap = box.querySelector<HTMLElement>("[data-ink-tags-hidden]");
+      if (!list || !input || !hiddenWrap) return;
+      const max = box.dataset.max ? Number(box.dataset.max) : undefined;
+      const fieldName = box.dataset.name ?? input.id;
+
+      const currentValues = () =>
+        Array.from(list.querySelectorAll<HTMLElement>("[data-ink-tags-chip]")).map(
+          (chip) => chip.dataset.value ?? ""
+        );
+
+      const syncHidden = () => {
+        hiddenWrap.innerHTML = "";
+        for (const v of currentValues()) {
+          const h = document.createElement("input");
+          h.type = "hidden";
+          h.name = fieldName;
+          h.value = v;
+          hiddenWrap.appendChild(h);
+        }
+      };
+
+      const emit = () => {
+        box.dispatchEvent(new CustomEvent("ink:tags:change", { bubbles: true, detail: { values: currentValues() } }));
+      };
+
+      const removeChip = (chip: HTMLElement) => {
+        chip.remove();
+        syncHidden();
+        emit();
+      };
+
+      const addTag = (raw: string) => {
+        const value = raw.trim();
+        if (!value) return;
+        const exists = currentValues().some((v) => v.toLowerCase() === value.toLowerCase());
+        if (exists) return;
+        if (max !== undefined && currentValues().length >= max) return;
+        const li = document.createElement("li");
+        li.className = "ink-tags__chip";
+        li.dataset.inkTagsChip = "";
+        li.dataset.value = value;
+        const span = document.createElement("span");
+        span.textContent = value;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ink-tags__remove";
+        btn.dataset.inkTagsRemove = "";
+        btn.setAttribute("aria-label", `Remove ${value}`);
+        btn.textContent = "×";
+        if (input.disabled) btn.disabled = true;
+        li.append(span, btn);
+        list.appendChild(li);
+        syncHidden();
+        emit();
+      };
+
+      input.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter" || event.key === ",") {
+          event.preventDefault();
+          if (!input.value.trim()) return;
+          addTag(input.value);
+          input.value = "";
+        } else if (event.key === "Backspace" && !input.value) {
+          const chips = list.querySelectorAll<HTMLElement>("[data-ink-tags-chip]");
+          const last = chips[chips.length - 1];
+          if (last) { event.preventDefault(); removeChip(last); }
+        }
+      });
+
+      list.addEventListener("click", (event: Event) => {
+        const btn = (event.target as HTMLElement).closest<HTMLElement>("[data-ink-tags-remove]");
+        if (!btn) return;
+        const chip = btn.closest<HTMLElement>("[data-ink-tags-chip]");
+        if (chip) removeChip(chip);
+      });
+    });
+  }
+
+  initTagInputs();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTagInputs(root ?? document); } };
+</script>

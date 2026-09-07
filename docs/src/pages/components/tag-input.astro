@@ -1,0 +1,80 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TagInput } from "astro-ink";
+---
+<Base title="TagInput">
+  <div class="docs-page">
+    <h1>TagInput</h1>
+    <p class="docs-lede">
+      Free-text tagging with removable chips. Enter or comma adds a tag
+      (trimmed, deduped case-insensitively, capped by max), Backspace on an
+      empty box removes the last tag, and one hidden input per tag carries
+      the form name for native submit.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <TagInput id="skills" label="Skills" name="skills" values={["HTML", "CSS"]} hint="Press Enter or comma to add a tag." />
+    </div>
+    <pre class="docs-code"><code>&lt;TagInput
+  id="skills"
+  label="Skills"
+  name="skills"
+  values=&#123;["HTML", "CSS"]&#125;
+  hint="Press Enter or comma to add a tag."
+/&gt;</code></pre>
+
+    <h2>Max tags</h2>
+    <div class="docs-example">
+      <TagInput id="topics" label="Topics" name="topics" values={["Vite"]} max={3} placeholder="Up to 3 topics" />
+    </div>
+    <pre class="docs-code"><code>&lt;TagInput
+  id="topics"
+  label="Topics"
+  name="topics"
+  values=&#123;["Vite"]&#125;
+  max=&#123;3&#125;
+  placeholder="Up to 3 topics"
+/&gt;</code></pre>
+
+    <h2>Error state</h2>
+    <div class="docs-example">
+      <TagInput id="labels" label="Labels" name="labels" values={["draft"]} error="Pick at least one published label." />
+    </div>
+    <pre class="docs-code"><code>&lt;TagInput
+  id="labels"
+  label="Labels"
+  name="labels"
+  values=&#123;["draft"]&#125;
+  error="Pick at least one published label."
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Input id; Field label targets it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; also names the chip list.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; one input per tag.</td></tr>
+        <tr><td><code>values</code></td><td><code>string[]</code></td><td><code>[]</code></td><td>Initial tags, rendered as chips.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Add a tag"</code></td><td>Text-box placeholder.</td></tr>
+        <tr><td><code>max</code></td><td><code>number</code></td><td>-</td><td>Maximum tag count; extra adds are ignored.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the input.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code>.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; disables box and chip buttons.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Text box is a plain <code>textbox</code> named by the Field label — no combobox role without a popup.</li>
+      <li>Chips live in a named list (<code>&lt;ul&gt;</code> labelled <code>"&#123;label&#125; tags"</code>); each remove button is named <code>"Remove &#123;tag&#125;"</code>.</li>
+      <li>Hint and error connect via <code>aria-describedby</code>; error sets <code>aria-invalid="true"</code>.</li>
+      <li>Adding and removing tags dispatches <code>ink:tags:change</code> with <code>&#123; values &#125;</code>.</li>
+    </ul>
+  </div>
+</Base>
