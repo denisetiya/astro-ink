@@ -42,7 +42,9 @@ function findPath(opts: CascadeOption[], vals: string[]): CascadeOption[] | unde
   const rest = findPath(node.children, tail);
   return rest ? [node, ...rest] : undefined;
 }
-const initialPath = findPath(options, value) ?? [];
+const rawPath = findPath(options, value) ?? [];
+const rawLeaf = rawPath[rawPath.length - 1];
+const initialPath = !selectAny && rawLeaf?.children?.length ? [] : rawPath;
 const initialText = initialPath.length > 0
   ? initialPath.map((n) => n.label).join(" / ")
   : resolvedPlaceholder;

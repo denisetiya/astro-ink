@@ -106,7 +106,7 @@ const teams = [
         <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Trigger id; Field label targets it.</td></tr>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Names Field/panel/message ids (trigger itself carries no id).</td></tr>
         <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; kept in the trigger name and panel name.</td></tr>
         <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; carries the selected value.</td></tr>
         <tr><td><code>options</code></td><td><code>CascadeOption[]</code> (<code>&#123; value; label; disabled?; children? &#125;</code>)</td><td>-</td><td>Tree nodes; branches expand, leaves select.</td></tr>

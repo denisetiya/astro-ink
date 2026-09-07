@@ -46,7 +46,7 @@ const initialValue = initial?.value ?? "";
 const optionsJson = JSON.stringify(options).replace(/</g, "\\u003c");
 ---
 <Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
-  <div class="ink-tselect" data-ink-tselect data-options={optionsJson} data-selectable={selectable} data-placeholder={resolvedPlaceholder} data-initial={initialValue}>
+  <div class="ink-tselect" data-ink-tselect data-options={optionsJson} data-selectable={selectable} data-placeholder={resolvedPlaceholder}>
     <button
       type="button"
       class="ink-input ink-tselect__trigger"
@@ -377,8 +377,8 @@ const optionsJson = JSON.stringify(options).replace(/</g, "\\u003c");
             }
           }
         } else if (event.key === "Enter" || event.key === " ") {
-          if (event.key === " " && el.getAttribute("aria-disabled") === "true") return;
           event.preventDefault();
+          if (event.key === " " && el.getAttribute("aria-disabled") === "true") return;
           toggleOrSelect(el);
         } else if (event.key === "Home") {
           event.preventDefault();
