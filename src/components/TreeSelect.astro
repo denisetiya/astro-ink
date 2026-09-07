@@ -1,0 +1,429 @@
+---
+import Field from "./Field.astro";
+
+interface CascadeOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  children?: CascadeOption[];
+}
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  options: CascadeOption[];
+  value?: string;
+  selectable?: "any" | "leaf";
+  placeholder?: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, options, value = "", selectable = "leaf",
+  placeholder, hint, error, required = false, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const resolvedPlaceholder = placeholder ?? `Select ${label.toLowerCase()}`;
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+
+function findNode(opts: CascadeOption[], val: string): CascadeOption | undefined {
+  for (const o of opts) {
+    if (o.value === val) return o;
+    const hit = o.children ? findNode(o.children, val) : undefined;
+    if (hit) return hit;
+  }
+  return undefined;
+}
+const initial = value ? findNode(options, value) : undefined;
+const initialText = initial?.label ?? resolvedPlaceholder;
+const initialValue = initial?.value ?? "";
+// Escape `<` so option text can never break out of the data attribute.
+const optionsJson = JSON.stringify(options).replace(/</g, "\\u003c");
+---
+<Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
+  <div class="ink-tselect" data-ink-tselect data-options={optionsJson} data-selectable={selectable} data-placeholder={resolvedPlaceholder} data-initial={initialValue}>
+    <button
+      type="button"
+      class="ink-input ink-tselect__trigger"
+      data-ink-tselect-trigger
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      aria-controls={`${id}-panel`}
+      aria-describedby={describedBy}
+      aria-invalid={error ? "true" : undefined}
+      disabled={disabled || undefined}
+      {...rest}
+    >
+      <span class="ink-visually-hidden">{label}: </span>
+      <span class="ink-tselect__text" data-ink-tselect-text>{initialText}</span>
+      <svg class="ink-tselect__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <div class="ink-tselect__panel" role="dialog" aria-label={`${label} options`} id={`${id}-panel`} data-ink-tselect-panel hidden>
+      <ul class="ink-tselect__tree" role="tree" aria-label={label} data-ink-tselect-tree>
+      </ul>
+    </div>
+    <input type="hidden" name={name} value={initialValue} data-ink-tselect-value />
+  </div>
+</Field>
+
+<style>
+  .ink-tselect {
+    position: relative;
+  }
+
+  .ink-tselect__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ink-tselect__text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ink-tselect__chevron {
+    flex: none;
+    color: var(--ink-muted);
+  }
+
+  .ink-tselect__trigger[aria-expanded="true"] .ink-tselect__chevron { rotate: 180deg; }
+
+  .ink-tselect__panel {
+    position: absolute;
+    top: calc(100% + var(--ink-space-1));
+    inset-inline: 0;
+    max-height: 16rem;
+    overflow: auto;
+    padding: var(--ink-space-1);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-tselect__panel[hidden] { display: none; }
+
+  /* Nodes are rendered by script from JSON, so they carry no Astro scope
+     attribute. Anchor their rules under the server-rendered tree instead
+     (same reason Tree.astro scopes slotted groups with :global). */
+  .ink-tselect__tree :global(ul[role="tree"]),
+  .ink-tselect__tree {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 2px;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-tselect__tree :global(ul[role="group"]) {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 var(--ink-space-4);
+    display: grid;
+    gap: 2px;
+    border-inline-start: 1px solid var(--ink-border);
+    padding-inline-start: var(--ink-space-3);
+  }
+
+  .ink-tselect__tree :global(ul[role="group"][hidden]) { display: none; }
+
+  .ink-tselect__tree :global([role="treeitem"]) {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+    padding: var(--ink-space-1) var(--ink-space-2);
+    min-height: 2.25rem;
+    border-radius: var(--ink-radius-sm);
+    color: var(--ink-ink);
+    cursor: default;
+  }
+
+  .ink-tselect__tree :global([role="treeitem"]:hover) {
+    background: color-mix(in srgb, var(--ink-ink) 4%, transparent);
+  }
+
+  .ink-tselect__tree :global([role="treeitem"]:focus) {
+    outline: none;
+  }
+
+  .ink-tselect__tree :global([role="treeitem"]:focus-visible) {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 1px;
+  }
+
+  .ink-tselect__tree :global([role="treeitem"][aria-selected="true"]) {
+    background: color-mix(in srgb, var(--ink-accent) 12%, transparent);
+  }
+
+  .ink-tselect__tree :global([role="treeitem"][aria-disabled="true"]) {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .ink-tselect__tree :global(.ink-tselect__chevron) {
+    color: var(--ink-muted);
+    flex-shrink: 0;
+  }
+
+  .ink-tselect__tree :global([role="treeitem"][aria-expanded="true"] > .ink-tselect__chevron) {
+    rotate: 90deg;
+  }
+</style>
+
+<script>
+  interface CascadeOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    children?: CascadeOption[];
+  }
+
+  function initTreeSelects(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-tselect]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const trigger = box.querySelector<HTMLButtonElement>("[data-ink-tselect-trigger]");
+      const panel = box.querySelector<HTMLElement>("[data-ink-tselect-panel]");
+      const tree = box.querySelector<HTMLElement>("[data-ink-tselect-tree]");
+      const text = box.querySelector<HTMLElement>("[data-ink-tselect-text]");
+      const hidden = box.querySelector<HTMLInputElement>("[data-ink-tselect-value]");
+      if (!trigger || !panel || !tree || !text || !hidden) return;
+      let options: CascadeOption[] = [];
+      try {
+        options = JSON.parse(box.dataset.options ?? "[]") as CascadeOption[];
+      } catch {
+        options = [];
+      }
+      const allowAny = box.dataset.selectable === "any";
+
+      const nodeByValue = new Map<string, CascadeOption>();
+      const collect = (opts: CascadeOption[]) => {
+        for (const o of opts) {
+          nodeByValue.set(o.value, o);
+          if (o.children) collect(o.children);
+        }
+      };
+      collect(options);
+
+      const CHEVRON = '<svg class="ink-tselect__chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3.5 2l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      function buildItem(node: CascadeOption): HTMLLIElement {
+        const li = document.createElement("li");
+        li.setAttribute("role", "treeitem");
+        li.tabIndex = -1;
+        li.dataset.value = node.value;
+        const hasChildren = !!node.children?.length;
+        if (hasChildren) li.setAttribute("aria-expanded", "false");
+        if (node.disabled) li.setAttribute("aria-disabled", "true");
+        if (hidden.value === node.value) li.setAttribute("aria-selected", "true");
+        else li.setAttribute("aria-selected", "false");
+        if (hasChildren) li.insertAdjacentHTML("afterbegin", CHEVRON);
+        const span = document.createElement("span");
+        span.textContent = node.label;
+        li.appendChild(span);
+        if (hasChildren) {
+          const group = document.createElement("ul");
+          group.setAttribute("role", "group");
+          group.setAttribute("aria-label", `${node.label} contents`);
+          group.hidden = true;
+          for (const child of node.children ?? []) group.appendChild(buildItem(child));
+          li.appendChild(group);
+        }
+        return li;
+      }
+
+      function renderTree() {
+        tree.innerHTML = "";
+        for (const node of options) tree.appendChild(buildItem(node));
+      }
+
+      const visibleItems = (): HTMLElement[] =>
+        Array.from(tree.querySelectorAll<HTMLElement>('[role="treeitem"]')).filter(
+          (el) => !el.closest("ul[role='group'][hidden]"),
+        );
+
+      const syncTabindex = (active: HTMLElement | null) => {
+        for (const el of tree.querySelectorAll<HTMLElement>('[role="treeitem"]')) {
+          el.tabIndex = el === active ? 0 : -1;
+        }
+      };
+
+      const setExpanded = (item: HTMLElement, open: boolean) => {
+        item.setAttribute("aria-expanded", String(open));
+        const group = item.querySelector(":scope > ul[role='group']");
+        if (group instanceof HTMLElement) group.hidden = !open;
+      };
+
+      const isOpen = () => !panel.hidden;
+      const open = () => {
+        renderTree();
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        const selected = hidden.value
+          ? tree.querySelector<HTMLElement>(`[role="treeitem"][data-value="${CSS.escape(hidden.value)}"]`)
+          : null;
+        const first = selected ?? visibleItems()[0] ?? null;
+        if (first) {
+          if (selected) {
+            // Reveal the preselected node's ancestor chain on open.
+            let parent = selected.parentElement?.closest?.('[role="treeitem"]');
+            while (parent instanceof HTMLElement) {
+              setExpanded(parent, true);
+              parent = parent.parentElement?.closest?.('[role="treeitem"]') ?? null;
+            }
+          }
+          syncTabindex(first);
+          first.focus();
+        }
+      };
+      const close = () => {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      const isSelectable = (item: HTMLElement): boolean => {
+        if (item.getAttribute("aria-disabled") === "true") return false;
+        return allowAny || !item.hasAttribute("aria-expanded");
+      };
+
+      const select = (item: HTMLElement) => {
+        const v = item.dataset.value ?? "";
+        const node = nodeByValue.get(v);
+        if (!node) return;
+        hidden.value = v;
+        text.textContent = node.label;
+        for (const el of tree.querySelectorAll<HTMLElement>('[role="treeitem"]')) {
+          el.setAttribute("aria-selected", String(el === item));
+        }
+        close();
+        trigger.focus();
+        box.dispatchEvent(new CustomEvent("ink:treeselect:change", {
+          bubbles: true,
+          detail: { value: v },
+        }));
+      };
+
+      const toggleOrSelect = (item: HTMLElement) => {
+        if (item.getAttribute("aria-disabled") === "true") return;
+        if (isSelectable(item)) select(item);
+        else if (item.hasAttribute("aria-expanded")) {
+          setExpanded(item, item.getAttribute("aria-expanded") !== "true");
+        }
+      };
+
+      tree.addEventListener("click", (event: Event) => {
+        const item = (event.target as HTMLElement).closest?.('[role="treeitem"]');
+        if (!(item instanceof HTMLElement)) return;
+        syncTabindex(item);
+        item.focus();
+        toggleOrSelect(item);
+      });
+
+      tree.addEventListener("keydown", (event: KeyboardEvent) => {
+        const el = document.activeElement;
+        if (!(el instanceof HTMLElement) || el.getAttribute("role") !== "treeitem") return;
+        const items = visibleItems();
+        const at = items.indexOf(el);
+        const hasChildren = el.hasAttribute("aria-expanded");
+        const openState = el.getAttribute("aria-expanded") === "true";
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          const next = items[at + 1];
+          if (next) {
+            syncTabindex(next);
+            next.focus();
+          }
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          const prevItem = items[at - 1];
+          if (prevItem) {
+            syncTabindex(prevItem);
+            prevItem.focus();
+          }
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          if (hasChildren && !openState) {
+            setExpanded(el, true);
+          } else {
+            const firstChild = el.querySelector(":scope > ul[role='group'] [role='treeitem']");
+            if (firstChild instanceof HTMLElement) {
+              syncTabindex(firstChild);
+              firstChild.focus();
+            }
+          }
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          if (hasChildren && openState) {
+            setExpanded(el, false);
+          } else {
+            const parent = el.parentElement?.closest?.('[role="treeitem"]');
+            if (parent instanceof HTMLElement) {
+              syncTabindex(parent);
+              parent.focus();
+            }
+          }
+        } else if (event.key === "Enter" || event.key === " ") {
+          if (event.key === " " && el.getAttribute("aria-disabled") === "true") return;
+          event.preventDefault();
+          toggleOrSelect(el);
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          const head = items[0];
+          if (head) {
+            syncTabindex(head);
+            head.focus();
+          }
+        } else if (event.key === "End") {
+          event.preventDefault();
+          const tail = items[items.length - 1];
+          if (tail) {
+            syncTabindex(tail);
+            tail.focus();
+          }
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          trigger.focus();
+        }
+      });
+
+      trigger.addEventListener("click", () => {
+        if (isOpen()) close();
+        else open();
+      });
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "ArrowDown" && !isOpen()) {
+          event.preventDefault();
+          open();
+        } else if (event.key === "Escape" && isOpen()) {
+          event.preventDefault();
+          close();
+        }
+      });
+
+      document.addEventListener("click", (event: Event) => {
+        if (!box.contains(event.target as Node)) close();
+      });
+    });
+  }
+
+  initTreeSelects();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initTreeSelects(root ?? document); } };
+</script>

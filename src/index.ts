@@ -104,3 +104,5 @@ export { default as MultiSelect } from "./components/MultiSelect.astro";
 export { default as OtpInput } from "./components/OtpInput.astro";
 export { default as ColorPicker } from "./components/ColorPicker.astro";
 export { default as TagInput } from "./components/TagInput.astro";
+export { default as Cascader } from "./components/Cascader.astro";
+export { default as TreeSelect } from "./components/TreeSelect.astro";

@@ -1,0 +1,137 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Cascader } from "astro-ink";
+
+const locations = [
+  { value: "europe", label: "Europe", children: [
+    { value: "berlin", label: "Berlin" },
+    { value: "paris", label: "Paris" },
+  ] },
+  { value: "asia", label: "Asia", children: [
+    { value: "tokyo", label: "Tokyo" },
+  ] },
+];
+---
+<Base title="Cascader">
+  <div class="docs-page">
+    <h1>Cascader</h1>
+    <p class="docs-lede">
+      Drill through nested levels to pick one value. Top-level items expand
+      a column to the right; picking a leaf shows the joined path on the
+      trigger and stores the leaf value in a hidden input.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Cascader
+        id="location"
+        label="Location"
+        name="location"
+        options={locations}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Cascader
+  id="location"
+  label="Location"
+  name="location"
+  options=&#123;[
+    &#123; value: "europe", label: "Europe", children: [
+      &#123; value: "berlin", label: "Berlin" &#125;,
+      &#123; value: "paris", label: "Paris" &#125;,
+    ] &#125;,
+    &#123; value: "asia", label: "Asia", children: [
+      &#123; value: "tokyo", label: "Tokyo" &#125;,
+    ] &#125;,
+  ]&#125;
+/&gt;</code></pre>
+
+    <h2>Preselected path</h2>
+    <div class="docs-example">
+      <Cascader
+        id="hq"
+        label="Headquarters"
+        name="hq"
+        options={locations}
+        value={["asia", "tokyo"]}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Cascader
+  id="hq"
+  label="Headquarters"
+  name="hq"
+  options=&#123;…&#125;
+  value=&#123;["asia", "tokyo"]&#125;
+/&gt;</code></pre>
+
+    <h2>Select any level</h2>
+    <p>
+      By default only leaves select (<code>selectAny</code> is
+      <code>false</code>): activating a branch expands it. With
+      <code>selectAny</code>, any node picks its own value instead.
+    </p>
+    <div class="docs-example">
+      <Cascader
+        id="region"
+        label="Region"
+        name="region"
+        options={locations}
+        selectAny
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Cascader
+  id="region"
+  label="Region"
+  name="region"
+  options=&#123;…&#125;
+  selectAny
+/&gt;</code></pre>
+
+    <h2>Error state</h2>
+    <div class="docs-example">
+      <Cascader
+        id="office"
+        label="Office"
+        name="office"
+        options={locations}
+        error="Choose an office location."
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Cascader
+  id="office"
+  label="Office"
+  name="office"
+  options=&#123;…&#125;
+  error="Choose an office location."
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Trigger id; Field label targets it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; kept in the trigger name and panel name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; carries the leaf value.</td></tr>
+        <tr><td><code>options</code></td><td><code>CascadeOption[]</code> (<code>&#123; value; label; disabled?; children? &#125;</code>)</td><td>-</td><td>Nested levels; branches expand, leaves select.</td></tr>
+        <tr><td><code>value</code></td><td><code>string[]</code></td><td><code>[]</code></td><td>Preselected value path; unknown values select nothing.</td></tr>
+        <tr><td><code>selectAny</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Any node selects; otherwise only leaves select.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Select …"</code></td><td>Empty-state trigger text; defaults to the lowercased label.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the trigger.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the trigger.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; trigger cannot open.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger keeps the label in its accessible name, with <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, <code>aria-controls</code>.</li>
+      <li>Panel is a <code>dialog</code> named <code>"&#123;label&#125; options"</code> holding one plain list of buttons per level (honest grouping — no fake listbox).</li>
+      <li>Opening focuses the first top-level item; Up/Down travel a column, Right expands, Left steps back, Enter picks (leaf-only unless <code>selectAny</code>), Escape closes and refocuses the trigger.</li>
+      <li>Hint and error connect via <code>aria-describedby</code>; error sets <code>aria-invalid="true"</code> on the trigger.</li>
+      <li>Selection dispatches <code>ink:cascader:change</code> with <code>&#123; value, path &#125;</code>.</li>
+    </ul>
+  </div>
+</Base>

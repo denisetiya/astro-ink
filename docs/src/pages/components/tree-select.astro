@@ -1,0 +1,133 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TreeSelect } from "astro-ink";
+
+const teams = [
+  { value: "engineering", label: "Engineering", children: [
+    { value: "ada", label: "Ada Lovelace" },
+    { value: "grace", label: "Grace Hopper" },
+  ] },
+  { value: "design", label: "Design" },
+];
+---
+<Base title="TreeSelect">
+  <div class="docs-page">
+    <h1>TreeSelect</h1>
+    <p class="docs-lede">
+      Pick one node from a collapsible tree inside a popup. Branches expand
+      and collapse like a tree view; picking a node shows its label on the
+      trigger and stores the value in a hidden input.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <TreeSelect
+        id="team"
+        label="Team"
+        name="team"
+        options={teams}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TreeSelect
+  id="team"
+  label="Team"
+  name="team"
+  options=&#123;[
+    &#123; value: "engineering", label: "Engineering", children: [
+      &#123; value: "ada", label: "Ada Lovelace" &#125;,
+      &#123; value: "grace", label: "Grace Hopper" &#125;,
+    ] &#125;,
+    &#123; value: "design", label: "Design" &#125;,
+  ]&#125;
+/&gt;</code></pre>
+
+    <h2>Preselected node</h2>
+    <div class="docs-example">
+      <TreeSelect
+        id="mentor"
+        label="Mentor"
+        name="mentor"
+        options={teams}
+        value="grace"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TreeSelect
+  id="mentor"
+  label="Mentor"
+  name="mentor"
+  options=&#123;…&#125;
+  value="grace"
+/&gt;</code></pre>
+
+    <h2>Selectable branches</h2>
+    <p>
+      By default only leaves select (<code>selectable="leaf"</code>):
+      activating a branch toggles it. With
+      <code>selectable="any"</code>, branches pick their own value instead.
+    </p>
+    <div class="docs-example">
+      <TreeSelect
+        id="department"
+        label="Department"
+        name="department"
+        options={teams}
+        selectable="any"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TreeSelect
+  id="department"
+  label="Department"
+  name="department"
+  options=&#123;…&#125;
+  selectable="any"
+/&gt;</code></pre>
+
+    <h2>Error state</h2>
+    <div class="docs-example">
+      <TreeSelect
+        id="reviewer"
+        label="Reviewer"
+        name="reviewer"
+        options={teams}
+        error="Choose a reviewer."
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TreeSelect
+  id="reviewer"
+  label="Reviewer"
+  name="reviewer"
+  options=&#123;…&#125;
+  error="Choose a reviewer."
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Trigger id; Field label targets it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; kept in the trigger name and panel name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; carries the selected value.</td></tr>
+        <tr><td><code>options</code></td><td><code>CascadeOption[]</code> (<code>&#123; value; label; disabled?; children? &#125;</code>)</td><td>-</td><td>Tree nodes; branches expand, leaves select.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code></td><td><code>""</code></td><td>Preselected node value; its ancestors open on first open.</td></tr>
+        <tr><td><code>selectable</code></td><td><code>"any" | "leaf"</code></td><td><code>"leaf"</code></td><td>Whether branches select or only toggle.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Select …"</code></td><td>Empty-state trigger text; defaults to the lowercased label.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the trigger.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the trigger.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; trigger cannot open.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger keeps the label in its accessible name, with <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, <code>aria-controls</code>.</li>
+      <li>Panel is a <code>dialog</code> named <code>"&#123;label&#125; options"</code> holding a real <code>tree</code> with roving tabindex, <code>aria-expanded</code> branches, and single-select <code>aria-selected</code>.</li>
+      <li>Keyboard mirrors the tree pattern (Up/Down/Home/End travel, Right expands, Left collapses to parent); Enter/Space picks when allowed, otherwise toggles. Escape closes and refocuses the trigger.</li>
+      <li>Hint and error connect via <code>aria-describedby</code>; error sets <code>aria-invalid="true"</code> on the trigger.</li>
+      <li>Selection dispatches <code>ink:treeselect:change</code> with <code>&#123; value &#125;</code>.</li>
+    </ul>
+  </div>
+</Base>

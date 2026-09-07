@@ -1,0 +1,384 @@
+---
+import Field from "./Field.astro";
+
+interface CascadeOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  children?: CascadeOption[];
+}
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  options: CascadeOption[];
+  value?: string[];
+  selectAny?: boolean;
+  placeholder?: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, options, value = [], selectAny = false,
+  placeholder, hint, error, required = false, disabled = false, class: className, ...rest
+} = Astro.props;
+
+const resolvedPlaceholder = placeholder ?? `Select ${label.toLowerCase()}`;
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+
+// Strict full-path resolution: unknown values resolve to no preselection.
+function findPath(opts: CascadeOption[], vals: string[]): CascadeOption[] | undefined {
+  if (vals.length === 0) return [];
+  const [head, ...tail] = vals;
+  const node = opts.find((o) => o.value === head);
+  if (!node) return undefined;
+  if (tail.length === 0) return [node];
+  if (!node.children) return undefined;
+  const rest = findPath(node.children, tail);
+  return rest ? [node, ...rest] : undefined;
+}
+const initialPath = findPath(options, value) ?? [];
+const initialText = initialPath.length > 0
+  ? initialPath.map((n) => n.label).join(" / ")
+  : resolvedPlaceholder;
+const leafValue = initialPath.length > 0 ? initialPath[initialPath.length - 1].value : "";
+// Escape `<` so option text can never break out of the data attribute.
+const optionsJson = JSON.stringify(options).replace(/</g, "\\u003c");
+---
+<Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
+  <div class="ink-cascader" data-ink-cascader data-options={optionsJson} data-select-any={selectAny ? "true" : undefined} data-placeholder={resolvedPlaceholder}>
+    <button
+      type="button"
+      class="ink-input ink-cascader__trigger"
+      data-ink-cascader-trigger
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      aria-controls={`${id}-panel`}
+      aria-describedby={describedBy}
+      aria-invalid={error ? "true" : undefined}
+      disabled={disabled || undefined}
+      {...rest}
+    >
+      <span class="ink-visually-hidden">{label}: </span>
+      <span class="ink-cascader__text" data-ink-cascader-text>{initialText}</span>
+      <svg class="ink-cascader__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <div class="ink-cascader__panel" role="dialog" aria-label={`${label} options`} id={`${id}-panel`} data-ink-cascader-panel hidden>
+    </div>
+    <input type="hidden" name={name} value={leafValue} data-ink-cascader-value />
+  </div>
+</Field>
+
+<style>
+  .ink-cascader {
+    position: relative;
+  }
+
+  .ink-cascader__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ink-cascader__text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ink-cascader__chevron {
+    flex: none;
+    color: var(--ink-muted);
+  }
+
+  .ink-cascader__trigger[aria-expanded="true"] .ink-cascader__chevron { rotate: 180deg; }
+
+  .ink-cascader__panel {
+    position: absolute;
+    top: calc(100% + var(--ink-space-1));
+    inset-inline: 0;
+    display: flex;
+    align-items: stretch;
+    max-width: 100%;
+    overflow: auto;
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-cascader__panel[hidden] { display: none; }
+
+  /* Columns are rendered by script from JSON, so they carry no Astro scope
+     attribute. Anchor their rules under the server-rendered panel instead
+     (same reason Tree.astro scopes slotted groups with :global). */
+  .ink-cascader__panel :global(.ink-cascader__column) {
+    min-width: 12rem;
+    flex: 1;
+    max-height: 16rem;
+    overflow: auto;
+    padding: var(--ink-space-1);
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__column + .ink-cascader__column) {
+    border-inline-start: 1px solid var(--ink-border);
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__list) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__option) {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    width: 100%;
+    min-height: 2.75rem;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border: none;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__option:hover) {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__option:focus-visible) {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: -2px;
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__option[aria-expanded="true"]) {
+    background: color-mix(in srgb, var(--ink-accent) 12%, transparent);
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__option[data-branch="true"]::after) {
+    content: "›";
+    margin-inline-start: auto;
+    color: var(--ink-muted);
+  }
+
+  .ink-cascader__panel :global(.ink-cascader__option:disabled) {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  interface CascadeOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    children?: CascadeOption[];
+  }
+
+  function initCascaders(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-cascader]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const trigger = box.querySelector<HTMLButtonElement>("[data-ink-cascader-trigger]");
+      const panel = box.querySelector<HTMLElement>("[data-ink-cascader-panel]");
+      const text = box.querySelector<HTMLElement>("[data-ink-cascader-text]");
+      const hidden = box.querySelector<HTMLInputElement>("[data-ink-cascader-value]");
+      if (!trigger || !panel || !text || !hidden) return;
+      let options: CascadeOption[] = [];
+      try {
+        options = JSON.parse(box.dataset.options ?? "[]") as CascadeOption[];
+      } catch {
+        options = [];
+      }
+      const selectAny = box.dataset.selectAny === "true";
+
+      // Expanded trail of branch nodes; column 0 shows options,
+      // column N+1 shows path[N].children.
+      let path: CascadeOption[] = [];
+
+      const isOpen = () => !panel.hidden;
+      const itemsAt = (level: number): CascadeOption[] =>
+        level === 0 ? options : (path[level - 1]?.children ?? []);
+      const nodeAt = (level: number, value: string): CascadeOption | undefined =>
+        itemsAt(level).find((n) => n.value === value);
+
+      const focusOption = (level: number, value?: string) => {
+        const col = panel.querySelector<HTMLElement>(`[data-ink-cascader-column="${level}"]`);
+        if (!col) return;
+        const btns = Array.from(col.querySelectorAll<HTMLButtonElement>("[data-ink-cascader-option]"))
+          .filter((b) => !b.disabled);
+        const target = value ? (btns.find((b) => b.dataset.value === value) ?? null) : (btns[0] ?? null);
+        target?.focus();
+      };
+
+      function renderColumns() {
+        panel.innerHTML = "";
+        const levels: CascadeOption[][] = [options];
+        for (const node of path) {
+          if (node.children) levels.push(node.children);
+          else break;
+        }
+        levels.forEach((items, level) => {
+          const col = document.createElement("div");
+          col.className = "ink-cascader__column";
+          col.dataset.inkCascaderColumn = String(level);
+          const list = document.createElement("ul");
+          list.className = "ink-cascader__list";
+          list.setAttribute("aria-label", `Level ${level + 1}`);
+          for (const item of items) {
+            const li = document.createElement("li");
+            li.className = "ink-cascader__item";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "ink-cascader__option";
+            btn.dataset.inkCascaderOption = "";
+            btn.dataset.value = item.value;
+            if (item.children?.length) {
+              btn.dataset.branch = "true";
+              btn.setAttribute("aria-expanded", String(path[level] === item));
+            }
+            if (item.disabled) btn.disabled = true;
+            btn.textContent = item.label;
+            li.appendChild(btn);
+            list.appendChild(li);
+          }
+          col.appendChild(list);
+          panel.appendChild(col);
+        });
+      }
+
+      const open = () => {
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        renderColumns();
+        focusOption(0);
+      };
+      const close = () => {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      const expand = (level: number, node: CascadeOption) => {
+        path = [...path.slice(0, level), node];
+        renderColumns();
+        focusOption(level + 1);
+      };
+
+      const select = (trail: CascadeOption[], node: CascadeOption) => {
+        const picked = [...trail, node];
+        hidden.value = node.value;
+        text.textContent = picked.map((n) => n.label).join(" / ");
+        path = picked.filter((n) => !!n.children?.length);
+        close();
+        trigger.focus();
+        box.dispatchEvent(new CustomEvent("ink:cascader:change", {
+          bubbles: true,
+          detail: { value: node.value, path: picked.map((n) => n.value) },
+        }));
+      };
+
+      const activate = (level: number, value: string) => {
+        const node = nodeAt(level, value);
+        if (!node || node.disabled) return;
+        if (node.children?.length && !selectAny) expand(level, node);
+        else select(path.slice(0, level), node);
+      };
+
+      panel.addEventListener("click", (event: Event) => {
+        const btn = (event.target as HTMLElement).closest?.("button[data-ink-cascader-option]");
+        if (!(btn instanceof HTMLButtonElement) || btn.disabled) return;
+        const col = btn.closest("[data-ink-cascader-column]");
+        if (!(col instanceof HTMLElement)) return;
+        // Stop the document click-away listener seeing this click: activate()
+        // re-renders the columns, detaching the target, which would otherwise
+        // read as an outside click and close the panel immediately.
+        event.stopPropagation();
+        activate(Number(col.dataset.inkCascaderColumn ?? 0), btn.dataset.value ?? "");
+      });
+
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        const target = event.target;
+        if (!(target instanceof HTMLButtonElement) || !target.hasAttribute("data-ink-cascader-option")) return;
+        const col = target.closest("[data-ink-cascader-column]");
+        if (!(col instanceof HTMLElement)) return;
+        const level = Number(col.dataset.inkCascaderColumn ?? 0);
+        const btns = Array.from(col.querySelectorAll<HTMLButtonElement>("[data-ink-cascader-option]"))
+          .filter((b) => !b.disabled);
+        const at = btns.indexOf(target);
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          btns[at + 1]?.focus();
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          btns[at - 1]?.focus();
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          btns[0]?.focus();
+        } else if (event.key === "End") {
+          event.preventDefault();
+          btns[btns.length - 1]?.focus();
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          const node = nodeAt(level, target.dataset.value ?? "");
+          if (node && node.children?.length && !node.disabled) expand(level, node);
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          if (level > 0) {
+            const parent = path[level - 1];
+            path = path.slice(0, level - 1);
+            renderColumns();
+            focusOption(level - 1, parent?.value);
+          }
+        } else if (event.key === "Enter") {
+          event.preventDefault();
+          activate(level, target.dataset.value ?? "");
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          trigger.focus();
+        }
+      });
+
+      trigger.addEventListener("click", () => {
+        if (isOpen()) close();
+        else open();
+      });
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "ArrowDown" && !isOpen()) {
+          event.preventDefault();
+          open();
+        } else if (event.key === "Escape" && isOpen()) {
+          event.preventDefault();
+          close();
+        }
+      });
+
+      document.addEventListener("click", (event: Event) => {
+        if (!box.contains(event.target as Node)) close();
+      });
+    });
+  }
+
+  initCascaders();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initCascaders(root ?? document); } };
+</script>
