@@ -18,7 +18,7 @@ const {
   hint, error, disabled = false, class: className, ...rest
 } = Astro.props;
 
-const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+const describedBy = [hint && `${id}-hex-hint`, error && `${id}-hex-error`].filter(Boolean).join(" ") || undefined;
 ---
 <Field id={`${id}-hex`} label={label} hint={hint} error={error} class={className}>
   <div class="ink-color" data-ink-color>
