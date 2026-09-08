@@ -107,3 +107,4 @@ export { default as TagInput } from "./components/TagInput.astro";
 export { default as Cascader } from "./components/Cascader.astro";
 export { default as TreeSelect } from "./components/TreeSelect.astro";
 export { default as TransferList } from "./components/TransferList.astro";
+export { default as Calendar } from "./components/Calendar.astro";

@@ -1,0 +1,510 @@
+---
+import Field from "./Field.astro";
+import {
+  getMonthGrid,
+  formatISODate,
+  parseISODate,
+  isSameDay,
+  formatLong,
+  monthLabel,
+} from "../scripts/dates";
+
+interface Props {
+  id: string;
+  label?: string;
+  name?: string;
+  value?: string;
+  min?: string;
+  max?: string;
+  month?: string;
+  locale?: string;
+  class?: string;
+}
+
+const {
+  id,
+  label = "Choose a date",
+  name,
+  value,
+  min,
+  max,
+  month,
+  locale,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const selected = value ? parseISODate(value) : undefined;
+const minDate = min ? parseISODate(min) : undefined;
+const maxDate = max ? parseISODate(max) : undefined;
+const minISO = minDate ? formatISODate(minDate) : undefined;
+const maxISO = maxDate ? formatISODate(maxDate) : undefined;
+const selectedISO = selected ? formatISODate(selected) : undefined;
+
+function resolveInitialYM(): { year: number; month: number } {
+  if (month && /^\d{4}-\d{2}$/.test(month)) {
+    const probe = parseISODate(`${month}-01`);
+    if (probe) return { year: probe.getFullYear(), month: probe.getMonth() };
+  }
+  if (selected) return { year: selected.getFullYear(), month: selected.getMonth() };
+  const now = new Date();
+  return { year: now.getFullYear(), month: now.getMonth() };
+}
+
+const initial = resolveInitialYM();
+const today = new Date();
+
+const days = getMonthGrid(initial.year, initial.month).map(({ date, inMonth }) => {
+  const iso = formatISODate(date);
+  const disabled =
+    !inMonth || (minISO != null && iso < minISO) || (maxISO != null && iso > maxISO);
+  const isSelected = selectedISO === iso;
+  return {
+    iso,
+    day: date.getDate(),
+    disabled,
+    outMonth: !inMonth,
+    isSelected,
+    isToday: isSameDay(date, today),
+    label: formatLong(date, locale) + (isSelected ? ", selected" : ""),
+  };
+});
+
+function rovingIndex(): number {
+  const enabled = days.map((d, i) => (!d.disabled ? i : -1)).filter((i) => i >= 0);
+  if (enabled.length === 0) return -1;
+  if (selectedISO) {
+    const s = days.findIndex((d) => d.iso === selectedISO && !d.disabled);
+    if (s >= 0) return s;
+  }
+  const t = days.findIndex((d) => !d.disabled && d.iso === formatISODate(today));
+  if (t >= 0) return t;
+  const mid = days.findIndex((d) => !d.disabled && !d.outMonth && d.day === 15);
+  if (mid >= 0) return mid;
+  return enabled[0];
+}
+const roving = rovingIndex();
+
+const rows: typeof days[] = [];
+for (let w = 0; w < 6; w++) rows.push(days.slice(w * 7, w * 7 + 7));
+
+const weekDays = Array.from({ length: 7 }, (_, i) => {
+  const d = new Date(2026, 0, 5 + i);
+  return {
+    short: new Intl.DateTimeFormat(locale, { weekday: "short" }).format(d),
+    long: new Intl.DateTimeFormat(locale, { weekday: "long" }).format(d),
+  };
+});
+---
+<Field id={id} label={label} class={className}>
+  <div
+    class="ink-cal"
+    data-ink-calendar
+    data-locale={locale}
+    data-min={minISO}
+    data-max={maxISO}
+    data-year={String(initial.year)}
+    data-month={String(initial.month)}
+    data-selected={selectedISO ?? ""}
+    {...rest}
+  >
+    <div class="ink-cal__bar">
+      <button type="button" class="ink-cal__nav" data-ink-cal-prev aria-label="Previous month">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <h2 class="ink-cal__title" data-ink-cal-title aria-live="polite" tabindex="-1">
+        {monthLabel(initial.year, initial.month, locale)}
+      </h2>
+      <button type="button" class="ink-cal__nav" data-ink-cal-next aria-label="Next month">
+        <span aria-hidden="true">›</span>
+      </button>
+      <button type="button" class="ink-cal__today" data-ink-cal-today>Today</button>
+    </div>
+    <table class="ink-cal__grid" aria-label={label}>
+      <thead>
+        <tr>
+          {weekDays.map((w) => (
+            <th class="ink-cal__head" scope="col" abbr={w.long}>{w.short}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody data-ink-cal-body>
+        {rows.map((week) => (
+          <tr>
+            {week.map((d) => {
+              const idx = days.indexOf(d);
+              return (
+                <td class="ink-cal__cell">
+                  <button
+                    type="button"
+                    class:list={[
+                      "ink-cal__day",
+                      d.outMonth && "ink-cal__day--out",
+                      d.isSelected && "ink-cal__day--selected",
+                      d.isToday && "ink-cal__day--today",
+                    ]}
+                    data-ink-cal-day
+                    data-iso={d.iso}
+                    aria-label={d.label}
+                    aria-current={d.isToday ? "date" : undefined}
+                    tabindex={idx === roving ? "0" : "-1"}
+                    disabled={d.disabled || undefined}
+                  >
+                    {d.day}
+                  </button>
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {name && <input type="hidden" name={name} value={selectedISO ?? ""} data-ink-cal-value />}
+  </div>
+</Field>
+
+<style>
+  .ink-cal {
+    display: grid;
+    gap: var(--ink-space-2);
+    max-width: 22rem;
+  }
+
+  .ink-cal__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-cal__title {
+    flex: 1;
+    margin: 0;
+    font-size: var(--ink-text-base);
+    font-weight: var(--ink-font-weight-semibold);
+    text-align: center;
+  }
+
+  .ink-cal__title:focus {
+    outline: none;
+  }
+
+  .ink-cal__nav,
+  .ink-cal__today {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: var(--ink-space-1) var(--ink-space-2);
+    border: 1px solid transparent;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    cursor: pointer;
+  }
+
+  .ink-cal__nav {
+    min-width: 2.75rem;
+    font-size: var(--ink-text-lg);
+    line-height: 1;
+  }
+
+  .ink-cal__nav:hover,
+  .ink-cal__today:hover {
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+  }
+
+  .ink-cal__nav:focus-visible,
+  .ink-cal__today:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-cal__grid {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .ink-cal__head {
+    padding: var(--ink-space-1);
+    font-size: var(--ink-text-xs);
+    font-weight: var(--ink-font-weight-medium);
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  /* Day cells are re-rendered by script, so they carry no Astro scope
+     attribute. Anchor their rules under the server-rendered root instead
+     (same reason Cascader.astro scopes slotted groups with :global). */
+  .ink-cal :global(.ink-cal__cell) {
+    padding: 2px;
+    text-align: center;
+  }
+
+  .ink-cal :global(.ink-cal__day) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    cursor: pointer;
+  }
+
+  .ink-cal :global(.ink-cal__day:hover) {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+  }
+
+  .ink-cal :global(.ink-cal__day:focus-visible) {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 1px;
+  }
+
+  .ink-cal :global(.ink-cal__day--selected) {
+    background: var(--ink-accent);
+    color: var(--ink-accent-ink);
+    font-weight: var(--ink-font-weight-semibold);
+  }
+
+  .ink-cal :global(.ink-cal__day--selected:hover) {
+    background: var(--ink-accent);
+  }
+
+  .ink-cal :global(.ink-cal__day--today) {
+    border-color: var(--ink-accent);
+  }
+
+  .ink-cal :global(.ink-cal__day:disabled) {
+    color: var(--ink-muted);
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .ink-cal :global(.ink-cal__day:disabled:hover) {
+    background: transparent;
+  }
+</style>
+
+<script>
+  import {
+    getMonthGrid,
+    formatISODate,
+    parseISODate,
+    isSameDay,
+    addMonths,
+    formatLong,
+    monthLabel,
+  } from "../scripts/dates";
+
+  function initCalendars(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-calendar]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const locale = box.dataset.locale || undefined;
+      const minISO = box.dataset.min || undefined;
+      const maxISO = box.dataset.max || undefined;
+      let viewYear = Number(box.dataset.year);
+      let viewMonth = Number(box.dataset.month);
+      let selectedISO: string | null = box.dataset.selected || null;
+
+      const title = box.querySelector<HTMLElement>("[data-ink-cal-title]");
+      const body = box.querySelector<HTMLElement>("[data-ink-cal-body]");
+      const prev = box.querySelector<HTMLButtonElement>("[data-ink-cal-prev]");
+      const next = box.querySelector<HTMLButtonElement>("[data-ink-cal-next]");
+      const todayBtn = box.querySelector<HTMLButtonElement>("[data-ink-cal-today]");
+      const hidden = box.querySelector<HTMLInputElement>("[data-ink-cal-value]");
+      if (!title || !body || !prev || !next || !todayBtn) return;
+
+      const dayButtons = () =>
+        Array.from(body.querySelectorAll<HTMLButtonElement>("[data-ink-cal-day]"));
+
+      const setRoving = (target: HTMLButtonElement | null) => {
+        for (const b of dayButtons()) b.tabIndex = b === target ? 0 : -1;
+      };
+
+      const defaultTarget = (): HTMLButtonElement | null => {
+        const btns = dayButtons().filter((b) => !b.disabled);
+        if (btns.length === 0) return null;
+        if (selectedISO) {
+          const s = btns.find((b) => b.dataset.iso === selectedISO);
+          if (s) return s;
+        }
+        const now = new Date();
+        const t = btns.find((b) => {
+          const d = parseISODate(b.dataset.iso ?? "");
+          return d ? isSameDay(d, now) : false;
+        });
+        if (t) return t;
+        return btns.find((b) => (b.dataset.iso ?? "").endsWith("-15")) ?? btns[0];
+      };
+
+      const render = (focusISO: string | null, moveFocus: boolean) => {
+        const cells = getMonthGrid(viewYear, viewMonth);
+        const now = new Date();
+        body.innerHTML = "";
+        for (let w = 0; w < 6; w++) {
+          const tr = document.createElement("tr");
+          for (let k = 0; k < 7; k++) {
+            const cell = cells[w * 7 + k];
+            const iso = formatISODate(cell.date);
+            const td = document.createElement("td");
+            td.className = "ink-cal__cell";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className =
+              "ink-cal__day" +
+              (!cell.inMonth ? " ink-cal__day--out" : "") +
+              (selectedISO === iso ? " ink-cal__day--selected" : "") +
+              (isSameDay(cell.date, now) ? " ink-cal__day--today" : "");
+            btn.setAttribute("data-ink-cal-day", "");
+            btn.dataset.iso = iso;
+            btn.textContent = String(cell.date.getDate());
+            btn.setAttribute(
+              "aria-label",
+              formatLong(cell.date, locale) + (selectedISO === iso ? ", selected" : ""),
+            );
+            if (isSameDay(cell.date, now)) btn.setAttribute("aria-current", "date");
+            btn.disabled =
+              !cell.inMonth ||
+              (minISO != null && iso < minISO) ||
+              (maxISO != null && iso > maxISO);
+            btn.tabIndex = -1;
+            td.appendChild(btn);
+            tr.appendChild(td);
+          }
+          body.appendChild(tr);
+        }
+        title.textContent = monthLabel(viewYear, viewMonth, locale);
+        let target: HTMLButtonElement | null = null;
+        if (focusISO) {
+          target = dayButtons().find((b) => b.dataset.iso === focusISO && !b.disabled) ?? null;
+        }
+        if (!target) target = defaultTarget();
+        setRoving(target);
+        if (moveFocus) {
+          if (target) target.focus();
+          else title.focus();
+        }
+      };
+
+      const syncHidden = () => {
+        if (hidden) hidden.value = selectedISO ?? "";
+      };
+
+      const paintSelection = () => {
+        for (const b of dayButtons()) {
+          const iso = b.dataset.iso ?? "";
+          const sel = selectedISO === iso;
+          b.classList.toggle("ink-cal__day--selected", sel);
+          const d = parseISODate(iso);
+          if (d) {
+            b.setAttribute("aria-label", formatLong(d, locale) + (sel ? ", selected" : ""));
+          }
+        }
+      };
+
+      const choose = (iso: string | null, anchor: HTMLButtonElement | null) => {
+        selectedISO = iso;
+        box.dataset.selected = iso ?? "";
+        syncHidden();
+        paintSelection();
+        if (anchor && !anchor.disabled) setRoving(anchor);
+        else setRoving(defaultTarget());
+        box.dispatchEvent(
+          new CustomEvent("ink:calendar:change", { bubbles: true, detail: { value: iso } }),
+        );
+      };
+
+      body.addEventListener("click", (event: Event) => {
+        const btn = (event.target as HTMLElement).closest?.("[data-ink-cal-day]");
+        if (!(btn instanceof HTMLButtonElement) || btn.disabled) return;
+        const iso = btn.dataset.iso ?? "";
+        choose(selectedISO === iso ? null : iso, btn);
+        btn.focus();
+      });
+
+      body.addEventListener("keydown", (event: KeyboardEvent) => {
+        const target = event.target;
+        if (!(target instanceof HTMLButtonElement) || target.disabled) return;
+        const current = parseISODate(target.dataset.iso ?? "");
+        if (!current) return;
+
+        const shift = (days: number): Date => {
+          const d = new Date(current);
+          d.setDate(d.getDate() + days);
+          return d;
+        };
+        const move = (d: Date) => {
+          if (d.getFullYear() !== viewYear || d.getMonth() !== viewMonth) return;
+          const iso = formatISODate(d);
+          if (minISO && iso < minISO) return;
+          if (maxISO && iso > maxISO) return;
+          event.preventDefault();
+          const el = dayButtons().find((b) => b.dataset.iso === iso);
+          if (el) {
+            setRoving(el);
+            el.focus();
+          }
+        };
+        const page = (n: number) => {
+          event.preventDefault();
+          const base = addMonths(current, n);
+          viewYear = base.getFullYear();
+          viewMonth = base.getMonth();
+          render(formatISODate(base), true);
+        };
+
+        if (event.key === "ArrowLeft") move(shift(-1));
+        else if (event.key === "ArrowRight") move(shift(1));
+        else if (event.key === "ArrowUp") move(shift(-7));
+        else if (event.key === "ArrowDown") move(shift(7));
+        else if (event.key === "Home") {
+          move(shift(-((current.getDay() + 6) % 7)));
+        } else if (event.key === "End") {
+          move(shift(6 - ((current.getDay() + 6) % 7)));
+        } else if (event.key === "PageUp") {
+          page(event.shiftKey ? -12 : -1);
+        } else if (event.key === "PageDown") {
+          page(event.shiftKey ? 12 : 1);
+        } else if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          const iso = target.dataset.iso ?? "";
+          choose(selectedISO === iso ? null : iso, target);
+        }
+      });
+
+      const stepMonth = (n: number) => {
+        const base = addMonths(new Date(viewYear, viewMonth, 1), n);
+        viewYear = base.getFullYear();
+        viewMonth = base.getMonth();
+        render(null, false);
+      };
+      prev.addEventListener("click", () => stepMonth(-1));
+      next.addEventListener("click", () => stepMonth(1));
+      todayBtn.addEventListener("click", () => {
+        const now = new Date();
+        viewYear = now.getFullYear();
+        viewMonth = now.getMonth();
+        const iso = formatISODate(now);
+        const enabled =
+          (minISO == null || iso >= minISO) && (maxISO == null || iso <= maxISO);
+        render(enabled ? iso : null, true);
+      });
+
+      syncHidden();
+    });
+  }
+
+  initCalendars();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prevInit = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prevInit?.(root); initCalendars(root ?? document); } };
+</script>

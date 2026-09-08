@@ -1,0 +1,86 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Calendar } from "astro-ink";
+---
+<Base title="Calendar">
+  <div class="docs-page">
+    <h1>Calendar</h1>
+    <p class="docs-lede">
+      Pick one date from a month table of buttons, with arrow-key travel and
+      month paging. The selected ISO date syncs to a hidden input for forms,
+      and every select or clear dispatches an
+      <code>ink:calendar:change</code> event.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <Calendar id="depart-cal" name="depart" month="2026-09" locale="en-GB" />
+    </div>
+    <pre class="docs-code"><code>&lt;Calendar
+  id="depart-cal"
+  name="depart"
+  month="2026-09"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      The <code>locale</code> is set so day names render in English
+      (<code>formatLong</code> follows the runtime default locale otherwise).
+      Omit <code>month</code> to open on the selected value, or on today.
+    </p>
+
+    <h2>Preselected with min and max</h2>
+    <div class="docs-example">
+      <Calendar
+        id="return-cal"
+        name="return"
+        month="2026-12"
+        value="2026-12-25"
+        min="2026-12-20"
+        max="2026-12-31"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;Calendar
+  id="return-cal"
+  name="return"
+  month="2026-12"
+  value="2026-12-25"
+  min="2026-12-20"
+  max="2026-12-31"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      Days outside <code>min</code>/<code>max</code> render disabled, as do
+      the out-of-month filler days. Clicking the selected day again clears
+      the value (hidden input empties, event fires with <code>null</code>).
+      A garbage <code>month</code> falls back to the value month, then today.
+    </p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Names the Field label wrapper.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>"Choose a date"</code></td><td>Visible label; also names the date table.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Hidden-input form name; carries the ISO date. No hidden input when omitted.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Preselected date; unknown strings select nothing.</td></tr>
+        <tr><td><code>min</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Earliest selectable date; earlier days render disabled.</td></tr>
+        <tr><td><code>max</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Latest selectable date; later days render disabled.</td></tr>
+        <tr><td><code>month</code></td><td><code>string</code> (<code>"YYYY-MM"</code>)</td><td>-</td><td>Initial visible month; garbage falls back to value, then today.</td></tr>
+        <tr><td><code>locale</code></td><td><code>string</code></td><td>-</td><td>BCP 47 locale for day and month names; runtime default when omitted.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Native <code>table</code> of buttons (documented table-of-buttons pattern, not a grid role). Each day button carries the full date in its <code>aria-label</code>, plus a <code>", selected"</code> suffix when selected.</li>
+      <li>Selected day uses <code>aria-current="date"</code> only when it is today; selection is otherwise shown via class and label.</li>
+      <li>Month heading sits in an <code>aria-live="polite"</code> region; prev/next buttons are named <code>"Previous month"</code> / <code>"Next month"</code>; the <code>"Today"</code> button jumps back and focuses today.</li>
+      <li>Keyboard (roving tabindex over enabled days): Left/Right ±1 day, Up/Down ±1 week, Home/End start/end of week, PageUp/PageDown ±1 month (Shift: ±1 year), Enter/Space select or clear. Travel stops at disabled days and month boundaries.</li>
+      <li>Selection dispatches <code>ink:calendar:change</code> with <code>&#123; value &#125;</code> (<code>string | null</code>).</li>
+    </ul>
+  </div>
+</Base>
