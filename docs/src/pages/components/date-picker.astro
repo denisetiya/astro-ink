@@ -1,0 +1,97 @@
+---
+import Base from "../../layouts/Base.astro";
+import { DatePicker } from "astro-ink";
+---
+<Base title="DatePicker">
+  <div class="docs-page">
+    <h1>DatePicker</h1>
+    <p class="docs-lede">
+      A button trigger opens a dialog with an embedded Calendar. Picking a
+      day writes the ISO date to a hidden input, shows the long-form date on
+      the trigger, and dispatches an <code>ink:date:change</code> event.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <DatePicker
+        id="departure"
+        label="Departure date"
+        name="departure"
+        month="2026-09"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DatePicker
+  id="departure"
+  label="Departure date"
+  name="departure"
+  month="2026-09"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      The <code>locale</code> is set so day names render in English
+      (<code>formatLong</code> follows the runtime default locale otherwise).
+      Omit <code>month</code> to open on the selected value, or on today.
+    </p>
+
+    <h2>Constrained range</h2>
+    <div class="docs-example">
+      <DatePicker
+        id="return"
+        label="Return date"
+        name="return"
+        month="2026-12"
+        min="2026-12-20"
+        max="2026-12-31"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DatePicker
+  id="return"
+  label="Return date"
+  name="return"
+  month="2026-12"
+  min="2026-12-20"
+  max="2026-12-31"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      Days outside <code>min</code>/<code>max</code> render disabled inside
+      the popup. For a booking form that forbids the past, pass
+      <code>min</code> as today in <code>YYYY-MM-DD</code> form.
+    </p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Names Field/panel/message ids (trigger itself carries no id).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; kept in the trigger name and dialog name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; carries the ISO date.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Preselected date; unknown strings select nothing.</td></tr>
+        <tr><td><code>min</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Earliest selectable date; earlier days render disabled.</td></tr>
+        <tr><td><code>max</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Latest selectable date; later days render disabled.</td></tr>
+        <tr><td><code>month</code></td><td><code>string</code> (<code>"YYYY-MM"</code>)</td><td>-</td><td>Initial popup month; falls back to the value month, then today.</td></tr>
+        <tr><td><code>locale</code></td><td><code>string</code></td><td>-</td><td>BCP 47 locale for day and month names; runtime default when omitted.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Select …"</code></td><td>Empty-state trigger text; defaults to the lowercased label.</td></tr>
+        <tr><td><code>hideValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Skips the hidden input; composition API for a combined date-time field, which owns the value.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the trigger.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the trigger.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; trigger cannot open.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger keeps the label in its accessible name, with <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, <code>aria-controls</code>. It is a native button, so it stays keyboard-focusable.</li>
+      <li>Panel is a <code>dialog</code> named <code>"&#123;label&#125; options"</code> holding the embedded Calendar (same table-of-buttons keyboard map as Calendar) plus a <code>"Clear"</code> button.</li>
+      <li>Opening moves focus to the current day; Escape closes and refocuses the trigger; clicking outside closes.</li>
+      <li>Hint and error connect via <code>aria-describedby</code>; error sets <code>aria-invalid="true"</code> on the trigger.</li>
+      <li>Selection and Clear dispatch <code>ink:date:change</code> with <code>&#123; value &#125;</code> (ISO string, empty when cleared).</li>
+    </ul>
+  </div>
+</Base>

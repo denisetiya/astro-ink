@@ -1,0 +1,86 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TimePicker } from "astro-ink";
+---
+<Base title="TimePicker">
+  <div class="docs-page">
+    <h1>TimePicker</h1>
+    <p class="docs-lede">
+      A button trigger opens a dialog with two listboxes, Hour
+      (<code>00</code>–<code>23</code>) and Minute
+      (<code>00</code>–<code>59</code>). Choosing both parts commits a
+      <code>"HH:MM"</code> value to a hidden input and dispatches an
+      <code>ink:time:change</code> event.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <TimePicker
+        id="meeting"
+        label="Meeting time"
+        name="meeting"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TimePicker
+  id="meeting"
+  label="Meeting time"
+  name="meeting"
+/&gt;</code></pre>
+    <p>
+      Click or Enter an hour, then a minute: once both parts are set the
+      value commits (<code>"14:30"</code>), the dialog closes, and focus
+      returns to the trigger. Changing either part afterwards recommits the
+      new time immediately. <code>"Now"</code> fills the current time;
+      <code>"Clear"</code> empties the value.
+    </p>
+
+    <h2>Preselected value</h2>
+    <div class="docs-example">
+      <TimePicker
+        id="standup"
+        label="Standup time"
+        name="standup"
+        value="09:00"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;TimePicker
+  id="standup"
+  label="Standup time"
+  name="standup"
+  value="09:00"
+/&gt;</code></pre>
+    <p>
+      A <code>value</code> in <code>"HH:MM"</code> 24-hour form preselects
+      both columns and shows on the trigger. Malformed values select nothing.
+    </p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Names Field/panel/message ids (trigger itself carries no id).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; kept in the trigger name and dialog name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; carries the <code>"HH:MM"</code> value.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code> (<code>"HH:MM"</code>)</td><td>-</td><td>Preselected time; malformed values select nothing.</td></tr>
+        <tr><td><code>hideValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Skips the hidden input; composition API for a combined date-time field, which owns the value.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the trigger.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the trigger.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; trigger cannot open.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger keeps the label in its accessible name, with <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, <code>aria-controls</code>.</li>
+      <li>Panel is a <code>dialog</code> named <code>"&#123;label&#125; options"</code> holding two labelled listboxes (<code>"Hour"</code>, <code>"Minute"</code>) with <code>role="option"</code> items and <code>aria-selected</code>.</li>
+      <li>Keyboard per column (roving tabindex): Left/Right ±1, Up/Down ±column width (4 for hours, 6 for minutes), Home/End first/last, Enter/Space picks the focused part. Tab order: Hour option → Minute option → Now → Clear.</li>
+      <li>Escape closes and refocuses the trigger; clicking outside closes.</li>
+      <li>Hint and error connect via <code>aria-describedby</code>; error sets <code>aria-invalid="true"</code> on the trigger.</li>
+      <li>Commit, Now, and Clear dispatch <code>ink:time:change</code> with <code>&#123; value &#125;</code> (<code>"HH:MM"</code>, empty when cleared).</li>
+    </ul>
+  </div>
+</Base>

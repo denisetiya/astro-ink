@@ -1,0 +1,248 @@
+---
+import Field from "./Field.astro";
+import Calendar from "./Calendar.astro";
+import { formatISODate, parseISODate, formatLong } from "../scripts/dates";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  value?: string;
+  min?: string;
+  max?: string;
+  month?: string;
+  locale?: string;
+  placeholder?: string;
+  hideValue?: boolean;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, value, min, max, month, locale, placeholder,
+  hideValue = false, hint, error, required = false, disabled = false,
+  class: className, ...rest
+} = Astro.props;
+
+const selected = value ? parseISODate(value) : undefined;
+const selectedISO = selected ? formatISODate(selected) : "";
+const resolvedPlaceholder = placeholder ?? `Select ${label.toLowerCase()}`;
+const triggerText = selected ? formatLong(selected, locale) : resolvedPlaceholder;
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+
+function monthOf(iso?: string): string | undefined {
+  if (!iso) return undefined;
+  const d = parseISODate(iso);
+  return d ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}` : undefined;
+}
+const initialMonth = month ?? monthOf(value);
+---
+<Field id={id} label={label} hint={hint} error={error} required={required} class={className}>
+  <div
+    class="ink-datepicker"
+    data-ink-datepicker
+    data-locale={locale}
+    data-placeholder={resolvedPlaceholder}
+  >
+    <button
+      type="button"
+      class="ink-input ink-datepicker__trigger"
+      data-ink-datepicker-trigger
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      aria-controls={`${id}-panel`}
+      aria-describedby={describedBy}
+      aria-invalid={error ? "true" : undefined}
+      disabled={disabled || undefined}
+      {...rest}
+    >
+      <span class="ink-visually-hidden">{label}: </span>
+      <span class="ink-datepicker__text" data-ink-datepicker-text>{triggerText}</span>
+      <svg class="ink-datepicker__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <div class="ink-datepicker__panel" role="dialog" aria-label={`${label} options`} id={`${id}-panel`} data-ink-datepicker-panel hidden>
+      <Calendar
+        id={`${id}-cal`}
+        month={initialMonth}
+        value={selectedISO || undefined}
+        min={min}
+        max={max}
+        locale={locale}
+      />
+      <button type="button" class="ink-datepicker__clear" data-ink-datepicker-clear disabled={disabled || undefined}>
+        Clear
+      </button>
+    </div>
+    {!hideValue && <input type="hidden" name={name} value={selectedISO} data-ink-datepicker-value />}
+  </div>
+</Field>
+
+<style>
+  .ink-datepicker {
+    position: relative;
+  }
+
+  .ink-datepicker__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ink-datepicker__text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ink-datepicker__chevron {
+    flex: none;
+    color: var(--ink-muted);
+  }
+
+  .ink-datepicker__trigger[aria-expanded="true"] .ink-datepicker__chevron { rotate: 180deg; }
+
+  .ink-datepicker__panel {
+    position: absolute;
+    top: calc(100% + var(--ink-space-1));
+    inset-inline: 0;
+    display: grid;
+    gap: var(--ink-space-2);
+    justify-items: start;
+    padding: var(--ink-space-3);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-datepicker__panel[hidden] { display: none; }
+
+  .ink-datepicker__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: var(--ink-space-1) var(--ink-space-3);
+    border: 1px solid transparent;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    cursor: pointer;
+  }
+
+  .ink-datepicker__clear:hover {
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+  }
+
+  .ink-datepicker__clear:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import { parseISODate, formatLong } from "../scripts/dates";
+
+  function initDatePickers(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-datepicker]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const trigger = box.querySelector<HTMLButtonElement>("[data-ink-datepicker-trigger]");
+      const panel = box.querySelector<HTMLElement>("[data-ink-datepicker-panel]");
+      const text = box.querySelector<HTMLElement>("[data-ink-datepicker-text]");
+      const hidden = box.querySelector<HTMLInputElement>("[data-ink-datepicker-value]");
+      const clear = box.querySelector<HTMLButtonElement>("[data-ink-datepicker-clear]");
+      if (!trigger || !panel || !text) return;
+      const locale = box.dataset.locale || undefined;
+      const placeholder = box.dataset.placeholder ?? "";
+
+      const isOpen = () => !panel.hidden;
+      const open = () => {
+        if (trigger.disabled) return;
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        const day = panel.querySelector<HTMLButtonElement>('[data-ink-cal-day][tabindex="0"]');
+        (day ?? clear)?.focus();
+      };
+      const close = () => {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      const setValue = (iso: string | null) => {
+        if (hidden) hidden.value = iso ?? "";
+        if (iso) {
+          const d = parseISODate(iso);
+          text.textContent = d ? formatLong(d, locale) : iso;
+        } else {
+          text.textContent = placeholder;
+        }
+      };
+
+      // Own root only: the listener sits on this picker's box, so only the
+      // embedded Calendar inside it can trigger this handler.
+      box.addEventListener("ink:calendar:change", (event: Event) => {
+        if (!(event instanceof CustomEvent)) return;
+        if (!(event.target instanceof Node) || !box.contains(event.target)) return;
+        const iso = (event.detail?.value as string | null) ?? null;
+        setValue(iso);
+        close();
+        trigger.focus();
+        box.dispatchEvent(new CustomEvent("ink:date:change", {
+          bubbles: true,
+          detail: { value: iso ?? "" },
+        }));
+      });
+
+      clear?.addEventListener("click", () => {
+        setValue(null);
+        box.dispatchEvent(new CustomEvent("ink:date:change", {
+          bubbles: true,
+          detail: { value: "" },
+        }));
+      });
+
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          trigger.focus();
+        }
+      });
+
+      trigger.addEventListener("click", () => {
+        if (isOpen()) close();
+        else open();
+      });
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "ArrowDown" && !isOpen()) {
+          event.preventDefault();
+          open();
+        } else if (event.key === "Escape" && isOpen()) {
+          event.preventDefault();
+          close();
+        }
+      });
+
+      document.addEventListener("click", (event: Event) => {
+        if (!box.contains(event.target as Node)) close();
+      });
+    });
+  }
+
+  initDatePickers();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initDatePickers(root ?? document); } };
+</script>
