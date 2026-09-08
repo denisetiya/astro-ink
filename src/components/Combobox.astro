@@ -196,14 +196,14 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
         setActive(first);
       };
 
-      const select = (el: HTMLElement) => {
+      const select = (el: HTMLElement, refocus = true) => {
         const v = el.dataset.value ?? "";
         hidden.value = v;
         input.value = el.dataset.label ?? "";
         options.forEach((o) => o.setAttribute("aria-selected", String(o === el)));
         if (clear) clear.hidden = false;
         close();
-        input.focus();
+        if (refocus) input.focus();
         combo.dispatchEvent(new CustomEvent("ink:combo:change", { bubbles: true, detail: { value: v } }));
       };
 
@@ -243,7 +243,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
         // commit only exact label matches; otherwise revert to selected label
         const typed = input.value.trim().toLowerCase();
         const exact = options.find((o) => (o.dataset.label ?? "").toLowerCase() === typed && o.getAttribute("aria-disabled") !== "true");
-        if (exact) { select(exact); }
+        if (exact) { select(exact, false); }
         else {
           const sel = options.find((o) => o.getAttribute("aria-selected") === "true");
           input.value = sel?.dataset.label ?? "";
