@@ -75,7 +75,7 @@ import { DatePicker } from "astro-ink";
         <tr><td><code>max</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Latest selectable date; later days render disabled.</td></tr>
         <tr><td><code>month</code></td><td><code>string</code> (<code>"YYYY-MM"</code>)</td><td>-</td><td>Initial popup month; falls back to the value month, then today.</td></tr>
         <tr><td><code>locale</code></td><td><code>string</code></td><td>-</td><td>BCP 47 locale for day and month names; runtime default when omitted.</td></tr>
-        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Select …"</code></td><td>Empty-state trigger text; defaults to the lowercased label.</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>"Select &#123;label&#125;"</code> (lowercased)</td><td>Empty-state trigger text; pass <code>placeholder</code> to override.</td></tr>
         <tr><td><code>hideValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Skips the hidden input; composition API for a combined date-time field, which owns the value.</td></tr>
         <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the trigger.</td></tr>
         <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the trigger.</td></tr>

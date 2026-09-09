@@ -334,21 +334,27 @@ const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))
         }));
       };
 
-      const activate = (list: HTMLElement, val: string) => {
+      const activate = (list: HTMLElement, val: string): boolean => {
         if (list === hourList) hour = val;
         else minute = val;
         paint();
         // Both parts set: commit live (a later change to either part
         // recommits immediately), then close and refocus the trigger.
-        if (hour != null && minute != null) commit();
+        // Returns true on commit so callers skip refocusing the option
+        // inside the now-hidden panel.
+        if (hour != null && minute != null) {
+          commit();
+          return true;
+        }
+        return false;
       };
 
       const onListClick = (list: HTMLElement) => (event: Event) => {
         const el = (event.target as HTMLElement).closest?.('[role="option"]');
         if (!(el instanceof HTMLElement)) return;
         event.stopPropagation();
-        activate(list, el.dataset.val ?? "");
-        focusVal(list, el.dataset.val ?? "");
+        const val = el.dataset.val ?? "";
+        if (!activate(list, val)) focusVal(list, val);
       };
       hourList.addEventListener("click", onListClick(hourList));
       minuteList.addEventListener("click", onListClick(minuteList));
@@ -376,8 +382,8 @@ const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))
           opts[opts.length - 1]?.focus();
         } else if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          activate(list, target.dataset.val ?? "");
-          focusVal(list, target.dataset.val ?? "");
+          const val = target.dataset.val ?? "";
+          if (!activate(list, val)) focusVal(list, val);
         } else if (event.key === "Escape") {
           event.preventDefault();
           close();
