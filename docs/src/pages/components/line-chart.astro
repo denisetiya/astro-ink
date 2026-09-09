@@ -1,0 +1,83 @@
+---
+import Base from "../../layouts/Base.astro";
+import { LineChart } from "astro-ink";
+
+const signups = [
+  { label: "Jan", value: 30 },
+  { label: "Feb", value: 34 },
+  { label: "Mar", value: 42 },
+  { label: "Apr", value: 45 },
+  { label: "May", value: 52 },
+  { label: "Jun", value: 58 },
+  { label: "Jul", value: 61 },
+  { label: "Aug", value: 70 },
+  { label: "Sep", value: 78 },
+  { label: "Oct", value: 88 },
+  { label: "Nov", value: 102 },
+  { label: "Dec", value: 120 },
+];
+
+const weekly = [
+  { label: "Mon", value: 12 },
+  { label: "Tue", value: 18 },
+  { label: "Wed", value: 15 },
+  { label: "Thu", value: 22 },
+  { label: "Fri", value: 30 },
+  { label: "Sat", value: 28 },
+  { label: "Sun", value: 20 },
+];
+---
+<Base title="LineChart">
+  <div class="docs-page">
+    <h1>LineChart</h1>
+    <p class="docs-lede">
+      A trend line through your points. Monthly signups below are honest
+      sample data, rendered as a static SVG with no tooltips.
+    </p>
+
+    <h2>Monthly signups</h2>
+    <div class="docs-example">
+      <LineChart data={signups} />
+    </div>
+    <pre class="docs-code"><code>&lt;LineChart data=&#123;signups&#125; /&gt;</code></pre>
+
+    <h2>With values</h2>
+    <p>Pass <code>showValues</code> to print each value next to its dot.</p>
+    <div class="docs-example">
+      <LineChart label="Weekly signups" data={weekly} showValues />
+    </div>
+    <pre class="docs-code"><code>&lt;LineChart label="Weekly signups" data=&#123;weekly&#125; showValues /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>data</code></td><td><code>Array&lt;&#123; label: string; value: number &#125;&gt;</code></td><td>-</td><td>Points in order, left to right.</td></tr>
+        <tr><td><code>width</code></td><td><code>number</code></td><td><code>560</code></td><td>viewBox width; the SVG scales to <code>100%</code>.</td></tr>
+        <tr><td><code>height</code></td><td><code>number</code></td><td><code>240</code></td><td>viewBox height.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>"Line chart"</code></td><td>Chart name; opens the auto-summary.</td></tr>
+        <tr><td><code>showValues</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Print each value above its dot.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Static honesty</h2>
+    <p>
+      Static SVG, no tooltips; values appear in text only when
+      <code>showValues</code> is set. X labels longer than 8 characters are
+      truncated with the full text kept in a <code>&lt;title&gt;</code>. A
+      zero baseline is clamped into the viewBox, so negative values (not shown
+      in the demos) draw below it.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The chart is an image (<code>role="img"</code>) with an auto-summary label: <code>"&#123;Label&#125;, &#123;n&#125; points, high &#123;maxLabel&#125; &#123;max&#125;, low &#123;minLabel&#125; &#123;min&#125;"</code>.</li>
+      <li>A <code>&lt;title&gt;</code> repeats the summary and a <code>&lt;desc&gt;</code> describes the reading order.</li>
+      <li>Every dot carries a <code>&lt;title&gt;</code> with its <code>"&#123;label&#125;: &#123;value&#125;"</code>.</li>
+      <li>Y ticks come from <code>niceTicks</code>; tick and axis text uses the muted token at xs size.</li>
+    </ul>
+  </div>
+</Base>

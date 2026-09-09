@@ -1,0 +1,151 @@
+---
+import { scaleLinear, niceTicks } from "../scripts/chart";
+
+interface ChartPoint {
+  label: string;
+  value: number;
+}
+
+interface Props {
+  data: ChartPoint[];
+  width?: number;
+  height?: number;
+  label?: string;
+  showValues?: boolean;
+  class?: string;
+}
+
+const {
+  data,
+  width = 560,
+  height = 240,
+  label = "Line chart",
+  showValues = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const padL = 44;
+const padR = 12;
+const padT = showValues ? 18 : 10;
+const padB = 28;
+const iw = Math.max(1, width - padL - padR);
+const ih = Math.max(1, height - padT - padB);
+
+const values = data.map((d) => d.value);
+const dMin = values.length > 0 ? Math.min(0, ...values) : 0;
+const dMax = values.length > 0 ? Math.max(0, ...values) : 1;
+const ticks = niceTicks(dMin, dMax, 4);
+let tMin = ticks.length > 0 ? ticks[0] : dMin;
+let tMax = ticks.length > 0 ? ticks[ticks.length - 1] : dMax;
+if (tMax <= tMin) tMax = tMin + 1;
+
+const y = scaleLinear(tMin, tMax, padT + ih, padT);
+const x =
+  data.length > 1
+    ? scaleLinear(0, data.length - 1, padL, padL + iw)
+    : () => padL + iw / 2;
+
+const pts = data.map((d, i) => ({
+  label: d.label,
+  value: d.value,
+  cx: x(i),
+  cy: y(d.value),
+}));
+const linePath = pts
+  .map((p, i) => `${i === 0 ? "M" : "L"}${p.cx.toFixed(2)},${p.cy.toFixed(2)}`)
+  .join(" ");
+
+let summary = `${label}, 0 points`;
+if (pts.length > 0) {
+  let hi = pts[0];
+  let lo = pts[0];
+  for (const p of pts) {
+    if (p.value > hi.value) hi = p;
+    if (p.value < lo.value) lo = p;
+  }
+  summary = `${label}, ${pts.length} points, high ${hi.label} ${hi.value}, low ${lo.label} ${lo.value}`;
+}
+
+const slug = label
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+const titleId = `ink-line-${slug || "chart"}-title`;
+const descId = `ink-line-${slug || "chart"}-desc`;
+const trunc = (s: string) => (s.length > 8 ? `${s.slice(0, 8)}…` : s);
+---
+<div class:list={["ink-line", className]}>
+  <svg
+    class="ink-line__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={summary}
+    {...rest}
+  >
+    <title id={titleId}>{summary}</title>
+    <desc id={descId}>{`Static line chart of ${label}. Values read left to right.`}</desc>
+    {ticks.map((t) => (
+      <g>
+        <line class="ink-line__grid" x1={padL} x2={padL + iw} y1={y(t)} y2={y(t)} />
+        <text class="ink-line__tick" x={padL - 6} y={y(t)} text-anchor="end" dominant-baseline="central">{t}</text>
+      </g>
+    ))}
+    {linePath && <path class="ink-line__path" data-ink-line d={linePath} />}
+    {pts.map((p) => (
+      <circle class="ink-line__dot" cx={p.cx} cy={p.cy} r="3.5">
+        <title>{`${p.label}: ${p.value}`}</title>
+      </circle>
+    ))}
+    {pts.map((p) => (
+      <text class="ink-line__xlabel" x={p.cx} y={height - 8} text-anchor="middle">
+        <title>{p.label}</title>{trunc(p.label)}
+      </text>
+    ))}
+    {showValues &&
+      pts.map((p) => (
+        <text class="ink-line__value" x={p.cx} y={p.cy - 6} text-anchor="middle">{p.value}</text>
+      ))}
+  </svg>
+</div>
+
+<style>
+  .ink-line {
+    --ink-chart-accent: var(--ink-accent);
+    --ink-chart-grid: var(--ink-border);
+    --ink-chart-tick: var(--ink-muted);
+  }
+
+  .ink-line__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .ink-line__grid {
+    stroke: var(--ink-chart-grid);
+    stroke-width: 1;
+  }
+
+  .ink-line__tick,
+  .ink-line__xlabel,
+  .ink-line__value {
+    fill: var(--ink-chart-tick);
+    font-size: var(--ink-text-xs);
+  }
+
+  .ink-line__path {
+    fill: none;
+    stroke: var(--ink-chart-accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ink-line__dot {
+    fill: var(--ink-chart-accent);
+    stroke: var(--ink-bg);
+    stroke-width: 1.5;
+  }
+</style>

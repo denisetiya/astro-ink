@@ -113,3 +113,6 @@ export { default as TimePicker } from "./components/TimePicker.astro";
 export { default as DateTimePicker } from "./components/DateTimePicker.astro";
 export { default as DateRangePicker } from "./components/DateRangePicker.astro";
 export { default as DataGrid } from "./components/DataGrid.astro";
+export { default as LineChart } from "./components/LineChart.astro";
+export { default as BarChart } from "./components/BarChart.astro";
+export { default as AreaChart } from "./components/AreaChart.astro";
