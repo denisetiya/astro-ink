@@ -1,0 +1,56 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Sparkline } from "astro-ink";
+
+const signups = [8, 12, 10, 16, 14, 22, 19, 26, 24, 30, 36, 42];
+const weekly = [5, 9, 7, 11, 13, 10, 15];
+---
+<Base title="Sparkline">
+  <div class="docs-page">
+    <h1>Sparkline</h1>
+    <p class="docs-lede">
+      A word-sized trend with no axes. Signups below are honest sample data,
+      rendered as a static SVG.
+    </p>
+
+    <h2>Signups trend</h2>
+    <div class="docs-example">
+      <Sparkline data={signups} />
+    </div>
+    <pre class="docs-code"><code>&lt;Sparkline data=&#123;signups&#125; /&gt;</code></pre>
+
+    <h2>Sized</h2>
+    <p>Pass <code>width</code>, <code>height</code>, and <code>strokeWidth</code> to fit the line to its slot.</p>
+    <div class="docs-example">
+      <Sparkline label="Weekly commits" data={weekly} width={160} height={40} strokeWidth={2} />
+    </div>
+    <pre class="docs-code"><code>&lt;Sparkline label="Weekly commits" data=&#123;weekly&#125; width=&#123;160&#125; height=&#123;40&#125; strokeWidth=&#123;2&#125; /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>data</code></td><td><code>number[]</code></td><td>-</td><td>Points in order, left to right.</td></tr>
+        <tr><td><code>width</code></td><td><code>number</code></td><td><code>120</code></td><td>viewBox width; the SVG scales to <code>100%</code>.</td></tr>
+        <tr><td><code>height</code></td><td><code>number</code></td><td><code>32</code></td><td>viewBox height.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>"Sparkline"</code></td><td>Chart name; opens the auto-summary.</td></tr>
+        <tr><td><code>strokeWidth</code></td><td><code>number</code></td><td><code>1.5</code></td><td>Line weight.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Static honesty</h2>
+    <p>
+      Static SVG polyline, no axes, dots, or hover states. Fewer than two
+      points draws a flat mid line and the label notes the point count.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The chart is an image (<code>role="img"</code>) with an auto-summary label: <code>"&#123;Label&#125;, ends at &#123;last&#125;, high &#123;max&#125;"</code>.</li>
+      <li>A <code>&lt;title&gt;</code> repeats the summary and a <code>&lt;desc&gt;</code> describes the reading order.</li>
+    </ul>
+  </div>
+</Base>

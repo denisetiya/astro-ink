@@ -116,3 +116,6 @@ export { default as DataGrid } from "./components/DataGrid.astro";
 export { default as LineChart } from "./components/LineChart.astro";
 export { default as BarChart } from "./components/BarChart.astro";
 export { default as AreaChart } from "./components/AreaChart.astro";
+export { default as PieChart } from "./components/PieChart.astro";
+export { default as Sparkline } from "./components/Sparkline.astro";
+export { default as Gauge } from "./components/Gauge.astro";

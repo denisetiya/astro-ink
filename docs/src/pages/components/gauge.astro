@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { Gauge } from "astro-ink";
+---
+<Base title="Gauge">
+  <div class="docs-page">
+    <h1>Gauge</h1>
+    <p class="docs-lede">
+      A semicircle meter for a single value. Server load below is honest
+      sample data, rendered as a static SVG.
+    </p>
+
+    <h2>Server load</h2>
+    <div class="docs-example">
+      <Gauge label="Server load" value={75} />
+    </div>
+    <pre class="docs-code"><code>&lt;Gauge label="Server load" value=&#123;75&#125; /&gt;</code></pre>
+
+    <h2>Custom range</h2>
+    <p>Pass <code>min</code>, <code>max</code>, and <code>size</code> to rescale the dial.</p>
+    <div class="docs-example">
+      <Gauge label="Storage" value={30} min={10} max={50} size={240} />
+    </div>
+    <pre class="docs-code"><code>&lt;Gauge label="Storage" value=&#123;30&#125; min=&#123;10&#125; max=&#123;50&#125; size=&#123;240&#125; /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>value</code></td><td><code>number</code></td><td>-</td><td>Needle value; clamped into <code>[min, max]</code>.</td></tr>
+        <tr><td><code>min</code></td><td><code>number</code></td><td><code>0</code></td><td>Range floor.</td></tr>
+        <tr><td><code>max</code></td><td><code>number</code></td><td><code>100</code></td><td>Range ceiling.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>"Gauge"</code></td><td>Accessible name on the meter.</td></tr>
+        <tr><td><code>size</code></td><td><code>number</code></td><td><code>200</code></td><td>viewBox edge; the SVG scales to <code>100%</code>.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Static honesty</h2>
+    <p>
+      Static SVG, no needle animation. The fill arc follows the gauge angle
+      over a fixed semicircle track. Out-of-range values clamp both the arc
+      and the displayed number; <code>0</code>-to-<code>100</code> ranges print
+      a percent sign.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The wrapper is a meter (<code>role="meter"</code>), not an image: <code>aria-valuemin</code>, <code>aria-valuemax</code>, <code>aria-valuenow</code>, and <code>aria-label</code> carry the value. No <code>role="img"</code>.</li>
+      <li>The inner SVG is <code>aria-hidden</code>; the center text repeats the value in print.</li>
+    </ul>
+  </div>
+</Base>

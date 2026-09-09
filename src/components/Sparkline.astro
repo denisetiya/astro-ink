@@ -1,0 +1,85 @@
+---
+import { scaleLinear } from "../scripts/chart";
+
+interface Props {
+  data: number[];
+  width?: number;
+  height?: number;
+  label?: string;
+  strokeWidth?: number;
+  class?: string;
+}
+
+const {
+  data,
+  width = 120,
+  height = 32,
+  label = "Sparkline",
+  strokeWidth = 1.5,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const pad = 2;
+const mid = height / 2;
+
+let points: string;
+if (data.length < 2) {
+  points = `${pad},${mid} ${width - pad},${mid}`;
+} else {
+  const lo = Math.min(...data);
+  const hi = Math.max(...data);
+  const x = scaleLinear(0, data.length - 1, pad, width - pad);
+  const y =
+    hi === lo ? () => mid : scaleLinear(lo, hi, height - pad, pad);
+  points = data.map((v, i) => `${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(" ");
+}
+
+let summary: string;
+if (data.length === 0) {
+  summary = `${label}, 0 points`;
+} else if (data.length === 1) {
+  summary = `${label}, 1 point, value ${data[0]}`;
+} else {
+  summary = `${label}, ends at ${data[data.length - 1]}, high ${Math.max(...data)}`;
+}
+
+const slug = label
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+const titleId = `ink-spark-${slug || "chart"}-title`;
+const descId = `ink-spark-${slug || "chart"}-desc`;
+---
+<div class:list={["ink-spark", className]}>
+  <svg
+    class="ink-spark__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={summary}
+    {...rest}
+  >
+    <title id={titleId}>{summary}</title>
+    <desc id={descId}>{`Static sparkline of ${label}. Values read left to right.`}</desc>
+    <polyline class="ink-spark__line" points={points} stroke-width={strokeWidth} data-ink-spark />
+  </svg>
+</div>
+
+<style>
+  .ink-spark {
+    --ink-spark-line: var(--ink-accent);
+  }
+
+  .ink-spark__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .ink-spark__line {
+    fill: none;
+    stroke: var(--ink-spark-line);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

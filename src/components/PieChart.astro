@@ -1,0 +1,192 @@
+---
+import { pieSlices } from "../scripts/chart";
+
+interface PieDatum {
+  label: string;
+  value: number;
+}
+
+interface Props {
+  data: PieDatum[];
+  donut?: boolean;
+  label?: string;
+  size?: number;
+  class?: string;
+}
+
+const {
+  data,
+  donut = false,
+  label = "Pie chart",
+  size = 220,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const values = data.map((d) => Math.max(0, d.value));
+const total = values.reduce((sum, v) => sum + v, 0);
+const hasData = total > 0;
+const slices = pieSlices(values);
+const palette = [
+  "var(--ink-pie-0)",
+  "var(--ink-pie-1)",
+  "var(--ink-pie-2)",
+  "var(--ink-pie-3)",
+  "var(--ink-pie-4)",
+  "var(--ink-pie-5)",
+];
+
+const pad = 4;
+const cx = size / 2;
+const cy = size / 2;
+const r = Math.max(1, size / 2 - pad);
+const holeR = r * 0.55;
+
+const TAU = Math.PI * 2;
+const wedge = (start: number, fraction: number) => {
+  const a0 = start * TAU - Math.PI / 2;
+  const a1 = (start + fraction) * TAU - Math.PI / 2;
+  const x1 = (cx + r * Math.cos(a0)).toFixed(2);
+  const y1 = (cy + r * Math.sin(a0)).toFixed(2);
+  const x2 = (cx + r * Math.cos(a1)).toFixed(2);
+  const y2 = (cy + r * Math.sin(a1)).toFixed(2);
+  const large = fraction > 0.5 ? 1 : 0;
+  return `M${cx},${cy}L${x1},${y1}A${r},${r} 0 ${large} 1 ${x2},${y2}Z`;
+};
+
+const isFullCircle = slices.length === 1 && slices[0].fraction >= 1;
+const summary = hasData
+  ? `${label}, ${data.length} segments, total ${total}`
+  : `${label}, no data`;
+
+const slug = label
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+const titleId = `ink-pie-${slug || "chart"}-title`;
+const descId = `ink-pie-${slug || "chart"}-desc`;
+---
+<div class:list={["ink-pie", className]}>
+  <svg
+    class="ink-pie__svg"
+    viewBox={`0 0 ${size} ${size}`}
+    role="img"
+    aria-label={summary}
+    {...rest}
+  >
+    <title id={titleId}>{summary}</title>
+    <desc id={descId}>{`Static pie chart of ${label}. Slices read clockwise from the top.`}</desc>
+    {hasData ? (
+      isFullCircle ? (
+        <circle cx={cx} cy={cy} r={r} fill={palette[0]} data-ink-slice>
+          <title>{`${data[0].label}: ${data[0].value}`}</title>
+        </circle>
+      ) : (
+        slices.map((s, i) =>
+          s.fraction > 0 ? (
+            <path d={wedge(s.offset, s.fraction)} fill={palette[i % palette.length]} data-ink-slice>
+              <title>{`${data[i].label}: ${data[i].value}`}</title>
+            </path>
+          ) : null,
+        )
+      )
+    ) : (
+      <g>
+        <circle class="ink-pie__empty" cx={cx} cy={cy} r={r} />
+        <text class="ink-pie__empty-label" x={cx} y={cy} text-anchor="middle" dominant-baseline="central">no data</text>
+      </g>
+    )}
+    {hasData && donut && (
+      <g>
+        <circle class="ink-pie__hole" cx={cx} cy={cy} r={holeR} />
+        <text class="ink-pie__total" x={cx} y={cy} text-anchor="middle" dominant-baseline="central">{total}</text>
+      </g>
+    )}
+  </svg>
+  <ul class="ink-pie__legend">
+    {data.map((d, i) => (
+      <li class="ink-pie__item">
+        <span class="ink-pie__swatch" style={`background:${palette[i % palette.length]}`} aria-hidden="true" />
+        <span class="ink-pie__name">{d.label}</span>
+        <span class="ink-pie__value">{d.value}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .ink-pie {
+    --ink-pie-0: var(--ink-accent);
+    --ink-pie-1: var(--ink-success);
+    --ink-pie-2: var(--ink-info);
+    --ink-pie-3: var(--ink-warning);
+    --ink-pie-4: var(--ink-danger);
+    --ink-pie-5: var(--ink-muted);
+    --ink-pie-name: var(--ink-ink);
+    --ink-pie-value: var(--ink-muted);
+    --ink-pie-empty: var(--ink-border);
+    --ink-pie-hole: var(--ink-surface);
+    --ink-pie-total: var(--ink-ink);
+  }
+
+  .ink-pie__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .ink-pie__legend {
+    list-style: none;
+    margin: var(--ink-space-2) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-pie__item {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-pie__swatch {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: var(--ink-radius-sm);
+    flex: none;
+  }
+
+  .ink-pie__name {
+    color: var(--ink-pie-name);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-pie__value {
+    color: var(--ink-pie-value);
+    font-size: var(--ink-text-sm);
+    margin-left: auto;
+  }
+
+  .ink-pie__empty {
+    fill: none;
+    stroke: var(--ink-pie-empty);
+    stroke-width: 2;
+  }
+
+  .ink-pie__empty-label {
+    fill: var(--ink-pie-value);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-pie__hole {
+    fill: var(--ink-pie-hole);
+  }
+
+  .ink-pie__total {
+    fill: var(--ink-pie-total);
+    font-size: var(--ink-text-xl);
+    font-weight: var(--ink-font-weight-semibold);
+  }
+</style>
