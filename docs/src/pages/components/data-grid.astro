@@ -1,0 +1,135 @@
+---
+import Base from "../../layouts/Base.astro";
+import { DataGrid } from "astro-ink";
+
+const invoices = [
+  { id: "inv-01", customer: "Ada Lovelace", amount: 1200, status: "Paid" },
+  { id: "inv-02", customer: "Grace Hopper", amount: 850, status: "Pending" },
+  { id: "inv-03", customer: "Alan Turing", amount: 2300, status: "Overdue" },
+  { id: "inv-04", customer: "Katherine Johnson", amount: 1450, status: "Paid" },
+  { id: "inv-05", customer: "Margaret Hamilton", amount: 1980, status: "Pending" },
+  { id: "inv-06", customer: "Barbara Liskov", amount: 1100, status: "Paid" },
+  { id: "inv-07", customer: "Frances Allen", amount: 1750, status: "Overdue" },
+  { id: "inv-08", customer: "Carol Shaw", amount: 960, status: "Pending" },
+  { id: "inv-09", customer: "Anita Borg", amount: 1620, status: "Paid" },
+  { id: "inv-10", customer: "Radia Perlman", amount: 2100, status: "Pending" },
+  { id: "inv-11", customer: "Lynn Conway", amount: 1340, status: "Paid" },
+  { id: "inv-12", customer: "Sophie Wilson", amount: 1875, status: "Overdue" },
+];
+
+const invoiceColumns = [
+  { key: "customer", header: "Customer", sortable: true },
+  { key: "amount", header: "Amount", sortable: true, align: "end" as const },
+  { key: "status", header: "Status" },
+];
+
+const team = [
+  { id: "ada", name: "Ada Lovelace", role: "Engineer" },
+  { id: "grace", name: "Grace Hopper", role: "Lead" },
+  { id: "alan", name: "Alan Turing", role: "Researcher" },
+];
+
+const teamColumns = [
+  { key: "name", header: "Name" },
+  { key: "role", header: "Role" },
+];
+---
+<Base title="DataGrid">
+  <div class="docs-page">
+    <h1>DataGrid</h1>
+    <p class="docs-lede">
+      Sortable, filterable, pageable table. The server renders every row, so
+      no-JS readers and search engines see the full table; the script enhances
+      in place with sorting, filtering, pagination, and row selection.
+    </p>
+
+    <h2>Invoices</h2>
+    <div class="docs-example" id="demo-invoices" style="display: grid;">
+      <DataGrid
+        id="invoices"
+        label="Invoices"
+        name="invoices"
+        columns={invoiceColumns}
+        rows={invoices}
+        rowKey="id"
+        selectable
+        pageSize={5}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DataGrid
+  id="invoices"
+  label="Invoices"
+  name="invoices"
+  columns=&#123;invoiceColumns&#125;
+  rows=&#123;invoices&#125;
+  rowKey="id"
+  selectable
+  pageSize=&#123;5&#125;
+/&gt;</code></pre>
+
+    <h2>Plain variant</h2>
+    <p>A grid with no sorting, filtering, selection, or pagination chrome: all rows, always visible.</p>
+    <div class="docs-example" id="demo-team" style="display: grid;">
+      <DataGrid
+        id="team"
+        label="Team"
+        columns={teamColumns}
+        rows={team}
+        rowKey="id"
+        filterable={false}
+        pageSize={10}
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DataGrid
+  id="team"
+  label="Team"
+  columns=&#123;teamColumns&#125;
+  rows=&#123;team&#125;
+  rowKey="id"
+  filterable=&#123;false&#125;
+  pageSize=&#123;10&#125;
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Grid id; prefixes the filter input id.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Table caption and filter input name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden inputs form name (selected ids).</td></tr>
+        <tr><td><code>columns</code></td><td><code>Array&lt;&#123; key; header; sortable?; align? &#125;&gt;</code></td><td>-</td><td>Column defs; <code>sortable</code> enables header sorting.</td></tr>
+        <tr><td><code>rows</code></td><td><code>Array&lt;Record&lt;string, string | number&gt;&gt;</code></td><td>-</td><td>All rows, rendered server-side.</td></tr>
+        <tr><td><code>rowKey</code></td><td><code>string</code></td><td>-</td><td>Column key holding the unique row id.</td></tr>
+        <tr><td><code>selectable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Row checkboxes plus select-all header.</td></tr>
+        <tr><td><code>filterable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Show the filter search input.</td></tr>
+        <tr><td><code>pageSize</code></td><td><code>number</code></td><td><code>5</code></td><td>Rows per client page.</td></tr>
+        <tr><td><code>striped</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Alternating row treatment.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>No-JS behavior</h2>
+    <p>
+      Without JavaScript the full table renders: every row, real
+      <code>th scope="col"</code> headers, caption, and visible row checkboxes.
+      Sorting, filtering, and pagination are enhancements only.
+    </p>
+
+    <h2>Events</h2>
+    <p>
+      Selection changes dispatch <code>ink:grid:change</code> with
+      <code>&#123; selected: string[] &#125;</code>. Selected ids also submit
+      with the form via hidden inputs named <code>name</code>.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Sortable headers carry <code>aria-sort</code> and toggle with click, Enter, or Space.</li>
+      <li>The status line is a live region (<code>role="status"</code>): page and range counts announce politely.</li>
+      <li>Row checkboxes are native and labelled (<code>Select row …</code>); the header box selects all and shows indeterminate state.</li>
+      <li>Pagination buttons disable at the first and last page instead of linking nowhere.</li>
+    </ul>
+  </div>
+</Base>

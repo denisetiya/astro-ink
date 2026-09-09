@@ -11,6 +11,7 @@ const pages = [
   { path: "/components/card", heading: "Card" },
   { path: "/components/carousel", heading: "Carousel" },
   { path: "/components/code-block", heading: "CodeBlock" },
+  { path: "/components/data-grid", heading: "DataGrid" },
   { path: "/components/descriptions", heading: "Descriptions" },
   { path: "/components/highlight", heading: "Highlight" },
   { path: "/components/image-list", heading: "ImageList" },

@@ -1,0 +1,377 @@
+---
+import Field from "./Field.astro";
+
+interface DataColumn {
+  key: string;
+  header: string;
+  sortable?: boolean;
+  align?: "start" | "center" | "end";
+}
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  columns: DataColumn[];
+  rows: Array<Record<string, string | number>>;
+  rowKey: string;
+  selectable?: boolean;
+  filterable?: boolean;
+  pageSize?: number;
+  striped?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, columns, rows, rowKey,
+  selectable = false, filterable = true, pageSize = 5,
+  striped = false, class: className, ...rest
+} = Astro.props;
+
+const total = rows.length;
+const totalPages = Math.max(1, Math.ceil(total / pageSize));
+const firstShown = total === 0 ? 0 : 1;
+const lastShown = Math.min(pageSize, total);
+const keyOf = (row: Record<string, string | number>) => String(row[rowKey]);
+---
+<div
+  class:list={["ink-datagrid", striped && "ink-datagrid--striped", className]}
+  data-ink-datagrid
+  data-page-size={pageSize}
+  {...rest}
+>
+  {filterable && (
+    <div class="ink-datagrid__filter">
+      <Field id={`${id}-filter`} label={`Filter ${label}`}>
+        <input
+          id={`${id}-filter`}
+          class="ink-input"
+          type="search"
+          data-ink-datagrid-filter
+        />
+      </Field>
+    </div>
+  )}
+  <div class="ink-datagrid__table-wrap">
+    <table class="ink-datagrid__table">
+      <caption class="ink-datagrid__caption">{label}</caption>
+      <thead>
+        <tr>
+          {selectable && (
+            <th scope="col" class="ink-datagrid__check">
+              <input type="checkbox" data-ink-datagrid-select-all aria-label="Select all rows" />
+            </th>
+          )}
+          {columns.map((col) => (
+            <th
+              scope="col"
+              data-key={col.key}
+              data-sortable={col.sortable || undefined}
+              data-align={col.align}
+              tabindex={col.sortable ? "0" : undefined}
+              aria-sort={col.sortable ? "none" : undefined}
+            >
+              {col.header}
+              {col.sortable && (
+                <span class="ink-datagrid__arrow" data-ink-datagrid-arrow aria-hidden="true" hidden></span>
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody class="ink-datagrid__body" data-ink-datagrid-body>
+        {rows.map((row) => (
+          <tr data-key={keyOf(row)}>
+            {selectable && (
+              <td class="ink-datagrid__check">
+                <input
+                  type="checkbox"
+                  data-ink-datagrid-select
+                  value={keyOf(row)}
+                  aria-label={`Select row ${keyOf(row)}`}
+                />
+              </td>
+            )}
+            {columns.map((col) => (
+              <td data-col={col.key} data-align={col.align}>{String(row[col.key])}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <div class="ink-datagrid__pager">
+    <button type="button" class="ink-datagrid__nav" data-ink-datagrid-prev aria-label="Previous page" disabled>
+      <span aria-hidden="true">‹</span> Previous
+    </button>
+    <button type="button" class="ink-datagrid__nav" data-ink-datagrid-next aria-label="Next page" disabled={totalPages <= 1 || undefined}>
+      Next <span aria-hidden="true">›</span>
+    </button>
+    <p class="ink-datagrid__status" role="status" aria-live="polite">
+      <span data-ink-datagrid-page>Page 1 of {totalPages}</span>
+      <span aria-hidden="true"> · </span>
+      <span data-ink-datagrid-range>Showing {firstShown}–{lastShown} of {total}</span>
+    </p>
+  </div>
+  {selectable && (
+    <div data-ink-datagrid-hidden data-name={name} hidden></div>
+  )}
+</div>
+
+<style>
+  .ink-datagrid {
+    display: grid;
+    gap: var(--ink-space-3);
+  }
+
+  .ink-datagrid [hidden] { display: none; }
+
+  .ink-datagrid__filter {
+    max-width: 22rem;
+  }
+
+  .ink-datagrid__table-wrap { overflow-x: auto; }
+
+  .ink-datagrid__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-datagrid__caption {
+    text-align: start;
+    padding-bottom: var(--ink-space-2);
+    color: var(--ink-muted);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-datagrid__table th,
+  .ink-datagrid__table td {
+    text-align: start;
+    padding: var(--ink-space-2) var(--ink-space-3);
+    border-bottom: 1px solid var(--ink-border);
+  }
+
+  .ink-datagrid__table thead th {
+    font-weight: var(--ink-font-weight-semibold);
+    color: var(--ink-muted);
+    font-size: var(--ink-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .ink-datagrid__table th[data-sortable="true"] {
+    cursor: pointer;
+  }
+
+  .ink-datagrid__table th[data-sortable="true"]:hover {
+    color: var(--ink-ink);
+  }
+
+  .ink-datagrid__table th[data-sortable="true"]:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: -2px;
+  }
+
+  .ink-datagrid__arrow {
+    margin-left: var(--ink-space-1);
+  }
+
+  .ink-datagrid__table td[data-align="center"],
+  .ink-datagrid__table th[data-align="center"] { text-align: center; }
+
+  .ink-datagrid__table td[data-align="end"],
+  .ink-datagrid__table th[data-align="end"] { text-align: end; }
+
+  .ink-datagrid--striped .ink-datagrid__table tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--ink-ink) 3%, var(--ink-surface));
+  }
+
+  .ink-datagrid__check {
+    width: 2.5rem;
+  }
+
+  .ink-datagrid__check input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: var(--ink-accent);
+    vertical-align: middle;
+  }
+
+  .ink-datagrid__pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-datagrid__nav {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-1);
+    min-height: 2.75rem;
+    padding: var(--ink-space-1) var(--ink-space-3);
+    font-size: var(--ink-text-sm);
+    color: var(--ink-ink);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+  }
+
+  .ink-datagrid__nav:disabled {
+    opacity: 0.5;
+  }
+
+  .ink-datagrid__nav:not(:disabled):hover {
+    border-color: var(--ink-accent);
+  }
+
+  .ink-datagrid__status {
+    margin: 0;
+    font-size: var(--ink-text-sm);
+    color: var(--ink-muted);
+  }
+</style>
+
+<script>
+  function initGrids(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-datagrid]").forEach((grid) => {
+      if (grid.dataset.inkBound) return;
+      grid.dataset.inkBound = "true";
+      const pageSize = Number((grid.dataset.pageSize ?? "5")) || 5;
+      const body = grid.querySelector<HTMLElement>("[data-ink-datagrid-body]");
+      const filter = grid.querySelector<HTMLInputElement>("[data-ink-datagrid-filter]");
+      const prev = grid.querySelector<HTMLButtonElement>("[data-ink-datagrid-prev]");
+      const next = grid.querySelector<HTMLButtonElement>("[data-ink-datagrid-next]");
+      const pageLabel = grid.querySelector<HTMLElement>("[data-ink-datagrid-page]");
+      const rangeLabel = grid.querySelector<HTMLElement>("[data-ink-datagrid-range]");
+      const selectAll = grid.querySelector<HTMLInputElement>("[data-ink-datagrid-select-all]");
+      const hiddenWrap = grid.querySelector<HTMLElement>("[data-ink-datagrid-hidden]");
+      if (!body) return;
+      const fieldName = hiddenWrap?.dataset.name ?? "";
+      const rows = Array.from(body.querySelectorAll<HTMLElement>("tr"));
+      const heads = Array.from(grid.querySelectorAll<HTMLElement>('th[data-sortable="true"]'));
+      let sortKey: string | null = null;
+      let sortDir: "asc" | "desc" = "asc";
+      let query = "";
+      let page = 1;
+
+      const cellText = (tr: HTMLElement, key: string) =>
+        tr.querySelector(`[data-col="${key}"]`)?.textContent?.trim() ?? "";
+
+      const applySort = () => {
+        if (!sortKey) return;
+        const key = sortKey;
+        const dir = sortDir === "asc" ? 1 : -1;
+        rows.sort((a, b) => {
+          const va = cellText(a, key);
+          const vb = cellText(b, key);
+          const na = Number(va);
+          const nb = Number(vb);
+          if (va !== "" && vb !== "" && Number.isFinite(na) && Number.isFinite(nb)) return (na - nb) * dir;
+          return va.localeCompare(vb) * dir;
+        });
+        for (const tr of rows) body.appendChild(tr);
+      };
+
+      const apply = () => {
+        const q = query.trim().toLowerCase();
+        const matched = rows.filter((tr) => q === "" || (tr.textContent ?? "").toLowerCase().includes(q));
+        // N in "Showing a-b of N" is the FILTERED count (MUI-standard).
+        const total = matched.length;
+        const pages = Math.max(1, Math.ceil(total / pageSize));
+        if (page > pages) page = pages;
+        if (page < 1) page = 1;
+        const start = (page - 1) * pageSize;
+        const windowed = new Set(matched.slice(start, start + pageSize));
+        for (const tr of rows) tr.hidden = !windowed.has(tr);
+        const a = total === 0 ? 0 : start + 1;
+        const b = Math.min(start + pageSize, total);
+        // NOTE: numeric ranges use an en dash (–); R-02 bans em dashes only.
+        if (rangeLabel) rangeLabel.textContent = `Showing ${a}–${b} of ${total}`;
+        if (pageLabel) pageLabel.textContent = `Page ${page} of ${pages}`;
+        if (prev) prev.disabled = page <= 1;
+        if (next) next.disabled = page >= pages;
+      };
+
+      const syncSelection = (emit = true) => {
+        const boxes = rows
+          .map((tr) => tr.querySelector<HTMLInputElement>('[data-ink-datagrid-select]'))
+          .filter((b): b is HTMLInputElement => b instanceof HTMLInputElement);
+        const selected = boxes.filter((b) => b.checked).map((b) => b.value);
+        if (hiddenWrap) {
+          hiddenWrap.innerHTML = "";
+          for (const v of selected) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = fieldName;
+            input.value = v;
+            hiddenWrap.appendChild(input);
+          }
+        }
+        if (selectAll) {
+          selectAll.checked = boxes.length > 0 && selected.length === boxes.length;
+          selectAll.indeterminate = selected.length > 0 && selected.length < boxes.length;
+        }
+        if (emit) grid.dispatchEvent(new CustomEvent("ink:grid:change", { bubbles: true, detail: { selected } }));
+      };
+
+      const setSort = (key: string) => {
+        if (sortKey === key) sortDir = sortDir === "asc" ? "desc" : "asc";
+        else { sortKey = key; sortDir = "asc"; }
+        for (const h of heads) {
+          const arrow = h.querySelector<HTMLElement>("[data-ink-datagrid-arrow]");
+          if (h.dataset.key === sortKey) {
+            h.setAttribute("aria-sort", sortDir === "asc" ? "ascending" : "descending");
+            if (arrow) { arrow.hidden = false; arrow.textContent = sortDir === "asc" ? "▲" : "▼"; }
+          } else {
+            h.setAttribute("aria-sort", "none");
+            if (arrow) { arrow.hidden = true; arrow.textContent = ""; }
+          }
+        }
+        applySort();
+        apply();
+      };
+
+      for (const h of heads) {
+        const key = h.dataset.key;
+        if (!key) continue;
+        h.addEventListener("click", () => setSort(key));
+        h.addEventListener("keydown", (event: KeyboardEvent) => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSort(key); }
+        });
+      }
+
+      filter?.addEventListener("input", () => {
+        query = filter.value;
+        page = 1;
+        apply();
+      });
+
+      prev?.addEventListener("click", () => { page -= 1; apply(); });
+      next?.addEventListener("click", () => { page += 1; apply(); });
+
+      for (const tr of rows) {
+        tr.querySelector<HTMLInputElement>('[data-ink-datagrid-select]')
+          ?.addEventListener("change", () => syncSelection());
+      }
+      selectAll?.addEventListener("change", () => {
+        for (const tr of rows) {
+          const box = tr.querySelector<HTMLInputElement>('[data-ink-datagrid-select]');
+          if (box) box.checked = selectAll.checked;
+        }
+        syncSelection();
+      });
+
+      apply();
+      syncSelection(false);
+    });
+  }
+
+  initGrids();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prevInit = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prevInit?.(root); initGrids(root ?? document); } };
+</script>
