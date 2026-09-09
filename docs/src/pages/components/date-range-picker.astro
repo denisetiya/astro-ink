@@ -1,0 +1,106 @@
+---
+import Base from "../../layouts/Base.astro";
+import { DateRangePicker } from "astro-ink";
+---
+<Base title="DateRangePicker">
+  <div class="docs-page">
+    <h1>DateRangePicker</h1>
+    <p class="docs-lede">
+      One trigger opens a dialog with two side-by-side Calendars (the given
+      month plus the next). The first pick sets the start and announces
+      <code>"choose end date"</code> through a polite live region; the second
+      pick sets the end. Days between get an in-range treatment, and every
+      pick dispatches an <code>ink:range:change</code> event.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <DateRangePicker
+        id="stay"
+        label="Hotel stay"
+        name="stay"
+        month="2026-09"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DateRangePicker
+  id="stay"
+  label="Hotel stay"
+  name="stay"
+  month="2026-09"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      The <code>locale</code> is set so day names render in English
+      (<code>formatLong</code> follows the runtime default locale otherwise).
+      Pick the 10th, then the 15th: the <code>stay</code> hidden input holds
+      <code>"2026-09-10"</code>, <code>stay-end</code> holds
+      <code>"2026-09-15"</code>, and the days between read
+      <code>", in selected range"</code> in their labels. The dialog stays
+      open after every pick so the range can be adjusted; <code>"Clear"</code>
+      resets both hidden inputs and the paint and dispatches
+      <code>ink:range:change</code> with <code>&#123; start: "", end: "" &#125;</code>.
+    </p>
+
+    <h2>Preselected range</h2>
+    <div class="docs-example">
+      <DateRangePicker
+        id="stay-set"
+        label="Hotel stay"
+        name="stay-set"
+        value={{ start: "2026-09-10", end: "2026-09-15" }}
+        month="2026-09"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DateRangePicker
+  id="stay-set"
+  label="Hotel stay"
+  name="stay-set"
+  value=&#123;&#123; start: "2026-09-10", end: "2026-09-15" &#125;&#125;
+  month="2026-09"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      A <code>value</code> with ISO <code>start</code>/<code>end</code> paints
+      the range server-side — the start (resp. end) day renders pre-selected
+      in the first (resp. second) calendar, with in-range middles labelled.
+      Malformed dates select nothing. Picking a second day earlier than the
+      start restarts the range at the new start instead (the end stays
+      empty); a first calendar month falls back to the start month, then
+      today, and the second always shows the following month.
+    </p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Names Field/panel/message ids (trigger itself carries no id).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Visible label; kept in the trigger name and dialog name.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Start hidden-input form name; carries the ISO start date.</td></tr>
+        <tr><td><code>endName</code></td><td><code>string</code></td><td><code>name + "-end"</code></td><td>End hidden-input form name; carries the ISO end date.</td></tr>
+        <tr><td><code>value</code></td><td><code>&#123; start?: string; end?: string &#125;</code></td><td>-</td><td>Preselected range; each part is a strict ISO date, malformed parts select nothing.</td></tr>
+        <tr><td><code>min</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Earliest selectable date in both calendars; earlier days render disabled.</td></tr>
+        <tr><td><code>max</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Latest selectable date in both calendars; later days render disabled.</td></tr>
+        <tr><td><code>month</code></td><td><code>string</code> (<code>"YYYY-MM"</code>)</td><td>-</td><td>First calendar's month; the second always shows the following month. Falls back to the start month, then today.</td></tr>
+        <tr><td><code>locale</code></td><td><code>string</code></td><td>-</td><td>BCP 47 locale for day and month names; runtime default when omitted.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the trigger.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message; sets <code>aria-invalid</code> on the trigger.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; trigger cannot open.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>Trigger keeps the label in its accessible name, with <code>aria-haspopup="dialog"</code>, <code>aria-expanded</code>, <code>aria-controls</code>. It is a native button, so it stays keyboard-focusable.</li>
+      <li>Panel is a <code>dialog</code> named <code>"&#123;label&#125; options"</code> holding two Calendars labelled <code>"&#123;label&#125;: start date"</code> and <code>"&#123;label&#125;: end date"</code> (same table-of-buttons keyboard map as Calendar) plus a <code>"Clear"</code> button.</li>
+      <li>Opening moves focus to the current day; Escape closes and refocuses the trigger; clicking outside closes. The panel stays open after picks, with focus left on the picked day.</li>
+      <li>A polite live region announces <code>"Start date … selected. Choose end date."</code> after the first pick (and on Clear).</li>
+      <li>Range endpoints keep the <code>", selected"</code> suffix; days strictly between gain <code>", in selected range"</code>.</li>
+      <li>Every pick and Clear dispatches <code>ink:range:change</code> with <code>&#123; start, end &#125;</code> (ISO strings, empty when unset).</li>
+    </ul>
+  </div>
+</Base>

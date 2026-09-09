@@ -18,6 +18,8 @@ interface Props {
   max?: string;
   month?: string;
   locale?: string;
+  rangeStart?: string;
+  rangeEnd?: string;
   class?: string;
 }
 
@@ -30,6 +32,8 @@ const {
   max,
   month,
   locale,
+  rangeStart,
+  rangeEnd,
   class: className,
   ...rest
 } = Astro.props;
@@ -40,6 +44,15 @@ const maxDate = max ? parseISODate(max) : undefined;
 const minISO = minDate ? formatISODate(minDate) : undefined;
 const maxISO = maxDate ? formatISODate(maxDate) : undefined;
 const selectedISO = selected ? formatISODate(selected) : undefined;
+// Range in-painting for DateRangePicker: endpoint = selected-style,
+// strict middles = in-range class + label suffix (no Field/label change).
+function cleanRangeISO(v?: string): string | undefined {
+  if (!v) return undefined;
+  const d = parseISODate(v);
+  return d ? formatISODate(d) : undefined;
+}
+const rangeStartISO = cleanRangeISO(rangeStart);
+const rangeEndISO = cleanRangeISO(rangeEnd);
 
 function resolveInitialYM(): { year: number; month: number } {
   if (month && /^\d{4}-\d{2}$/.test(month)) {
@@ -59,14 +72,19 @@ const days = getMonthGrid(initial.year, initial.month).map(({ date, inMonth }) =
   const disabled =
     !inMonth || (minISO != null && iso < minISO) || (maxISO != null && iso > maxISO);
   const isSelected = selectedISO === iso;
+  const isEndpoint = (rangeStartISO != null && iso === rangeStartISO) ||
+    (rangeEndISO != null && iso === rangeEndISO);
+  const inRange = rangeStartISO != null && rangeEndISO != null &&
+    iso > rangeStartISO && iso < rangeEndISO;
   return {
     iso,
     day: date.getDate(),
     disabled,
     outMonth: !inMonth,
-    isSelected,
+    isSelected: isSelected || isEndpoint,
+    inRange,
     isToday: isSameDay(date, today),
-    label: formatLong(date, locale) + (isSelected ? ", selected" : ""),
+    label: formatLong(date, locale) + (isSelected || isEndpoint ? ", selected" : inRange ? ", in selected range" : ""),
   };
 });
 
@@ -141,6 +159,7 @@ const weekDays = Array.from({ length: 7 }, (_, i) => {
                       "ink-cal__day",
                       d.outMonth && "ink-cal__day--out",
                       d.isSelected && "ink-cal__day--selected",
+                      d.inRange && "ink-cal__day--in-range",
                       d.isToday && "ink-cal__day--today",
                     ]}
                     data-ink-cal-day
@@ -275,6 +294,14 @@ const weekDays = Array.from({ length: 7 }, (_, i) => {
 
   .ink-cal :global(.ink-cal__day--selected:hover) {
     background: var(--ink-accent);
+  }
+
+  .ink-cal :global(.ink-cal__day--in-range) {
+    background: color-mix(in srgb, var(--ink-accent) 16%, transparent);
+  }
+
+  .ink-cal :global(.ink-cal__day--in-range:hover) {
+    background: color-mix(in srgb, var(--ink-accent) 24%, transparent);
   }
 
   .ink-cal :global(.ink-cal__day--today) {

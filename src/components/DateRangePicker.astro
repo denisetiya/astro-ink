@@ -1,0 +1,384 @@
+---
+import Field from "./Field.astro";
+import Calendar from "./Calendar.astro";
+import { parseISODate, formatISODate, formatLong, addMonths } from "../scripts/dates";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  endName?: string;
+  value?: { start?: string; end?: string };
+  min?: string;
+  max?: string;
+  month?: string;
+  locale?: string;
+  hint?: string;
+  error?: string;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, endName = `${name}-end`, value,
+  min, max, month, locale, hint, error, disabled = false,
+  class: className, ...rest
+} = Astro.props;
+
+// Strict ISO parse; garbage yields "" (documented, never half-filled).
+function cleanISO(v?: string): string {
+  if (!v) return "";
+  const d = parseISODate(v);
+  return d ? formatISODate(d) : "";
+}
+
+const startISO = cleanISO(value?.start);
+const endISO = cleanISO(value?.end);
+
+function validMonth(m?: string): string | undefined {
+  if (!m || !/^\d{4}-\d{2}$/.test(m)) return undefined;
+  return parseISODate(`${m}-01`) ? m : undefined;
+}
+
+function monthOfISO(iso: string): string {
+  const d = parseISODate(iso)!;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function plusOneMonth(m: string): string {
+  const n = addMonths(parseISODate(`${m}-01`)!, 1);
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function todayMonth(): string {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}`;
+}
+
+// First calendar shows `month`, else the start month, else today; the
+// second calendar always shows the following month.
+const firstMonth = validMonth(month) ?? (startISO ? monthOfISO(startISO) : todayMonth());
+const secondMonth = plusOneMonth(firstMonth);
+
+const resolvedPlaceholder = `Select ${label.toLowerCase()}`;
+const startLong = startISO ? formatLong(parseISODate(startISO)!, locale) : "";
+const endLong = endISO ? formatLong(parseISODate(endISO)!, locale) : "";
+const triggerText = startISO && endISO
+  ? `${startLong} – ${endLong}`
+  : startISO
+    ? `${startLong} – …`
+    : resolvedPlaceholder;
+const initialStatus = startISO && !endISO
+  ? `Start date ${startLong} selected. Choose end date.`
+  : "";
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+---
+<Field id={id} label={label} hint={hint} error={error} class={className}>
+  <div
+    class="ink-rangepicker"
+    data-ink-rangepicker
+    data-locale={locale}
+    data-placeholder={resolvedPlaceholder}
+  >
+    <button
+      type="button"
+      class="ink-input ink-rangepicker__trigger"
+      data-ink-range-trigger
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      aria-controls={`${id}-panel`}
+      aria-describedby={describedBy}
+      aria-invalid={error ? "true" : undefined}
+      disabled={disabled || undefined}
+      {...rest}
+    >
+      <span class="ink-visually-hidden">{label}: </span>
+      <span class="ink-rangepicker__text" data-ink-range-text>{triggerText}</span>
+      <svg class="ink-rangepicker__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <div class="ink-rangepicker__panel" role="dialog" aria-label={`${label} options`} id={`${id}-panel`} data-ink-range-panel hidden>
+      <p class="ink-visually-hidden" aria-live="polite" data-ink-range-status>{initialStatus}</p>
+      <div class="ink-rangepicker__calendars">
+        <Calendar
+          id={`${id}-start-cal`}
+          label={`${label}: start date`}
+          month={firstMonth}
+          value={startISO || undefined}
+          rangeStart={startISO || undefined}
+          rangeEnd={endISO || undefined}
+          min={min}
+          max={max}
+          locale={locale}
+        />
+        <Calendar
+          id={`${id}-end-cal`}
+          label={`${label}: end date`}
+          month={secondMonth}
+          value={endISO || undefined}
+          rangeStart={startISO || undefined}
+          rangeEnd={endISO || undefined}
+          min={min}
+          max={max}
+          locale={locale}
+        />
+      </div>
+      <button type="button" class="ink-rangepicker__clear" data-ink-range-clear disabled={disabled || undefined}>
+        Clear
+      </button>
+    </div>
+    <input type="hidden" name={name} value={startISO} data-ink-range-start />
+    <input type="hidden" name={endName} value={endISO} data-ink-range-end />
+  </div>
+</Field>
+
+<style>
+  .ink-rangepicker {
+    position: relative;
+  }
+
+  .ink-rangepicker__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ink-rangepicker__text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ink-rangepicker__chevron {
+    flex: none;
+    color: var(--ink-muted);
+  }
+
+  .ink-rangepicker__trigger[aria-expanded="true"] .ink-rangepicker__chevron { rotate: 180deg; }
+
+  .ink-rangepicker__panel {
+    position: absolute;
+    top: calc(100% + var(--ink-space-1));
+    inset-inline: 0;
+    display: grid;
+    gap: var(--ink-space-2);
+    justify-items: start;
+    padding: var(--ink-space-3);
+    background: var(--ink-surface);
+    border: 1px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-md);
+    box-shadow: var(--ink-shadow-2);
+    z-index: var(--ink-z-dropdown, 50);
+  }
+
+  .ink-rangepicker__panel[hidden] { display: none; }
+
+  .ink-rangepicker__calendars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ink-space-4);
+  }
+
+  .ink-rangepicker__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: var(--ink-space-1) var(--ink-space-3);
+    border: 1px solid transparent;
+    border-radius: var(--ink-radius-sm);
+    background: transparent;
+    color: var(--ink-ink);
+    font-size: var(--ink-text-sm);
+    cursor: pointer;
+  }
+
+  .ink-rangepicker__clear:hover {
+    background: color-mix(in srgb, var(--ink-ink) 8%, transparent);
+  }
+
+  .ink-rangepicker__clear:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import { parseISODate, formatLong } from "../scripts/dates";
+
+  function initRanges(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-rangepicker]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const trigger = box.querySelector<HTMLButtonElement>("[data-ink-range-trigger]");
+      const panel = box.querySelector<HTMLElement>("[data-ink-range-panel]");
+      const text = box.querySelector<HTMLElement>("[data-ink-range-text]");
+      const clear = box.querySelector<HTMLButtonElement>("[data-ink-range-clear]");
+      const status = box.querySelector<HTMLElement>("[data-ink-range-status]");
+      const startHidden = box.querySelector<HTMLInputElement>("[data-ink-range-start]");
+      const endHidden = box.querySelector<HTMLInputElement>("[data-ink-range-end]");
+      if (!trigger || !panel || !text || !startHidden || !endHidden) return;
+      const locale = box.dataset.locale || undefined;
+      const placeholder = box.dataset.placeholder ?? "";
+      const cals = Array.from(box.querySelectorAll<HTMLElement>("[data-ink-calendar]"));
+
+      let start = startHidden.value || "";
+      let end = endHidden.value || "";
+
+      const longOf = (iso: string): string => {
+        const d = parseISODate(iso);
+        return d ? formatLong(d, locale) : iso;
+      };
+
+      const paint = () => {
+        for (const cal of cals) {
+          for (const btn of Array.from(cal.querySelectorAll<HTMLButtonElement>("[data-ink-cal-day]"))) {
+            const iso = btn.dataset.iso ?? "";
+            const isEndpoint = (start && iso === start) || (end && iso === end);
+            const inRange = Boolean(start && end && iso > start && iso < end);
+            btn.classList.toggle("ink-cal__day--selected", Boolean(isEndpoint));
+            btn.classList.toggle("ink-cal__day--in-range", inRange);
+            const d = parseISODate(iso);
+            if (d) {
+              btn.setAttribute(
+                "aria-label",
+                formatLong(d, locale) + (isEndpoint ? ", selected" : inRange ? ", in selected range" : ""),
+              );
+            }
+          }
+        }
+        startHidden.value = start;
+        endHidden.value = end;
+        text.textContent = start && end
+          ? `${longOf(start)} – ${longOf(end)}`
+          : start
+            ? `${longOf(start)} – …`
+            : placeholder;
+      };
+
+      const announce = (msg: string) => {
+        if (status) status.textContent = msg;
+      };
+
+      const commit = (announcement: string | null) => {
+        paint();
+        if (announcement != null) announce(announcement);
+        box.dispatchEvent(new CustomEvent("ink:range:change", {
+          bubbles: true,
+          detail: { start, end },
+        }));
+      };
+
+      // Own root only: the listener sits on this picker's box, so only the
+      // two embedded Calendars inside it can trigger this handler.
+      // The panel stays open after every pick (never focus into a closed
+      // panel — there is no close here, focus remains on the picked day via
+      // the Calendar's own handler).
+      box.addEventListener("ink:calendar:change", (event: Event) => {
+        if (!(event instanceof CustomEvent)) return;
+        if (!(event.target instanceof Node) || !box.contains(event.target)) return;
+        const raw = event.detail?.value;
+        const iso = typeof raw === "string" ? raw : "";
+        if (!iso) {
+          // Toggle-off inside a Calendar: the clicked endpoint deselected.
+          // A calendar showing the start day resets the whole range;
+          // otherwise only the end is cleared.
+          const source = cals.find((c) => c.contains(event.target as Node));
+          const showsStart = source?.querySelector(`[data-ink-cal-day][data-iso="${start}"]`);
+          if (start && showsStart) {
+            start = "";
+            end = "";
+            commit("Choose start date.");
+          } else if (end) {
+            end = "";
+            commit(start ? `Start date ${longOf(start)} selected. Choose end date.` : "Choose start date.");
+          }
+          return;
+        }
+        if (!start || iso < start) {
+          // First pick, or a second pick before the start: restart the
+          // range at the new start and wait for an end date.
+          start = iso;
+          end = "";
+          commit(`Start date ${longOf(start)} selected. Choose end date.`);
+        } else {
+          end = iso;
+          commit(null);
+        }
+      });
+
+      clear?.addEventListener("click", () => {
+        start = "";
+        end = "";
+        commit("Choose start date.");
+      });
+
+      // Calendar month navigation re-renders day buttons without range
+      // paint; repaint once the synchronous render has run (click covers
+      // prev/next/today buttons, keydown covers PageUp/PageDown travel).
+      box.addEventListener("click", (event: Event) => {
+        const nav = (event.target as HTMLElement).closest?.(
+          "[data-ink-cal-prev], [data-ink-cal-next], [data-ink-cal-today]",
+        );
+        if (nav) window.setTimeout(paint, 0);
+      });
+      box.addEventListener("keydown", (event: Event) => {
+        if (!(event instanceof KeyboardEvent)) return;
+        if (event.key === "PageUp" || event.key === "PageDown") window.setTimeout(paint, 0);
+      });
+
+      const isOpen = () => !panel.hidden;
+      const open = () => {
+        if (trigger.disabled) return;
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        const day = panel.querySelector<HTMLButtonElement>('[data-ink-cal-day][tabindex="0"]');
+        (day ?? clear)?.focus();
+      };
+      const close = () => {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      trigger.addEventListener("click", () => {
+        if (isOpen()) close();
+        else open();
+      });
+      trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "ArrowDown" && !isOpen()) {
+          event.preventDefault();
+          open();
+        } else if (event.key === "Escape" && isOpen()) {
+          event.preventDefault();
+          close();
+        }
+      });
+
+      panel.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          trigger.focus();
+        }
+      });
+
+      document.addEventListener("click", (event: Event) => {
+        if (!box.contains(event.target as Node)) close();
+      });
+
+      // Endpoints render server-side via the Calendars' value props;
+      // paint the in-range middles (and normalize labels) on init.
+      paint();
+    });
+  }
+
+  initRanges();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initRanges(root ?? document); } };
+</script>

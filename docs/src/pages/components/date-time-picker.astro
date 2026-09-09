@@ -1,0 +1,99 @@
+---
+import Base from "../../layouts/Base.astro";
+import { DateTimePicker } from "astro-ink";
+---
+<Base title="DateTimePicker">
+  <div class="docs-page">
+    <h1>DateTimePicker</h1>
+    <p class="docs-lede">
+      A full date picker plus a full time picker side by side, with their own
+      popups. Either half committing updates the combined hidden input to a
+      <code>"YYYY-MM-DDTHH:MM"</code> value. No combined change event fires;
+      the child <code>ink:date:change</code> and
+      <code>ink:time:change</code> events bubble naturally.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <DateTimePicker
+        id="event-start"
+        label="Event start"
+        name="event-start"
+        month="2026-09"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DateTimePicker
+  id="event-start"
+  label="Event start"
+  name="event-start"
+  month="2026-09"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      The <code>locale</code> is set so day names render in English
+      (<code>formatLong</code> follows the runtime default locale otherwise).
+      Pick a day, then an hour and a minute: the hidden input combines them
+      (<code>"2026-09-12T09:30"</code>). Clearing either half empties the
+      combined value. <code>month</code> pins the date half's calendar; omit
+      it to open on the selected value, or on today.
+    </p>
+
+    <h2>Preselected value</h2>
+    <div class="docs-example">
+      <DateTimePicker
+        id="event-start-set"
+        label="Event start"
+        name="event-start-set"
+        value="2026-09-12T09:30"
+        month="2026-09"
+        locale="en-GB"
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;DateTimePicker
+  id="event-start-set"
+  label="Event start"
+  name="event-start-set"
+  value="2026-09-12T09:30"
+  month="2026-09"
+  locale="en-GB"
+/&gt;</code></pre>
+    <p>
+      A <code>value</code> in <code>"YYYY-MM-DDTHH:MM"</code> form splits
+      into the date and time halves server-side. Anything else (missing
+      <code>T</code>, an impossible date, a bad time) leaves both halves
+      empty — the value is never half-filled. Each half keeps its own label
+      (<code>"Event start: date"</code> / <code>"Event start: time"</code>)
+      and popup; the group label never renders a <code>for</code> attribute,
+      so no wrapping <code>Field</code> is used.
+    </p>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>id</code></td><td><code>string</code></td><td>-</td><td>Required. Names the group label/message ids; children get <code>"&#123;id&#125;-date"</code> / <code>"&#123;id&#125;-time"</code> (triggers themselves carry no id).</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Group label; children are labelled <code>"&#123;label&#125;: date"</code> and <code>"&#123;label&#125;: time"</code>.</td></tr>
+        <tr><td><code>name</code></td><td><code>string</code></td><td><code>id</code></td><td>Hidden-input form name; carries the combined <code>"YYYY-MM-DDTHH:MM"</code> value. Children render no hidden input of their own.</td></tr>
+        <tr><td><code>value</code></td><td><code>string</code> (<code>"YYYY-MM-DDTHH:MM"</code>)</td><td>-</td><td>Initial combined value, split server-side; malformed values leave both halves empty.</td></tr>
+        <tr><td><code>min</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Earliest selectable date on the date half; earlier days render disabled.</td></tr>
+        <tr><td><code>max</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Latest selectable date on the date half; later days render disabled.</td></tr>
+        <tr><td><code>month</code></td><td><code>string</code> (<code>"YYYY-MM"</code>)</td><td>-</td><td>Initial calendar month for the date half; falls back to the value month, then today.</td></tr>
+        <tr><td><code>locale</code></td><td><code>string</code></td><td>-</td><td>BCP 47 locale for day and month names; runtime default when omitted.</td></tr>
+        <tr><td><code>hint</code></td><td><code>string</code></td><td>-</td><td>Help text below the pair.</td></tr>
+        <tr><td><code>error</code></td><td><code>string</code></td><td>-</td><td>Error message below the pair.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Non-interactive; neither trigger can open.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The pair is a group labelled by the group label; each half is a fully labelled DatePicker / TimePicker trigger with its own dialog, keyboard map, Escape, and click-away behavior.</li>
+      <li>Hint and error connect via <code>aria-describedby</code> on the group.</li>
+      <li>No combined change event is dispatched — listen for the bubbling child <code>ink:date:change</code> / <code>ink:time:change</code> events with <code>&#123; value &#125;</code> (empty when cleared).</li>
+    </ul>
+  </div>
+</Base>

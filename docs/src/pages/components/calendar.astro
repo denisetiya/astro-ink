@@ -70,6 +70,8 @@ import { Calendar } from "astro-ink";
         <tr><td><code>max</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Latest selectable date; later days render disabled.</td></tr>
         <tr><td><code>month</code></td><td><code>string</code> (<code>"YYYY-MM"</code>)</td><td>-</td><td>Initial visible month; garbage falls back to value, then today.</td></tr>
         <tr><td><code>locale</code></td><td><code>string</code></td><td>-</td><td>BCP 47 locale for day and month names; runtime default when omitted.</td></tr>
+        <tr><td><code>rangeStart</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Range start for in-painting; paints the day selected. Composition API for a range picker, which owns the range state.</td></tr>
+        <tr><td><code>rangeEnd</code></td><td><code>string</code> (ISO)</td><td>-</td><td>Range end for in-painting; paints the day selected. Days strictly between gain the in-range class and <code>", in selected range"</code> label suffix.</td></tr>
         <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
       </tbody>
     </table>

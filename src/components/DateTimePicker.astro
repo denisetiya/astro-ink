@@ -1,0 +1,161 @@
+---
+// NOTE: Field doesn't fit DateTimePicker — Field renders a single
+// `<label for>` but this composes two full pickers (date + time), each with
+// its own Field label ("{Label}: date" / "{Label}: time"). A wrapping Field
+// would triple labels, so the group label, hint, and error are hand-rolled
+// here (OTP precedent) and associated via a group role.
+import DatePicker from "./DatePicker.astro";
+import TimePicker from "./TimePicker.astro";
+import { parseISODate, formatISODate } from "../scripts/dates";
+
+interface Props {
+  id: string;
+  label: string;
+  name?: string;
+  value?: string;
+  min?: string;
+  max?: string;
+  month?: string;
+  locale?: string;
+  hint?: string;
+  error?: string;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  id, label, name = id, value, min, max, month, locale,
+  hint, error, disabled = false, class: className, ...rest
+} = Astro.props;
+
+// Strict split of "YYYY-MM-DDTHH:MM". Anything malformed (missing T, bad
+// date, bad time) yields both parts empty — documented, never half-filled.
+function splitValue(v?: string): { date: string; time: string } {
+  if (!v) return { date: "", time: "" };
+  const t = v.indexOf("T");
+  if (t < 0) return { date: "", time: "" };
+  const d = parseISODate(v.slice(0, t));
+  const m = /^(\d{2}):(\d{2})$/.exec(v.slice(t + 1));
+  let time = "";
+  if (m) {
+    const h = Number(m[1]);
+    const mi = Number(m[2]);
+    if (h >= 0 && h <= 23 && mi >= 0 && mi <= 59) time = `${m[1]}:${m[2]}`;
+  }
+  if (!d || !time) return { date: "", time: "" };
+  return { date: formatISODate(d), time };
+}
+
+const { date: datePart, time: timePart } = splitValue(value);
+const combined = datePart && timePart ? `${datePart}T${timePart}` : "";
+const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+---
+<div class:list={["ink-datetime", className]} data-ink-datetime data-date={datePart} data-time={timePart} {...rest}>
+  <div class="ink-datetime__group" role="group" aria-labelledby={`${id}-label`} aria-describedby={describedBy}>
+    <span class="ink-datetime__label" id={`${id}-label`}>{label}</span>
+    <div class="ink-datetime__fields">
+      <DatePicker
+        id={`${id}-date`}
+        label={`${label}: date`}
+        month={month}
+        value={datePart || undefined}
+        min={min}
+        max={max}
+        locale={locale}
+        hideValue
+        disabled={disabled}
+      />
+      <TimePicker
+        id={`${id}-time`}
+        label={`${label}: time`}
+        value={timePart || undefined}
+        hideValue
+        disabled={disabled}
+      />
+    </div>
+    {hint && <p class="ink-datetime__hint" id={`${id}-hint`}>{hint}</p>}
+    {error && <p class="ink-datetime__error" id={`${id}-error`}>{error}</p>}
+  </div>
+  <input type="hidden" name={name} value={combined} data-ink-datetime-value />
+</div>
+
+<style>
+  .ink-datetime {
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-datetime__group {
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-datetime__label {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+  }
+
+  .ink-datetime__fields {
+    display: grid;
+    gap: var(--ink-space-2);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 30rem) {
+    .ink-datetime__fields {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ink-datetime__hint {
+    margin: 0;
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-datetime__error {
+    margin: 0;
+    font-size: var(--ink-text-xs);
+    color: var(--ink-danger);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>
+
+<script>
+  function initDateTimes(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-datetime]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const hidden = box.querySelector<HTMLInputElement>("[data-ink-datetime-value]");
+      if (!hidden) return;
+      let date = box.dataset.date || "";
+      let time = box.dataset.time || "";
+
+      const sync = () => {
+        hidden.value = date && time ? `${date}T${time}` : "";
+      };
+
+      // Child ink:date:change / ink:time:change events bubble naturally;
+      // no combined event is dispatched.
+      box.addEventListener("ink:date:change", (event: Event) => {
+        if (!(event instanceof CustomEvent)) return;
+        const v = event.detail?.value;
+        date = typeof v === "string" ? v : "";
+        sync();
+      });
+
+      box.addEventListener("ink:time:change", (event: Event) => {
+        if (!(event instanceof CustomEvent)) return;
+        const v = event.detail?.value;
+        time = typeof v === "string" ? v : "";
+        sync();
+      });
+    });
+  }
+
+  initDateTimes();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initDateTimes(root ?? document); } };
+</script>

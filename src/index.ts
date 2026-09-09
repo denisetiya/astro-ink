@@ -110,3 +110,5 @@ export { default as TransferList } from "./components/TransferList.astro";
 export { default as Calendar } from "./components/Calendar.astro";
 export { default as DatePicker } from "./components/DatePicker.astro";
 export { default as TimePicker } from "./components/TimePicker.astro";
+export { default as DateTimePicker } from "./components/DateTimePicker.astro";
+export { default as DateRangePicker } from "./components/DateRangePicker.astro";
