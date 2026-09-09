@@ -51,7 +51,7 @@ const combined = datePart && timePart ? `${datePart}T${timePart}` : "";
 const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
 ---
 <div class:list={["ink-datetime", className]} data-ink-datetime data-date={datePart} data-time={timePart} {...rest}>
-  <div class="ink-datetime__group" role="group" aria-labelledby={`${id}-label`} aria-describedby={describedBy}>
+    <div class="ink-datetime__group" role="group" aria-labelledby={`${id}-label`} aria-describedby={describedBy} aria-invalid={error ? "true" : undefined}>
     <span class="ink-datetime__label" id={`${id}-label`}>{label}</span>
     <div class="ink-datetime__fields">
       <DatePicker
