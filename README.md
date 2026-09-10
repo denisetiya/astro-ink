@@ -73,26 +73,30 @@ Set the theme with an attribute (the toggle logic belongs to your app):
 ## Docs
 
 The docs site lives in `docs/`. Run it locally with `npm run docs:dev`.
-Every catalog component has a page with a live demo, a copy-paste snippet,
-a props table, and accessibility notes.
+Every catalog component with a renderable UI has a live docs page with a
+live demo, a copy-paste snippet, a props table, and accessibility notes.
+Six catalog items are covered by guidance instead of pages: Portal, Popper,
+ClickAwayListener, FocusTrap, Icon, and CSS Baseline.
 
 ## Status
 
-Roadmap complete: 120/120 catalog components per spec §7
+120 catalog items per spec §7
 (`docs/superpowers/specs/2026-08-12-astro-ink-design.md`), verified by
-`scripts/spec-coverage.py`: Button, Badge, Alert, Container,
+`scripts/spec-coverage.py`: 118 fully covered, 2 known partials (Slider
+range, Checkbox group), plus 9 subpart/extra exports. Full list: Button, Badge, Alert, Container,
 VisuallyHidden, Field, TextField, NumberInput, PasswordInput, SearchInput,
-Textarea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, File,
+Textarea, Select, Checkbox, RadioGroup, Switch, Slider, File,
 InputGroup, Form, ButtonGroup, ToggleButton, Link, Breadcrumbs, Anchor,
 Navbar, Sidebar, Tabs, Pagination, Stepper, Menu, Menubar, ContextMenu,
 NavigationMenu, CommandMenu, Drawer, Sheet, SpeedDial, BottomNavigation,
 Tour, Dialog, ConfirmDialog, Backdrop, Toast, Popover, HoverCard, Progress,
 ProgressRing, Spinner, Callout, Banner, EmptyState, Result, LoadingOverlay,
-SkipLink, CopyButton, Chip, Divider, Kbd, Paper, Grid, Stack, AppShell,
+SkipLink, CopyButton, Portal, Popper, ClickAwayListener, FocusTrap, Icon,
+CSS Baseline, Chip, Divider, Kbd, Paper, Grid, Stack, AppShell,
 PageHeader, ScrollArea, ScrollShadow, AspectRatio, Splitter, Affix,
 Accordion, Avatar, AvatarGroup, Card, List, ImageList, Carousel, Table,
 Tooltip, Typography, Blockquote, CodeBlock, Spoiler, Highlight, Statistic,
-Descriptions, Skeleton, Timeline, TreeView, Fab, IconButton,
+Descriptions, Skeleton, Timeline, TreeView, FAB, IconButton,
 SegmentedControl, Rating, Combobox, Autocomplete, MultiSelect, OTPInput,
 ColorPicker, TagInput, Cascader, TreeSelect, TransferList, Calendar,
 DatePicker, TimePicker, DateTimePicker, DateRangePicker, DataGrid,

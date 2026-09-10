@@ -9,8 +9,10 @@ Maps every catalog item to one of:
   style   - covered by a stylesheet (CSS Baseline -> styles/base.css)
   slot    - covered by a documented slot (Icon -> EmptyState slot="icon")
 
-Exit 0: all 120 covered. Exit 1: names the uncovered gap (do NOT publish
-the 120 claim until the gap is resolved).
+Known partials (Slider range, Checkbox group) are derived mechanically below
+and FAIL coverage: exit 1 with the partial named.
+
+Exit 0: all 120 fully covered. Exit 1: gaps and/or known partials remain.
 """
 import re
 import sys
@@ -28,6 +30,8 @@ FILE = (ROOT / 'src/components/File.astro').read_text()
 TEXTAREA = (ROOT / 'src/components/Textarea.astro').read_text()
 TOGGLE = (ROOT / 'src/components/ToggleButton.astro').read_text()
 EMPTYSTATE = (ROOT / 'src/components/EmptyState.astro').read_text()
+SLIDER = (ROOT / 'src/components/Slider.astro').read_text()
+CHECKBOX = (ROOT / 'src/components/Checkbox.astro').read_text()
 
 # (spec name, kind, evidence)
 # evidence: export name(s), or 'path:substring' that must exist in the file.
@@ -39,14 +43,14 @@ CATALOG = [
     ('ToggleButton (+group exclusive)', 'prop', 'ToggleButton:exclusiveGroup'),
     ('SegmentedControl', 'export', 'SegmentedControl'),
     ('FAB', 'variant', 'Fab'),
-    ('Checkbox (+group)', 'export', 'Checkbox'),
+    ('Checkbox', 'export', 'Checkbox'),
     ('RadioGroup', 'export', 'RadioGroup'),
     ('Switch', 'export', 'Switch'),
     ('Select', 'export', 'Select'),
     ('MultiSelect', 'export', 'MultiSelect'),
     ('Combobox', 'export', 'Combobox'),
     ('Autocomplete', 'export', 'Autocomplete'),
-    ('Slider (single only; range noted partial)', 'export', 'Slider'),
+    ('Slider', 'export', 'Slider'),
     ('Rating', 'export', 'Rating'),
     ('TextField', 'export', 'TextField'),
     ('NumberInput', 'export', 'NumberInput'),
@@ -186,6 +190,13 @@ for name, kind, evidence in CATALOG:
         if not (ROOT / evidence).exists():
             failures.append(f'{name}: missing file {evidence}')
 
+# Known partials, derived mechanically from component sources (fail coverage).
+partials = []
+if SLIDER.count('type="range"') < 2:
+    partials.append('Slider: range variant missing')
+if 'group' not in CHECKBOX.lower():
+    partials.append('Checkbox: no group API')
+
 print(f'catalog items: {len(CATALOG)} (spec section 7 target: 120)')
 print(f'index.ts exports: {len(EXPORTS)}')
 print(f'exports consumed by mapping: {len(consumed)}')
@@ -204,5 +215,13 @@ if failures:
     print('UNCOVERED:')
     for failure in failures:
         print(f'  - {failure}')
+if partials:
+    print(f'KNOWN PARTIALS ({len(partials)}):')
+    for partial in partials:
+        print(f'  - {partial}')
+full = len(CATALOG) - len(partials)
+if failures or partials:
+    print(f'coverage: {full}/120 fully covered, '
+          f'{len(partials)} known partials')
     sys.exit(1)
 print('coverage: 120/120 catalog items mapped, no gaps')
