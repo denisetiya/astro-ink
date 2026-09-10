@@ -39,7 +39,7 @@ const now = pct === undefined ? undefined : Math.round(((pct ?? 0) / 100) * max)
   .ink-progress__track {
     flex: 1;
     height: var(--ink-progress-height, 0.5rem);
-    border-radius: 999px;
+    border-radius: var(--ink-progress-radius, 999px);
     background: color-mix(in srgb, var(--ink-ink) 12%, var(--ink-bg));
     overflow: hidden;
   }
@@ -47,7 +47,7 @@ const now = pct === undefined ? undefined : Math.round(((pct ?? 0) / 100) * max)
   .ink-progress__fill {
     height: 100%;
     background: var(--ink-accent);
-    border-radius: 999px;
+    border-radius: var(--ink-progress-radius, 999px);
     transition: width var(--ink-duration-base) var(--ink-ease);
   }
 

@@ -54,7 +54,7 @@ const { label = "Quick actions", direction = "up", class: className, ...rest } =
   .ink-speed__actions > :global(button) {
     min-height: 2.75rem;
     min-width: 2.75rem;
-    border-radius: 50%;
+    border-radius: var(--ink-speed-radius, 50%);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -66,7 +66,7 @@ const { label = "Quick actions", direction = "up", class: className, ...rest } =
   .ink-speed__trigger {
     width: 3.5rem;
     height: 3.5rem;
-    border-radius: 50%;
+    border-radius: var(--ink-speed-radius, 50%);
     border: none;
     background: var(--ink-accent);
     color: var(--ink-accent-ink);

@@ -2,6 +2,8 @@
 import "astro-ink/styles/tokens.css";
 import "astro-ink/styles/base.css";
 import "astro-ink/styles/themes/dark.css";
+import "astro-ink/styles/themes/midnight.css";
+import "astro-ink/styles/themes/brutal.css";
 import "../styles/docs.css";
 
 interface Props {
@@ -20,7 +22,7 @@ const { title, description = "astro-ink: lightweight, token-driven UI components
     <meta name="description" content={description} />
     <script is:inline>
       const stored = localStorage.getItem("ink-theme");
-      const theme = stored === "dark" || stored === "light"
+      const theme = stored === "dark" || stored === "light" || stored === "midnight" || stored === "brutal"
         ? stored
         : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
       document.documentElement.dataset.theme = theme;

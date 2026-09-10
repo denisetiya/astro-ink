@@ -33,7 +33,7 @@ const { src, alt = "", fallback = "?", size = "md", color, class: className, ...
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: var(--ink-avatar-radius, 50%);
     background: color-mix(in srgb, var(--ink-accent) 18%, var(--ink-surface));
     color: var(--ink-ink);
     font-weight: var(--ink-font-weight-medium);

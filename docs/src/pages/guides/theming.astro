@@ -65,10 +65,34 @@ import "astro-ink/styles/themes/dark.css";</code></pre>
 
     <h2>Presets</h2>
     <p>
-      The default theme is Paper &amp; Ink and the dark theme ships today.
-      Additional preset themes (midnight, brutal) are planned for a later
-      release; until then, the template above is the supported way to build
-      your own.
+      Three preset themes ship with the library: the default Paper and Ink
+      light theme, the <code>dark</code> theme, plus <code>midnight</code>
+      (dark-first electric) and <code>brutal</code> (neo-brutalist light).
+      Each preset is one import of token overrides, one theme per page:
     </p>
+    <pre class="docs-code"><code>import "astro-ink/styles/tokens.css";
+import "astro-ink/styles/base.css";
+// pick one preset (or none for the default light theme):
+import "astro-ink/styles/themes/dark.css";
+import "astro-ink/styles/themes/midnight.css";
+import "astro-ink/styles/themes/brutal.css";</code></pre>
+    <pre class="docs-code"><code>document.documentElement.dataset.theme = "midnight";
+// or: "light", "dark", "brutal"</code></pre>
+    <p>Try them on this page (demo only, persisted like the header toggle):</p>
+    <div class="docs-example">
+      <button type="button" class="docs-preview-btn" data-preview-theme="light">Preview light</button>
+      <button type="button" class="docs-preview-btn" data-preview-theme="midnight">Preview midnight</button>
+      <button type="button" class="docs-preview-btn" data-preview-theme="brutal">Preview brutal</button>
+    </div>
   </div>
 </Base>
+
+<script>
+  document.querySelectorAll("[data-preview-theme]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const theme = btn.getAttribute("data-preview-theme") ?? "light";
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem("ink-theme", theme);
+    });
+  });
+</script>

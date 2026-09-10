@@ -148,3 +148,18 @@
   display: grid;
   gap: var(--ink-space-2);
 }
+
+.docs-preview-btn {
+  padding: var(--ink-space-2) var(--ink-space-4);
+  font-size: var(--ink-text-sm);
+  font-weight: var(--ink-font-weight-medium);
+  border: 1px solid var(--ink-border-strong);
+  border-radius: var(--ink-radius-md);
+  background: var(--ink-surface);
+  color: var(--ink-ink);
+  cursor: pointer;
+}
+
+.docs-preview-btn:hover {
+  border-color: var(--ink-ink);
+}

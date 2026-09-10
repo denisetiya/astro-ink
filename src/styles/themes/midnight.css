@@ -1,0 +1,35 @@
+/* astro-ink midnight theme. Activate: <html data-theme="midnight">.
+   Import after tokens.css: import "astro-ink/styles/themes/midnight.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Contrast (WCAG 2.1, computed by hand from the hexes below):
+   - ink #E8EEF7 on bg #0B0F1A: 16.40:1 (AA, normal text)
+   - muted #94A3B8 on bg #0B0F1A: 7.46:1 (AA, normal text)
+   - accent #38BDF8 on bg #0B0F1A: 8.93:1 (AA, normal text)
+   - accent-ink #04121F on accent #38BDF8: 8.82:1 (AA, button labels)
+   - success #4ADE80 on surface #131A2B: 9.96:1 (AA)
+   - warning #FBBF24 on surface #131A2B: 10.39:1 (AA)
+   - danger #F87171 on surface #131A2B: 6.27:1 (AA)
+   - info #7DD3FC on surface #131A2B: 10.41:1 (AA) */
+[data-theme="midnight"] {
+  color-scheme: dark;
+
+  --ink-bg: #0b0f1a;
+  --ink-surface: #131a2b;
+  --ink-ink: #e8eef7;
+  --ink-muted: #94a3b8;
+  --ink-border: #26334d;
+  --ink-border-strong: #35466a;
+
+  --ink-accent: #38bdf8;
+  --ink-accent-ink: #04121f;
+  --ink-success: #4ade80;
+  --ink-warning: #fbbf24;
+  --ink-danger: #f87171;
+  --ink-info: #7dd3fc;
+
+  --ink-shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --ink-shadow-2: 0 4px 12px rgb(0 0 0 / 0.6);
+
+  --ink-focus-color: var(--ink-accent);
+}

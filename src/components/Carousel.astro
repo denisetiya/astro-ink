@@ -66,7 +66,7 @@ const { label = "Carousel", autoplay = false, interval = 5000, class: className,
     width: 2.75rem;
     height: 2.75rem;
     border: 1px solid var(--ink-border-strong);
-    border-radius: 50%;
+    border-radius: var(--ink-carousel-radius, 50%);
     background: var(--ink-surface);
     color: var(--ink-ink);
     cursor: pointer;
@@ -84,7 +84,7 @@ const { label = "Carousel", autoplay = false, interval = 5000, class: className,
     height: 0.625rem;
     padding: 0;
     border: none;
-    border-radius: 50%;
+    border-radius: var(--ink-carousel-dot-radius, 50%);
     background: var(--ink-border-strong);
     cursor: pointer;
   }

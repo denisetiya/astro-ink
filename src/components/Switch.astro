@@ -43,7 +43,7 @@ const { name, label, checked = false, disabled = false, class: className, ...res
     align-items: center;
     padding: 2px;
     border: 1px solid var(--ink-border-strong);
-    border-radius: 999px;
+    border-radius: var(--ink-switch-radius, 999px);
     background: color-mix(in srgb, var(--ink-ink) 22%, var(--ink-bg));
     transition:
       background-color var(--ink-duration-base) var(--ink-ease),
@@ -53,7 +53,7 @@ const { name, label, checked = false, disabled = false, class: className, ...res
   .ink-switch__thumb {
     width: 1rem;
     height: 1rem;
-    border-radius: 50%;
+    border-radius: var(--ink-switch-thumb-radius, 50%);
     background: var(--ink-surface);
     box-shadow: var(--ink-shadow-1);
     transition: translate var(--ink-duration-base) var(--ink-ease);

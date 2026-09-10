@@ -111,7 +111,7 @@ const starPath = "M12 2.5l2.9 6.26 6.6.7-4.9 4.5 1.35 6.54L12 17.3 6.05 20.5l1.3
   .ink-rating__option > input:focus-visible + .ink-rating__star {
     outline: 2px solid var(--ink-focus-color);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: var(--ink-rating-radius, 2px);
   }
 
   .ink-rating__option--on .ink-rating__star { color: var(--ink-warning); }

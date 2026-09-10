@@ -20,7 +20,7 @@ const { label = "Loading…", size = "md", class: className, ...rest } = Astro.p
   .ink-spinner__ring {
     width: 1.25rem;
     height: 1.25rem;
-    border-radius: 50%;
+    border-radius: var(--ink-spinner-radius, 50%);
     border: 2.5px solid color-mix(in srgb, var(--ink-ink) 15%, transparent);
     border-top-color: var(--ink-accent);
     animation: ink-spin 0.8s linear infinite;

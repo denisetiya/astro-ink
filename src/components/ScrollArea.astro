@@ -33,7 +33,7 @@ const { maxHeight = "16rem", axis = "y", class: className, ...rest } = Astro.pro
 
   .ink-scroll::-webkit-scrollbar-thumb {
     background: var(--ink-border-strong);
-    border-radius: 999px;
+    border-radius: var(--ink-scrollbar-radius, 999px);
     border: 2px solid var(--ink-surface);
   }
 

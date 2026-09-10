@@ -39,7 +39,7 @@ const { name, value, label, checked = false, disabled = false, class: className,
     flex-shrink: 0;
     margin: 0;
     border: 1.5px solid var(--ink-border-strong);
-    border-radius: 50%;
+    border-radius: var(--ink-radio-radius, 50%);
     background: var(--ink-surface);
     display: grid;
     place-content: center;
@@ -51,7 +51,7 @@ const { name, value, label, checked = false, disabled = false, class: className,
     content: "";
     width: 0.55rem;
     height: 0.55rem;
-    border-radius: 50%;
+    border-radius: var(--ink-radio-radius, 50%);
     scale: 0;
     background: var(--ink-accent);
     transition: scale var(--ink-duration-fast) var(--ink-ease);

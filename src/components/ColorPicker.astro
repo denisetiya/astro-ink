@@ -99,7 +99,7 @@ const describedBy = [hint && `${id}-hex-hint`, error && `${id}-hex-error`].filte
     height: 2rem;
     padding: 0;
     border: 2px solid var(--ink-surface);
-    border-radius: 50%;
+    border-radius: var(--ink-color-swatch-radius, 50%);
     outline: 1px solid var(--ink-border-strong);
     cursor: pointer;
   }

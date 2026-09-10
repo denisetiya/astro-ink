@@ -1,0 +1,67 @@
+/* astro-ink brutal theme. Activate: <html data-theme="brutal">.
+   Import after tokens.css: import "astro-ink/styles/themes/brutal.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Neo-brutalist look comes from tokens alone: every radius token is 0
+   (including each --ink-<component>-radius token, so pills, thumbs, dots,
+   rings and circles all go square), borders go solid black, and shadows
+   become hard offsets with no blur.
+
+   Contrast (WCAG 2.1, computed by hand from the hexes below):
+   - ink #000000 on bg #FFFFFF: 21.00:1 (AA, normal text)
+   - muted #404040 on bg #FFFFFF: 10.37:1 (AA, normal text)
+   - accent #C22E00 on bg #FFFFFF: 5.70:1 (AA, normal text)
+   - accent-ink #FFFFFF on accent #C22E00: 5.70:1 (AA, button labels)
+
+   Note: border widths stay per-component (no --ink-border-width token
+   exists); this theme makes every border hard black instead. */
+[data-theme="brutal"] {
+  color-scheme: light;
+
+  --ink-bg: #ffffff;
+  --ink-surface: #ffffff;
+  --ink-ink: #000000;
+  --ink-muted: #404040;
+  --ink-border: #000000;
+  --ink-border-strong: #000000;
+
+  --ink-accent: #c22e00;
+  --ink-accent-ink: #ffffff;
+
+  --ink-radius-sm: 0;
+  --ink-radius-md: 0;
+  --ink-radius-lg: 0;
+
+  --ink-button-radius: 0;
+  --ink-input-radius: 0;
+  --ink-chip-radius: 0;
+  --ink-badge-radius: 0;
+  --ink-alert-radius: 0;
+  --ink-paper-radius: 0;
+  --ink-avatar-radius: 0;
+  --ink-avatargroup-radius: 0;
+  --ink-carousel-radius: 0;
+  --ink-carousel-dot-radius: 0;
+  --ink-color-swatch-radius: 0;
+  --ink-fab-radius: 0;
+  --ink-highlight-radius: 0;
+  --ink-loading-radius: 0;
+  --ink-progress-radius: 0;
+  --ink-radio-radius: 0;
+  --ink-rating-radius: 0;
+  --ink-scrollbar-radius: 0;
+  --ink-skeleton-radius: 0;
+  --ink-slider-radius: 0;
+  --ink-slider-thumb-radius: 0;
+  --ink-speed-radius: 0;
+  --ink-spinner-radius: 0;
+  --ink-stepper-radius: 0;
+  --ink-switch-radius: 0;
+  --ink-switch-thumb-radius: 0;
+  --ink-timeline-radius: 0;
+
+  --ink-shadow-1: 2px 2px 0 #000000;
+  --ink-shadow-2: 4px 4px 0 #000000;
+
+  --ink-focus-color: var(--ink-accent);
+}

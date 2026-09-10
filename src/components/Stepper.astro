@@ -65,7 +65,7 @@ const { steps, current, label = "Progress", class: className, ...rest } = Astro.
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: var(--ink-stepper-radius, 50%);
     border: 1.5px solid var(--ink-border-strong);
     color: var(--ink-muted);
     font-size: var(--ink-text-xs);

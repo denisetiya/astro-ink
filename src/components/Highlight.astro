@@ -21,7 +21,7 @@ const parts = markText(text, query, caseSensitive);
   .ink-highlight__mark {
     background: color-mix(in srgb, var(--ink-warning) 30%, transparent);
     color: inherit;
-    border-radius: 2px;
+    border-radius: var(--ink-highlight-radius, 2px);
     padding-inline: 1px;
   }
 </style>
