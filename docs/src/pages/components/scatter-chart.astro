@@ -1,0 +1,77 @@
+---
+import Base from "../../layouts/Base.astro";
+import { ScatterChart } from "astro-ink";
+
+const weight = [
+  { x: 12, y: 180, label: "font pack" },
+  { x: 24, y: 240 },
+  { x: 33, y: 310, label: "hero image" },
+  { x: 41, y: 290 },
+  { x: 52, y: 420 },
+  { x: 60, y: 480, label: "video embed" },
+  { x: 71, y: 560 },
+  { x: 84, y: 690 },
+];
+
+const api = [
+  { x: 2, y: 40, label: "auth" },
+  { x: 5, y: 90 },
+  { x: 9, y: 120, label: "search" },
+  { x: 14, y: 210 },
+  { x: 20, y: 260 },
+];
+---
+<Base title="ScatterChart">
+  <div class="docs-page">
+    <h1>ScatterChart</h1>
+    <p class="docs-lede">
+      Dots on two numeric axes. Page-weight timings below are honest sample
+      data, rendered as a static SVG with no scripts.
+    </p>
+
+    <h2>Page weight vs load time</h2>
+    <div class="docs-example">
+      <ScatterChart points={weight} xLabel="Bundle size (KB)" yLabel="Load time (ms)" />
+    </div>
+    <pre class="docs-code"><code>&lt;ScatterChart points=&#123;weight&#125; xLabel="Bundle size (KB)" yLabel="Load time (ms)" /&gt;</code></pre>
+
+    <h2>Custom size</h2>
+    <p>Pass <code>width</code> and <code>height</code> to resize the viewBox.</p>
+    <div class="docs-example">
+      <ScatterChart label="API timings" points={api} xLabel="Payload (KB)" yLabel="P99 (ms)" width={560} height={280} />
+    </div>
+    <pre class="docs-code"><code>&lt;ScatterChart label="API timings" points=&#123;api&#125; xLabel="Payload (KB)" yLabel="P99 (ms)" width=&#123;560&#125; height=&#123;280&#125; /&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>points</code></td><td><code>Array&lt;&#123; x: number; y: number; label?: string &#125;&gt;</code></td><td>-</td><td>Dots in document order.</td></tr>
+        <tr><td><code>width</code></td><td><code>number</code></td><td><code>560</code></td><td>viewBox width; the SVG scales to <code>100%</code>.</td></tr>
+        <tr><td><code>height</code></td><td><code>number</code></td><td><code>320</code></td><td>viewBox height.</td></tr>
+        <tr><td><code>xLabel</code></td><td><code>string</code></td><td><code>"x"</code></td><td>Horizontal axis name; used in the auto-summary.</td></tr>
+        <tr><td><code>yLabel</code></td><td><code>string</code></td><td><code>"y"</code></td><td>Vertical axis name; used in the auto-summary.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td><code>"Scatter chart"</code></td><td>Chart name; opens the auto-summary.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Static honesty</h2>
+    <p>
+      Static SVG, no scripts. Axis domains come from the data extent (floored
+      minimum to ceiled maximum) expanded through <code>niceTicks</code> with
+      a count of 5, so the printed range may extend past the outer dots.
+      Points without a <code>label</code> fall back to an
+      <code>"x, y"</code> coordinate title.
+    </p>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li>The chart is an image (<code>role="img"</code>) with an auto-summary label: <code>"&#123;Label&#125;, &#123;n&#125; points, x &#123;xLabel&#125; &#123;xmin&#125; to &#123;xmax&#125;, y &#123;yLabel&#125; &#123;ymin&#125; to &#123;ymax&#125;"</code>.</li>
+      <li>A <code>&lt;title&gt;</code> repeats the summary and a <code>&lt;desc&gt;</code> names both axes.</li>
+      <li>Every dot carries a <code>&lt;title&gt;</code> with its label or coordinates; axis ticks and names exist as text.</li>
+    </ul>
+  </div>
+</Base>

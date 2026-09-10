@@ -119,3 +119,5 @@ export { default as AreaChart } from "./components/AreaChart.astro";
 export { default as PieChart } from "./components/PieChart.astro";
 export { default as Sparkline } from "./components/Sparkline.astro";
 export { default as Gauge } from "./components/Gauge.astro";
+export { default as RadarChart } from "./components/RadarChart.astro";
+export { default as ScatterChart } from "./components/ScatterChart.astro";

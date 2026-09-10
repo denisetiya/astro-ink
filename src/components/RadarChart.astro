@@ -1,0 +1,191 @@
+---
+interface RadarSeries {
+  name: string;
+  values: number[];
+}
+
+interface Props {
+  categories: string[];
+  series: RadarSeries[];
+  max?: number;
+  size?: number;
+  label?: string;
+  class?: string;
+}
+
+const {
+  categories,
+  series,
+  max: maxProp,
+  size = 260,
+  label = "Radar chart",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const dataMax = series
+  .flatMap((s) => s.values)
+  .reduce((m, v) => Math.max(m, v), 0);
+const max = maxProp ?? dataMax;
+const safeMax = max > 0 ? max : 1;
+
+const n = categories.length;
+const cx = size / 2;
+const cy = size / 2;
+const outerPad = 36;
+const R = Math.max(1, size / 2 - outerPad);
+const labelR = R + 16;
+
+const TAU = Math.PI * 2;
+const angle = (i: number) => (n > 0 ? (i / n) * TAU - Math.PI / 2 : -Math.PI / 2);
+const polar = (i: number, r: number) => ({
+  x: cx + r * Math.cos(angle(i)),
+  y: cy + r * Math.sin(angle(i)),
+});
+const fmt = (p: { x: number; y: number }) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`;
+
+const ring = (frac: number) => categories.map((_, i) => fmt(polar(i, R * frac))).join(" ");
+const poly = (s: RadarSeries) =>
+  categories
+    .map((_, i) => {
+      const clamped = Math.min(1, Math.max(0, (s.values[i] ?? 0) / safeMax));
+      return fmt(polar(i, R * clamped));
+    })
+    .join(" ");
+
+const palette = ["var(--ink-radar-0)", "var(--ink-radar-1)", "var(--ink-radar-2)"];
+const summary = `${label}, ${n} categories, ${series.map((s) => s.name).join(", ")}`;
+
+const slug = label
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+const titleId = `ink-radar-${slug || "chart"}-title`;
+const descId = `ink-radar-${slug || "chart"}-desc`;
+---
+<div class:list={["ink-radar", className]}>
+  <svg
+    class="ink-radar__svg"
+    viewBox={`0 0 ${size} ${size}`}
+    role="img"
+    aria-label={summary}
+    {...rest}
+  >
+    <title id={titleId}>{summary}</title>
+    <desc id={descId}>{`Static radar chart of ${label}. Values read clockwise from the top, scaled 0 to ${max}.`}</desc>
+    {n > 0 ? (
+      <g>
+        {[1 / 3, 2 / 3, 1].map((f) => (
+          <polygon class="ink-radar__ring" points={ring(f)} data-ink-ring />
+        ))}
+        {categories.map((_, i) => {
+          const end = polar(i, R);
+          return <line class="ink-radar__spoke" x1={cx} y1={cy} x2={end.x} y2={end.y} />;
+        })}
+        {series.slice(0, 3).map((s, si) => (
+          <polygon
+            class="ink-radar__series"
+            points={poly(s)}
+            fill={palette[si % palette.length]}
+            stroke={palette[si % palette.length]}
+            data-ink-series
+          >
+            <title>{`${s.name}: ${categories.map((c, i) => `${c} ${s.values[i] ?? 0}`).join(", ")}`}</title>
+          </polygon>
+        ))}
+        {categories.map((c, i) => {
+          const p = polar(i, labelR);
+          return (
+            <text class="ink-radar__label" x={p.x} y={p.y} text-anchor="middle" dominant-baseline="central">
+              {c}
+            </text>
+          );
+        })}
+      </g>
+    ) : (
+      <text class="ink-radar__empty" x={cx} y={cy} text-anchor="middle" dominant-baseline="central">no data</text>
+    )}
+  </svg>
+  {series.length > 1 && (
+    <ul class="ink-radar__legend">
+      {series.slice(0, 3).map((s, si) => (
+        <li class="ink-radar__item">
+          <span class="ink-radar__swatch" style={`background:${palette[si % palette.length]}`} aria-hidden="true" />
+          <span class="ink-radar__name">{s.name}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+<style>
+  .ink-radar {
+    --ink-radar-0: var(--ink-accent);
+    --ink-radar-1: var(--ink-success);
+    --ink-radar-2: var(--ink-info);
+    --ink-radar-grid: var(--ink-border);
+    --ink-radar-label: var(--ink-muted);
+    --ink-radar-name: var(--ink-ink);
+  }
+
+  .ink-radar__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .ink-radar__ring {
+    fill: none;
+    stroke: var(--ink-radar-grid);
+    stroke-width: 1;
+  }
+
+  .ink-radar__spoke {
+    stroke: var(--ink-radar-grid);
+    stroke-width: 1;
+  }
+
+  .ink-radar__series {
+    fill-opacity: 0.25;
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .ink-radar__label {
+    fill: var(--ink-radar-label);
+    font-size: var(--ink-text-xs);
+  }
+
+  .ink-radar__empty {
+    fill: var(--ink-radar-label);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-radar__legend {
+    list-style: none;
+    margin: var(--ink-space-2) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--ink-space-1);
+  }
+
+  .ink-radar__item {
+    display: flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-radar__swatch {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: var(--ink-radius-sm);
+    flex: none;
+  }
+
+  .ink-radar__name {
+    color: var(--ink-radar-name);
+    font-size: var(--ink-text-sm);
+  }
+</style>

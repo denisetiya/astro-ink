@@ -1,0 +1,130 @@
+---
+import { scaleLinear, niceTicks } from "../scripts/chart";
+
+interface ScatterPoint {
+  x: number;
+  y: number;
+  label?: string;
+}
+
+interface Props {
+  points: ScatterPoint[];
+  width?: number;
+  height?: number;
+  xLabel?: string;
+  yLabel?: string;
+  label?: string;
+  class?: string;
+}
+
+const {
+  points,
+  width = 560,
+  height = 320,
+  xLabel = "x",
+  yLabel = "y",
+  label = "Scatter chart",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const padL = 48;
+const padR = 12;
+const padT = 10;
+const padB = 40;
+const iw = Math.max(1, width - padL - padR);
+const ih = Math.max(1, height - padT - padB);
+
+const xs = points.map((p) => p.x);
+const ys = points.map((p) => p.y);
+const xLo = xs.length > 0 ? Math.floor(Math.min(...xs)) : 0;
+const xHi = xs.length > 0 ? Math.ceil(Math.max(...xs)) : 1;
+const yLo = ys.length > 0 ? Math.floor(Math.min(...ys)) : 0;
+const yHi = ys.length > 0 ? Math.ceil(Math.max(...ys)) : 1;
+
+const xTicks = niceTicks(xLo, xHi, 5);
+const yTicks = niceTicks(yLo, yHi, 5);
+let xMin = xTicks.length > 0 ? xTicks[0] : xLo;
+let xMax = xTicks.length > 0 ? xTicks[xTicks.length - 1] : xHi;
+let yMin = yTicks.length > 0 ? yTicks[0] : yLo;
+let yMax = yTicks.length > 0 ? yTicks[yTicks.length - 1] : yHi;
+if (xMax <= xMin) xMax = xMin + 1;
+if (yMax <= yMin) yMax = yMin + 1;
+
+const x = scaleLinear(xMin, xMax, padL, padL + iw);
+const y = scaleLinear(yMin, yMax, padT + ih, padT);
+
+const summary = `${label}, ${points.length} points, x ${xLabel} ${xMin} to ${xMax}, y ${yLabel} ${yMin} to ${yMax}`;
+
+const slug = label
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+const titleId = `ink-scatter-${slug || "chart"}-title`;
+const descId = `ink-scatter-${slug || "chart"}-desc`;
+---
+<div class:list={["ink-scatter", className]}>
+  <svg
+    class="ink-scatter__svg"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-label={summary}
+    {...rest}
+  >
+    <title id={titleId}>{summary}</title>
+    <desc id={descId}>{`Static scatter chart of ${label}. Points read against the ${xLabel} and ${yLabel} axes.`}</desc>
+    {yTicks.map((t) => (
+      <g>
+        <line class="ink-scatter__grid" x1={padL} x2={padL + iw} y1={y(t)} y2={y(t)} />
+        <text class="ink-scatter__tick" x={padL - 6} y={y(t)} text-anchor="end" dominant-baseline="central">{t}</text>
+      </g>
+    ))}
+    {xTicks.map((t) => (
+      <text class="ink-scatter__tick" x={x(t)} y={padT + ih + 16} text-anchor="middle">{t}</text>
+    ))}
+    <text class="ink-scatter__axis" x={padL + iw / 2} y={height - 6} text-anchor="middle">{xLabel}</text>
+    <text class="ink-scatter__axis" x={12} y={padT + ih / 2} text-anchor="middle" transform={`rotate(-90 12 ${padT + ih / 2})`}>{yLabel}</text>
+    {points.map((p) => (
+      <circle class="ink-scatter__dot" cx={x(p.x)} cy={y(p.y)} r="4" data-ink-point>
+        <title>{p.label ?? `${p.x}, ${p.y}`}</title>
+      </circle>
+    ))}
+  </svg>
+</div>
+
+<style>
+  .ink-scatter {
+    --ink-scatter-accent: var(--ink-accent);
+    --ink-scatter-grid: var(--ink-border);
+    --ink-scatter-tick: var(--ink-muted);
+    --ink-scatter-axis: var(--ink-ink);
+  }
+
+  .ink-scatter__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+  }
+
+  .ink-scatter__grid {
+    stroke: var(--ink-scatter-grid);
+    stroke-width: 1;
+  }
+
+  .ink-scatter__tick {
+    fill: var(--ink-scatter-tick);
+    font-size: var(--ink-text-xs);
+  }
+
+  .ink-scatter__axis {
+    fill: var(--ink-scatter-axis);
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-scatter__dot {
+    fill: var(--ink-scatter-accent);
+    stroke: var(--ink-bg);
+    stroke-width: 1.5;
+  }
+</style>
