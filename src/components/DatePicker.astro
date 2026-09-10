@@ -85,6 +85,7 @@ const initialMonth = month ?? monthOf(value);
 <style>
   .ink-datepicker {
     position: relative;
+    min-width: 0;
   }
 
   .ink-datepicker__trigger {
@@ -97,6 +98,7 @@ const initialMonth = month ?? monthOf(value);
 
   .ink-datepicker__text {
     flex: 1;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

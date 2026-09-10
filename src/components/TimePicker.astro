@@ -115,6 +115,7 @@ const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))
 
 <style>
   .ink-timepicker {
+    min-width: 0;
     position: relative;
   }
 
@@ -128,6 +129,7 @@ const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))
 
   .ink-timepicker__text {
     flex: 1;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

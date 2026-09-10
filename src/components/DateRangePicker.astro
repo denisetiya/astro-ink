@@ -136,6 +136,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
 <style>
   .ink-rangepicker {
     position: relative;
+    min-width: 0;
   }
 
   .ink-rangepicker__trigger {
@@ -148,6 +149,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
 
   .ink-rangepicker__text {
     flex: 1;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

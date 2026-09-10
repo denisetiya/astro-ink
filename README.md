@@ -55,7 +55,7 @@ and a custom theme template.
 
 ## Status
 
-106 components shipped through Phase 7: Button, Badge, Alert, Container,
+120 components shipped through Phase 8: Button, Badge, Alert, Container,
 VisuallyHidden, Field, TextField, NumberInput, PasswordInput, SearchInput,
 Textarea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, File,
 InputGroup, Form, ButtonGroup, ToggleButton, Link, Breadcrumbs, Anchor,
@@ -69,7 +69,10 @@ Accordion, Avatar, AvatarGroup, Card, List, ImageList, Carousel, Table,
 Tooltip, Typography, Blockquote, CodeBlock, Spoiler, Highlight, Statistic,
 Descriptions, Skeleton, Timeline, TreeView, Fab, IconButton,
 SegmentedControl, Rating, Combobox, Autocomplete, MultiSelect, OTPInput,
-ColorPicker, TagInput, Cascader, TreeSelect, TransferList.
+ColorPicker, TagInput, Cascader, TreeSelect, TransferList, Calendar,
+DatePicker, TimePicker, DateTimePicker, DateRangePicker, DataGrid,
+LineChart, BarChart, AreaChart, PieChart, Sparkline, Gauge, RadarChart,
+ScatterChart.
 Utilities: focus-trap, dismiss, roving, scrollspy, pagination builder,
 autosize, slider fill, split math, highlight split, Popper, Portal, ClickAway.
 
