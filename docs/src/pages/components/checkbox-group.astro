@@ -1,0 +1,75 @@
+---
+import Base from "../../layouts/Base.astro";
+import { CheckboxGroup } from "astro-ink";
+---
+<Base title="CheckboxGroup">
+  <div class="docs-page">
+    <h1>CheckboxGroup</h1>
+    <p class="docs-lede">
+      Several choices out of many. Real checkboxes share one form name, so
+      selections submit natively. Each change dispatches
+      <code>ink:checkboxgroup:change</code> with <code>&#123; values &#125;</code>.
+    </p>
+
+    <h2>Example</h2>
+    <div class="docs-example">
+      <CheckboxGroup
+        name="toppings"
+        label="Toppings"
+        options={["Pepperoni", "Mushrooms", "Olives"]}
+        hint="Pick any you like."
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;CheckboxGroup
+  name="toppings"
+  label="Toppings"
+  options=&#123;["Pepperoni", "Mushrooms", "Olives"]&#125;
+/&gt;</code></pre>
+
+    <h2>With objects and error</h2>
+    <div class="docs-example">
+      <CheckboxGroup
+        name="notify"
+        label="Notifications"
+        options={[
+          { value: "email", label: "Email" },
+          { value: "sms", label: "SMS", disabled: true },
+          { value: "push", label: "Push" },
+        ]}
+        error="Pick at least one channel."
+        required
+      />
+    </div>
+    <pre class="docs-code"><code>&lt;CheckboxGroup
+  name="notify"
+  label="Notifications"
+  options=&#123;[&#123; value: "email", label: "Email" &#125;, &#123; value: "sms", label: "SMS", disabled: true &#125;]&#125;
+  error="Pick at least one channel."
+  required
+/&gt;</code></pre>
+
+    <h2>Props</h2>
+    <table class="docs-table">
+      <thead>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td><code>string</code></td><td>-</td><td>Shared checkbox name; message ids derive from it.</td></tr>
+        <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Legend text.</td></tr>
+        <tr><td><code>options</code></td><td><code>Array&lt;string | &#123; value; label; disabled? &#125;&gt;</code></td><td>-</td><td>Selectable items.</td></tr>
+        <tr><td><code>values</code></td><td><code>string[]</code></td><td><code>[]</code></td><td>Preselected option values.</td></tr>
+        <tr><td><code>hint / error</code></td><td><code>string</code></td><td>-</td><td>Wired via <code>aria-describedby</code> on the fieldset.</td></tr>
+        <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the group required.</td></tr>
+        <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables every option.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Accessibility</h2>
+    <ul class="docs-list">
+      <li><code>fieldset</code> + <code>legend</code> gives each box its group context.</li>
+      <li>Tab moves between options; Space toggles each natively.</li>
+      <li>Hint and error link via <code>aria-describedby</code> on the fieldset.</li>
+    </ul>
+  </div>
+</Base>

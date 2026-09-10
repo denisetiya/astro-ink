@@ -22,6 +22,12 @@ import { Slider } from "astro-ink";
     </div>
     <pre class="docs-code"><code>&lt;Slider id="price" label="Max price" min="10" max="1000" step="10" value="250" showValue /&gt;</code></pre>
 
+    <h2>Range</h2>
+    <div class="docs-example">
+      <Slider id="budget" label="Budget" range valueMin={20} valueMax={80} showValue />
+    </div>
+    <pre class="docs-code"><code>&lt;Slider id="budget" label="Budget" range valueMin=&#123;20&#125; valueMax=&#123;80&#125; showValue /&gt;</code></pre>
+
     <h2>Props</h2>
     <table class="docs-table">
       <thead>
@@ -29,8 +35,12 @@ import { Slider } from "astro-ink";
       </thead>
       <tbody>
         <tr><td><code>min / max / step</code></td><td><code>number</code></td><td><code>0 / 100 / 1</code></td><td>Range constraints.</td></tr>
-        <tr><td><code>value</code></td><td><code>number</code></td><td><code>50</code></td><td>Initial value.</td></tr>
+        <tr><td><code>value</code></td><td><code>number</code></td><td><code>50</code></td><td>Initial value (single mode).</td></tr>
+        <tr><td><code>range</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Two thumbs sharing <code>min / max / step</code>.</td></tr>
+        <tr><td><code>valueMin / valueMax</code></td><td><code>number</code></td><td><code>25% / 75%</code></td><td>Initial thumb values.</td></tr>
+        <tr><td><code>nameMax</code></td><td><code>string</code></td><td><code>name + "-max"</code></td><td>Form name for the maximum thumb.</td></tr>
         <tr><td><code>showValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Live <code>&lt;output&gt;</code> next to the track.</td></tr>
+        <tr><td><code>class</code></td><td><code>string</code></td><td>-</td><td>Style passthrough.</td></tr>
       </tbody>
     </table>
 

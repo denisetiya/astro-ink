@@ -9,10 +9,10 @@ Maps every catalog item to one of:
   style   - covered by a stylesheet (CSS Baseline -> styles/base.css)
   slot    - covered by a documented slot (Icon -> EmptyState slot="icon")
 
-Known partials (Slider range, Checkbox group) are derived mechanically below
-and FAIL coverage: exit 1 with the partial named.
+Former partials (Slider range, Checkbox group) are verified mechanically below
+and FAIL coverage if the evidence disappears: exit 1 with the gap named.
 
-Exit 0: all 120 fully covered. Exit 1: gaps and/or known partials remain.
+Exit 0: all 120 fully covered. Exit 1: gaps and/or regressions remain.
 """
 import re
 import sys
@@ -190,11 +190,11 @@ for name, kind, evidence in CATALOG:
         if not (ROOT / evidence).exists():
             failures.append(f'{name}: missing file {evidence}')
 
-# Known partials, derived mechanically from component sources (fail coverage).
+# Former partials, now full passes verified mechanically (fail on regression).
 partials = []
-if SLIDER.count('type="range"') < 2:
+if 'range' not in SLIDER or SLIDER.count('type="range"') < 2:
     partials.append('Slider: range variant missing')
-if 'group' not in CHECKBOX.lower():
+if 'CheckboxGroup' not in EXPORTS:
     partials.append('Checkbox: no group API')
 
 print(f'catalog items: {len(CATALOG)} (spec section 7 target: 120)')

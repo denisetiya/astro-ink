@@ -11,6 +11,7 @@ export { default as SearchInput } from "./components/SearchInput.astro";
 export { default as Textarea } from "./components/Textarea.astro";
 export { default as Select } from "./components/Select.astro";
 export { default as Checkbox } from "./components/Checkbox.astro";
+export { default as CheckboxGroup } from "./components/CheckboxGroup.astro";
 export { default as Radio } from "./components/Radio.astro";
 export { default as RadioGroup } from "./components/RadioGroup.astro";
 export { default as Switch } from "./components/Switch.astro";

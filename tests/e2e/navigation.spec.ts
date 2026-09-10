@@ -37,6 +37,7 @@ const pages = [
   { path: "/components/breadcrumbs", heading: "Breadcrumbs" },
   { path: "/components/button-group", heading: "ButtonGroup" },
   { path: "/components/checkbox", heading: "Checkbox" },
+  { path: "/components/checkbox-group", heading: "CheckboxGroup" },
   { path: "/components/chip", heading: "Chip" },
   { path: "/components/command-menu", heading: "CommandMenu" },
   { path: "/components/confirm-dialog", heading: "ConfirmDialog" },

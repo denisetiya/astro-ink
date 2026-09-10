@@ -1,0 +1,166 @@
+---
+import { normalizeOptions } from "../scripts/listbox";
+
+interface Props {
+  name: string;
+  label: string;
+  options: Array<string | { value: string; label: string; disabled?: boolean }>;
+  values?: string[];
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  name, label, options, values = [],
+  hint, error, required = false, disabled = false,
+  class: className, ...rest
+} = Astro.props;
+
+const items = normalizeOptions(options);
+const selected = new Set(values);
+const describedBy = [hint && `${name}-hint`, error && `${name}-error`]
+  .filter(Boolean)
+  .join(" ") || undefined;
+---
+<fieldset
+  class:list={["ink-checkbox-group", error && "ink-checkbox-group--error", className]}
+  aria-describedby={describedBy}
+  aria-invalid={error ? "true" : undefined}
+  data-ink-checkboxgroup
+  {...rest}
+>
+  <legend class="ink-checkbox-group__legend">
+    {label}{required && <span class="ink-checkbox-group__required" aria-hidden="true"> *</span>}
+  </legend>
+  <div class="ink-checkbox-group__options">
+    {items.map((o) => (
+      <label class="ink-checkbox-group__option">
+        <input
+          type="checkbox"
+          class="ink-checkbox-group__input"
+          name={name}
+          value={o.value}
+          checked={selected.has(o.value) || undefined}
+          disabled={disabled || o.disabled || undefined}
+        />
+        <span>{o.label}</span>
+      </label>
+    ))}
+  </div>
+  {hint && <p class="ink-checkbox-group__hint" id={`${name}-hint`}>{hint}</p>}
+  {error && <p class="ink-checkbox-group__error" id={`${name}-error`}>{error}</p>}
+</fieldset>
+
+<style>
+  .ink-checkbox-group {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-checkbox-group__legend {
+    font-size: var(--ink-text-sm);
+    font-weight: var(--ink-font-weight-medium);
+    padding: 0;
+  }
+
+  .ink-checkbox-group__required { color: var(--ink-danger); }
+
+  .ink-checkbox-group__options {
+    display: grid;
+    gap: var(--ink-space-2);
+  }
+
+  .ink-checkbox-group__option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ink-space-2);
+    cursor: pointer;
+    font-size: var(--ink-text-sm);
+  }
+
+  .ink-checkbox-group__input {
+    appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    margin: 0;
+    border: 1.5px solid var(--ink-border-strong);
+    border-radius: var(--ink-radius-sm);
+    background: var(--ink-surface);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition:
+      background-color var(--ink-duration-fast) var(--ink-ease),
+      border-color var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-checkbox-group__input::before {
+    content: "";
+    width: 0.625rem;
+    height: 0.625rem;
+    scale: 0;
+    background: var(--ink-accent-ink);
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transition: scale var(--ink-duration-fast) var(--ink-ease);
+  }
+
+  .ink-checkbox-group__input:checked {
+    background: var(--ink-accent);
+    border-color: var(--ink-accent);
+  }
+
+  .ink-checkbox-group__input:checked::before { scale: 1; }
+
+  .ink-checkbox-group__input:focus-visible {
+    outline: 2px solid var(--ink-focus-color);
+    outline-offset: 2px;
+  }
+
+  .ink-checkbox-group__input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .ink-checkbox-group__option:has(.ink-checkbox-group__input:disabled) {
+    cursor: not-allowed;
+  }
+
+  .ink-checkbox-group__hint {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-muted);
+  }
+
+  .ink-checkbox-group__error {
+    font-size: var(--ink-text-xs);
+    color: var(--ink-danger);
+    font-weight: var(--ink-font-weight-medium);
+  }
+</style>
+
+<script>
+  function initCheckboxGroups(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-ink-checkboxgroup]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      box.addEventListener("change", () => {
+        const values = Array.from(
+          box.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'),
+        ).map((c) => c.value);
+        box.dispatchEvent(new CustomEvent("ink:checkboxgroup:change", { bubbles: true, detail: { values } }));
+      });
+    });
+  }
+
+  initCheckboxGroups();
+
+  const w = window as unknown as { Ink?: { init: (root?: ParentNode) => void } };
+  const prev = w.Ink?.init;
+  w.Ink = { init: (root?: ParentNode) => { prev?.(root); initCheckboxGroups(root ?? document); } };
+</script>

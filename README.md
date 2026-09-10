@@ -82,8 +82,8 @@ ClickAwayListener, FocusTrap, Icon, and CSS Baseline.
 
 120 catalog items per spec §7
 (`docs/superpowers/specs/2026-08-12-astro-ink-design.md`), verified by
-`scripts/spec-coverage.py`: 118 fully covered, 2 known partials (Slider
-range, Checkbox group), plus 9 subpart/extra exports. Full list: Button, Badge, Alert, Container,
+`scripts/spec-coverage.py`: 120/120 fully covered, plus 10 subpart/extra
+exports. Full list: Button, Badge, Alert, Container,
 VisuallyHidden, Field, TextField, NumberInput, PasswordInput, SearchInput,
 Textarea, Select, Checkbox, RadioGroup, Switch, Slider, File,
 InputGroup, Form, ButtonGroup, ToggleButton, Link, Breadcrumbs, Anchor,
@@ -105,9 +105,9 @@ ScatterChart.
 Utilities: focus-trap, dismiss, roving, scrollspy, pagination builder,
 autosize, slider fill, split math, highlight split, Popper, Portal, ClickAway.
 
-Plus 9 subpart/extra exports beyond the catalog items: AccordionItem,
+Plus 10 subpart/extra exports beyond the catalog items: AccordionItem,
 ListItem, TableHead, TableBody, TableRow, TableCell, TimelineItem,
-TreeItem, Radio.
+TreeItem, Radio, CheckboxGroup.
 
 ## License
 

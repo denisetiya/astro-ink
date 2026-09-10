@@ -11,34 +11,88 @@ interface Props {
   step?: number;
   showValue?: boolean;
   disabled?: boolean;
+  range?: boolean;
+  valueMin?: number;
+  valueMax?: number;
+  nameMax?: string;
   class?: string;
 }
 
 const {
   id, name = id, label, min = 0, max = 100, value = 50, step = 1,
-  showValue = false, disabled = false, class: className, ...rest
+  showValue = false, disabled = false, range = false, valueMin, valueMax, nameMax,
+  class: className, ...rest
 } = Astro.props;
 
 const fill = computeFill(min, max, value);
+const span = max - min;
+const lo = valueMin ?? min + span * 0.25;
+const hi = valueMax ?? min + span * 0.75;
+const maxName = nameMax ?? `${name}-max`;
+const loFill = computeFill(min, max, lo);
+const hiFill = computeFill(min, max, hi);
+const thumbLabel = label ?? id;
 ---
 <div class:list={["ink-slider", className]}>
   {label && <label class="ink-slider__label" for={id}>{label}</label>}
   <div class="ink-slider__row">
-    <input
-      type="range"
-      id={id}
-      name={name}
-      class="ink-range"
-      min={min}
-      max={max}
-      value={value}
-      step={step}
-      disabled={disabled || undefined}
-      data-ink-slider
-      style={`--ink-slider-fill: ${fill}%`}
-      {...rest}
-    />
-    {showValue && <output class="ink-slider__output" for={id}>{value}</output>}
+    {range ? (
+      <div
+        class="ink-slider__dual"
+        data-ink-slider-range
+        style={`--ink-slider-range-min: ${loFill}%; --ink-slider-range-max: ${hiFill}%;`}
+      >
+        <div class="ink-slider__bar" aria-hidden="true"><div class="ink-slider__fill"></div></div>
+        <input
+          type="range"
+          id={id}
+          name={name}
+          class="ink-range"
+          min={min}
+          max={max}
+          value={lo}
+          step={step}
+          disabled={disabled || undefined}
+          aria-label={`${thumbLabel} minimum`}
+          {...rest}
+        />
+        <input
+          type="range"
+          id={`${id}-max`}
+          name={maxName}
+          class="ink-range"
+          min={min}
+          max={max}
+          value={hi}
+          step={step}
+          disabled={disabled || undefined}
+          aria-label={`${thumbLabel} maximum`}
+          {...rest}
+        />
+      </div>
+    ) : (
+      <input
+        type="range"
+        id={id}
+        name={name}
+        class="ink-range"
+        min={min}
+        max={max}
+        value={value}
+        step={step}
+        disabled={disabled || undefined}
+        data-ink-slider
+        style={`--ink-slider-fill: ${fill}%`}
+        {...rest}
+      />
+    )}
+    {showValue && (
+      range ? (
+        <output class="ink-slider__output" for={`${id} ${id}-max`}>{lo}–{hi}</output>
+      ) : (
+        <output class="ink-slider__output" for={id}>{value}</output>
+      )
+    )}
   </div>
 </div>
 
@@ -121,6 +175,55 @@ const fill = computeFill(min, max, value);
     font-variant-numeric: tabular-nums;
     color: var(--ink-muted);
   }
+
+  .ink-slider__dual {
+    position: relative;
+    flex: 1;
+    display: grid;
+  }
+
+  .ink-slider__dual .ink-range {
+    grid-area: 1 / 1;
+    pointer-events: none;
+    background: transparent;
+  }
+
+  .ink-slider__dual .ink-range::-webkit-slider-thumb {
+    pointer-events: auto;
+  }
+
+  .ink-slider__dual .ink-range::-moz-range-thumb {
+    pointer-events: auto;
+  }
+
+  .ink-slider__bar {
+    grid-area: 1 / 1;
+    align-self: center;
+    height: 0.375rem;
+    border-radius: var(--ink-slider-radius, 999px);
+    background: color-mix(in srgb, var(--ink-ink) 15%, var(--ink-bg));
+    margin-inline: 0.5625rem;
+  }
+
+  .ink-slider__fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--ink-accent);
+    margin-left: var(--ink-slider-range-min, 25%);
+    width: calc(var(--ink-slider-range-max, 75%) - var(--ink-slider-range-min, 25%));
+  }
+
+  .ink-slider__dual .ink-range::-webkit-slider-runnable-track {
+    background: transparent;
+  }
+
+  .ink-slider__dual .ink-range::-moz-range-track {
+    background: transparent;
+  }
+
+  .ink-slider__dual .ink-range::-moz-range-progress {
+    background: transparent;
+  }
 </style>
 
 <script>
@@ -138,6 +241,30 @@ const fill = computeFill(min, max, value);
         if (output) output.textContent = el.value;
       };
       el.addEventListener("input", update);
+      update();
+    });
+    root.querySelectorAll<HTMLElement>("[data-ink-slider-range]").forEach((box) => {
+      if (box.dataset.inkBound) return;
+      box.dataset.inkBound = "true";
+      const thumbs = Array.from(box.querySelectorAll<HTMLInputElement>('input[type="range"]'));
+      if (thumbs.length !== 2) return;
+      const [loEl, hiEl] = thumbs;
+      const update = () => {
+        const min = Number(loEl.min) || 0;
+        const max = Number(loEl.max) || 100;
+        box.style.setProperty("--ink-slider-range-min", `${computeFill(min, max, Number(loEl.value))}%`);
+        box.style.setProperty("--ink-slider-range-max", `${computeFill(min, max, Number(hiEl.value))}%`);
+        const output = box.parentElement?.querySelector("output");
+        if (output) output.textContent = `${loEl.value}–${hiEl.value}`;
+      };
+      loEl.addEventListener("input", () => {
+        if (Number(loEl.value) > Number(hiEl.value)) loEl.value = hiEl.value;
+        update();
+      });
+      hiEl.addEventListener("input", () => {
+        if (Number(hiEl.value) < Number(loEl.value)) hiEl.value = loEl.value;
+        update();
+      });
       update();
     });
   }

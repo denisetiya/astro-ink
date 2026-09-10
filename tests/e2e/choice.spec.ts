@@ -45,6 +45,22 @@ test("slider updates fill and output", async ({ page }) => {
   await expect(page.locator(".ink-slider", { has: slider }).locator(".ink-slider__output")).toHaveText(/\d+/);
 });
 
+test("slider range moves min thumb and never crosses max", async ({ page }) => {
+  await page.goto("/components/slider");
+  const minThumb = page.getByRole("slider", { name: "Budget minimum" });
+  const maxThumb = page.getByRole("slider", { name: "Budget maximum" });
+  const before = await minThumb.inputValue();
+  await minThumb.focus();
+  await minThumb.press("ArrowRight");
+  const after = await minThumb.inputValue();
+  expect(Number(after)).toBeGreaterThan(Number(before));
+  await maxThumb.focus();
+  for (let i = 0; i < 200; i++) await maxThumb.press("ArrowLeft");
+  const lo = Number(await minThumb.inputValue());
+  const hi = Number(await maxThumb.inputValue());
+  expect(hi).toBeGreaterThanOrEqual(lo);
+});
+
 test("radio group selects one option with arrow keys", async ({ page }) => {
   await page.goto("/components/radio-group");
   const first = page.getByRole("radio", { name: "Weekly" });
