@@ -63,6 +63,54 @@ import "astro-ink/styles/themes/dark.css";</code></pre>
 /* Required for AA contrast: verify every color pair you change
    reaches 4.5:1 for normal text, 3:1 for large text. */</code></pre>
 
+    <h2>Authoring rules</h2>
+    <p>
+      A custom theme wins over component styles without fighting them.
+      Three rules keep it that way:
+    </p>
+    <ul class="docs-list">
+      <li>Tokens only: override <code>--ink-*</code> custom properties, never restyle a component class.</li>
+      <li>No <code>!important</code>: component CSS never uses it, so your token values apply with normal specificity.</li>
+      <li>Low specificity: one selector (such as <code>:root</code> or <code>[data-theme="mine"]</code>) beats none, and loses to nothing. Layer order does the rest: import your file after <code>tokens.css</code>.</li>
+    </ul>
+
+    <h2>Shape tokens</h2>
+    <p>
+      Every component that draws a pill, circle, thumb, dot, or ring reads
+      its own radius token first and falls back to its default shape. Set
+      one token to reshape one component, or zero them all for square
+      corners (the <code>brutal</code> preset does exactly this):
+    </p>
+    <pre class="docs-code"><code>:root &#123;
+  --ink-alert-radius: 0;
+  --ink-avatar-radius: 0;
+  --ink-avatargroup-radius: 0;
+  --ink-badge-radius: 0;
+  --ink-button-radius: 0;
+  --ink-carousel-radius: 0;
+  --ink-carousel-dot-radius: 0;
+  --ink-chip-radius: 0;
+  --ink-color-swatch-radius: 0;
+  --ink-fab-radius: 0;
+  --ink-highlight-radius: 0;
+  --ink-input-radius: 0;          /* shared by Field, OtpInput, TagInput, TransferList, ColorPicker panel */
+  --ink-loading-radius: 0;
+  --ink-paper-radius: 0;
+  --ink-progress-radius: 0;
+  --ink-radio-radius: 0;
+  --ink-rating-radius: 0;
+  --ink-scrollbar-radius: 0;
+  --ink-skeleton-radius: 0;
+  --ink-slider-radius: 0;
+  --ink-slider-thumb-radius: 0;
+  --ink-speed-radius: 0;
+  --ink-spinner-radius: 0;
+  --ink-stepper-radius: 0;
+  --ink-switch-radius: 0;
+  --ink-switch-thumb-radius: 0;
+  --ink-timeline-radius: 0;
+&#125;</code></pre>
+
     <h2>Presets</h2>
     <p>
       Three preset themes ship with the library: the default Paper and Ink

@@ -50,12 +50,37 @@ Override tokens on `:root` or any container:
       --ink-button-radius: 999px;
     }
 
-See the full guide at the docs site (Theming page) for the token reference
+See the full guide in the docs site (run `npm run docs:dev` in this repo,
+then open the Theming page) for the token reference, the preset themes,
 and a custom theme template.
+
+Preset themes ship with the library: the default Paper and Ink light theme,
+plus `dark`, `midnight` (dark-first), and `brutal` (neo-brutalist). Each
+preset is one import of token overrides, one theme per page:
+
+    import "astro-ink/styles/tokens.css";
+    import "astro-ink/styles/base.css";
+    // pick one preset (or none for the default light theme):
+    import "astro-ink/styles/themes/dark.css";
+    import "astro-ink/styles/themes/midnight.css";
+    import "astro-ink/styles/themes/brutal.css";
+
+Set the theme with an attribute (the toggle logic belongs to your app):
+
+    document.documentElement.dataset.theme = "midnight";
+    // or: "light", "dark", "brutal"
+
+## Docs
+
+The docs site lives in `docs/`. Run it locally with `npm run docs:dev`.
+Every catalog component has a page with a live demo, a copy-paste snippet,
+a props table, and accessibility notes.
 
 ## Status
 
-120 components shipped through Phase 8: Button, Badge, Alert, Container,
+Roadmap complete: 120/120 catalog components per spec §7
+(`docs/superpowers/specs/2026-08-12-astro-ink-design.md`), verified by
+`scripts/spec-coverage.py`: Button, Badge, Alert, Container,
 VisuallyHidden, Field, TextField, NumberInput, PasswordInput, SearchInput,
 Textarea, Select, Checkbox, Radio, RadioGroup, Switch, Slider, File,
 InputGroup, Form, ButtonGroup, ToggleButton, Link, Breadcrumbs, Anchor,
@@ -76,9 +101,9 @@ ScatterChart.
 Utilities: focus-trap, dismiss, roving, scrollspy, pagination builder,
 autosize, slider fill, split math, highlight split, Popper, Portal, ClickAway.
 
-Upcoming: advanced inputs (FAB, Rating, Autocomplete, pickers of input),
-Data Grid, date/time pickers, charts, and publish — 27 more on the
-roadmap.
+Plus 9 subpart/extra exports beyond the catalog items: AccordionItem,
+ListItem, TableHead, TableBody, TableRow, TableCell, TimelineItem,
+TreeItem, Radio.
 
 ## License
 

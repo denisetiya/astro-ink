@@ -1,5 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import { Button, Alert, Sparkline } from "astro-ink";
+
+const signups = [8, 12, 10, 16, 14, 22, 19, 26, 24, 30, 36, 42];
 ---
 <Base title="Home">
   <div class="docs-page">
@@ -9,13 +12,36 @@ import Base from "../layouts/Base.astro";
       dependencies, fully themeable through CSS custom properties. Components
       only ship the CSS and script they need.
     </p>
+    <p>
+      120 catalog components. <a href="/components">Browse the full index</a>.
+    </p>
 
-    <h2>Components</h2>
-    <ul class="docs-list">
-      <li><a href="/components/button">Button</a></li>
-      <li><a href="/components/badge">Badge</a></li>
-      <li><a href="/components/alert">Alert</a></li>
-    </ul>
+    <h2>Try them here</h2>
+    <p>
+      Everything below is a real component running on this page, not a
+      screenshot. The dismiss button removes the alert. The buttons go to
+      real pages. The chart below draws from sample data.
+    </p>
+
+    <h3>Buttons</h3>
+    <div class="docs-example">
+      <Button href="/components">Browse components</Button>
+      <Button href="/guides/theming" variant="secondary">Read the theming guide</Button>
+      <Button href="/components/alert" variant="ghost">See the alert page</Button>
+    </div>
+
+    <h3>Alert</h3>
+    <div class="docs-example" style="display: grid;">
+      <Alert variant="success" dismissible>
+        <strong>Saved.</strong> Use the close button to dismiss this alert.
+      </Alert>
+    </div>
+
+    <h3>Chart</h3>
+    <div class="docs-example">
+      <Sparkline data={signups} label="Sample signups per week" width={200} height={48} />
+    </div>
+    <p>Sample data, drawn as a static SVG with no script.</p>
 
     <h2>Guides</h2>
     <ul class="docs-list">
