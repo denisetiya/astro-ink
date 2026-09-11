@@ -14,6 +14,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm install
+      - run: python3 scripts/spec-coverage.py
       - run: npm run check
       - run: npm test
       - run: npx playwright install --with-deps chromium

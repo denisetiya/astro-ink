@@ -55,7 +55,10 @@ then open the Theming page) for the token reference, the preset themes,
 and a custom theme template.
 
 Preset themes ship with the library: the default Paper and Ink light theme,
-plus `dark`, `midnight` (dark-first), and `brutal` (neo-brutalist). Each
+plus `dark`, `midnight` (dark-first), `brutal` (neo-brutalist),
+`forest` (green-tinted light), `ocean` (deep-sea dark),
+`ember` (warm hearth dark), `plum` (violet light), and `slate`
+(graphite dark with amber accent). Each
 preset is one import of token overrides, one theme per page:
 
     import "astro-ink/styles/tokens.css";
@@ -64,11 +67,16 @@ preset is one import of token overrides, one theme per page:
     import "astro-ink/styles/themes/dark.css";
     import "astro-ink/styles/themes/midnight.css";
     import "astro-ink/styles/themes/brutal.css";
+    import "astro-ink/styles/themes/forest.css";
+    import "astro-ink/styles/themes/ocean.css";
+    import "astro-ink/styles/themes/ember.css";
+    import "astro-ink/styles/themes/plum.css";
+    import "astro-ink/styles/themes/slate.css";
 
 Set the theme with an attribute (the toggle logic belongs to your app):
 
     document.documentElement.dataset.theme = "midnight";
-    // or: "light", "dark", "brutal"
+    // or: "light", "dark", "brutal", "forest", "ocean", "ember", "plum", "slate"
 
 ## Docs
 
