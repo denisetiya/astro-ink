@@ -10,6 +10,7 @@
    - success #4ADE80 on surface #131A2B: 9.96:1 (AA)
    - warning #FBBF24 on surface #131A2B: 10.39:1 (AA)
    - danger #F87171 on surface #131A2B: 6.27:1 (AA)
+   - danger-ink #04121F on danger #F87171: 6.83:1 (AA, button labels)
    - info #7DD3FC on surface #131A2B: 10.41:1 (AA) */
 [data-theme="midnight"] {
   color-scheme: dark;
@@ -26,6 +27,7 @@
   --ink-success: #4ade80;
   --ink-warning: #fbbf24;
   --ink-danger: #f87171;
+  --ink-danger-ink: #04121f;
   --ink-info: #7dd3fc;
 
   --ink-shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
