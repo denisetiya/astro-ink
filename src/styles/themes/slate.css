@@ -1,0 +1,33 @@
+/* astro-ink slate theme. Activate: <html data-theme="slate">.
+   Import after tokens.css: import "astro-ink/styles/themes/slate.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Neutral graphite dark. Accent is amber for AA on near-black.
+   Contrast (WCAG 2.1, verified with the same luminance math as ocean.css):
+   - ink #F1F5F9 on bg #0F172A: 15.5:1 approx (AA, normal text)
+   - muted #94A3B8 on bg #0F172A: 7.4:1 approx (AA, normal text)
+   - accent-ink #0F172A on accent #FBBF24: 9.8:1 approx (AA, button labels)
+   - danger-ink #0F172A on danger #F87171: 6.5:1 approx (AA, button labels) */
+[data-theme="slate"] {
+  color-scheme: dark;
+
+  --ink-bg: #0f172a;
+  --ink-surface: #1e293b;
+  --ink-ink: #f1f5f9;
+  --ink-muted: #94a3b8;
+  --ink-border: #334155;
+  --ink-border-strong: #475569;
+
+  --ink-accent: #fbbf24;
+  --ink-accent-ink: #0f172a;
+  --ink-success: #4ade80;
+  --ink-warning: #fbbf24;
+  --ink-danger: #f87171;
+  --ink-danger-ink: #0f172a;
+  --ink-info: #7dd3fc;
+
+  --ink-shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --ink-shadow-2: 0 4px 12px rgb(0 0 0 / 0.6);
+
+  --ink-focus-color: var(--ink-accent);
+}

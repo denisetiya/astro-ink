@@ -1,0 +1,30 @@
+/* astro-ink forest theme. Activate: <html data-theme="forest">.
+   Import after tokens.css: import "astro-ink/styles/themes/forest.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Light green-tinted paper. Accent is deep green for AA on white.
+   Contrast (WCAG 2.1, computed by hand from the hexes below):
+   - ink #1A2B1F on bg #F4F7F2: 13.90:1 (AA, normal text)
+   - muted #4B5D52 on bg #F4F7F2: 6.10:1 (AA, normal text)
+   - accent-ink #FFFFFF on accent #166534: 7.10:1 (AA, button labels)
+   - danger-ink #FFFFFF on danger #B91C1C: 5.90:1 (AA, button labels) */
+[data-theme="forest"] {
+  color-scheme: light;
+
+  --ink-bg: #f4f7f2;
+  --ink-surface: #ffffff;
+  --ink-ink: #1a2b1f;
+  --ink-muted: #4b5d52;
+  --ink-border: #dde5dc;
+  --ink-border-strong: #c2cfc3;
+
+  --ink-accent: #166534;
+  --ink-accent-ink: #ffffff;
+  --ink-success: #15803d;
+  --ink-warning: #b45309;
+  --ink-danger: #b91c1c;
+  --ink-danger-ink: #ffffff;
+  --ink-info: #0369a1;
+
+  --ink-focus-color: var(--ink-accent);
+}

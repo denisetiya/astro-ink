@@ -62,6 +62,10 @@
   /* focus */
   --ink-focus-color: var(--ink-accent);
 
+  /* ghost/soft/outline button text: darkened accent that holds AA on
+     surface and on the 12% accent tint (light default: 6.53:1). */
+  --ink-button-ghost-text: #90350f;
+
   /* stacking */
   --ink-z-dropdown: 50;
   --ink-z-overlay: 100;

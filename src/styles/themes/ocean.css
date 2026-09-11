@@ -1,0 +1,33 @@
+/* astro-ink ocean theme. Activate: <html data-theme="ocean">.
+   Import after tokens.css: import "astro-ink/styles/themes/ocean.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Deep-sea dark. Accent is sky for AA on navy.
+   Contrast (WCAG 2.1, computed by hand from the hexes below):
+   - ink #E6F1FE on bg #0A1628: 15.87:1 (AA, normal text)
+   - muted #9DB4CC on bg #0A1628: 8.49:1 (AA, normal text)
+   - accent-ink #04121F on accent #38BDF8: 8.82:1 (AA, button labels)
+   - danger-ink #04121F on danger #F87171: 6.83:1 (AA, button labels) */
+[data-theme="ocean"] {
+  color-scheme: dark;
+
+  --ink-bg: #0a1628;
+  --ink-surface: #10233d;
+  --ink-ink: #e6f1fe;
+  --ink-muted: #9db4cc;
+  --ink-border: #1e3a5c;
+  --ink-border-strong: #2e537e;
+
+  --ink-accent: #38bdf8;
+  --ink-accent-ink: #04121f;
+  --ink-success: #4ade80;
+  --ink-warning: #fbbf24;
+  --ink-danger: #f87171;
+  --ink-danger-ink: #04121f;
+  --ink-info: #7dd3fc;
+
+  --ink-shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --ink-shadow-2: 0 4px 12px rgb(0 0 0 / 0.6);
+
+  --ink-focus-color: var(--ink-accent);
+}

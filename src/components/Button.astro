@@ -1,6 +1,6 @@
 ---
 interface Props {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "ghost" | "danger" | "soft" | "outline";
   size?: "sm" | "md" | "lg";
   href?: string;
   type?: "button" | "submit" | "reset";
@@ -99,7 +99,7 @@ const Tag = href ? "a" : "button";
 
   .ink-button--ghost {
     background: transparent;
-    color: var(--ink-accent);
+    color: var(--ink-button-ghost-text, var(--ink-accent));
   }
 
   .ink-button--ghost:hover {
@@ -113,6 +113,25 @@ const Tag = href ? "a" : "button";
 
   .ink-button--danger:hover {
     background: color-mix(in srgb, var(--ink-danger) 85%, black);
+  }
+
+  .ink-button--soft {
+    background: color-mix(in srgb, var(--ink-accent) 12%, transparent);
+    color: var(--ink-button-ghost-text, var(--ink-accent));
+  }
+
+  .ink-button--soft:hover {
+    background: color-mix(in srgb, var(--ink-accent) 18%, transparent);
+  }
+
+  .ink-button--outline {
+    background: transparent;
+    color: var(--ink-button-ghost-text, var(--ink-accent));
+    border-color: var(--ink-accent);
+  }
+
+  .ink-button--outline:hover {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
   }
 
   .ink-button:disabled,

@@ -1,0 +1,33 @@
+/* astro-ink ember theme. Activate: <html data-theme="ember">.
+   Import after tokens.css: import "astro-ink/styles/themes/ember.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Warm dark hearth. Accent is ember orange for AA on dark umber.
+   Contrast (WCAG 2.1, computed by hand from the hexes below):
+   - ink #F7EFE6 on bg #1C1410: 15.94:1 (AA, normal text)
+   - muted #C9B8A6 on bg #1C1410: 9.41:1 (AA, normal text)
+   - accent-ink #201307 on accent #FB923C: 8.02:1 (AA, button labels)
+   - danger-ink #201307 on danger #F87171: 6.56:1 (AA, button labels) */
+[data-theme="ember"] {
+  color-scheme: dark;
+
+  --ink-bg: #1c1410;
+  --ink-surface: #2b211a;
+  --ink-ink: #f7efe6;
+  --ink-muted: #c9b8a6;
+  --ink-border: #453628;
+  --ink-border-strong: #5f4c39;
+
+  --ink-accent: #fb923c;
+  --ink-accent-ink: #201307;
+  --ink-success: #4ade80;
+  --ink-warning: #fbbf24;
+  --ink-danger: #f87171;
+  --ink-danger-ink: #201307;
+  --ink-info: #7dd3fc;
+
+  --ink-shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --ink-shadow-2: 0 4px 12px rgb(0 0 0 / 0.6);
+
+  --ink-focus-color: var(--ink-accent);
+}

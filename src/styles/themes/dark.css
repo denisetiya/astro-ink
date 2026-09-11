@@ -21,4 +21,5 @@
   --ink-shadow-2: 0 4px 12px rgb(0 0 0 / 0.5);
 
   --ink-focus-color: var(--ink-accent);
+  --ink-button-ghost-text: #f59a55;
 }

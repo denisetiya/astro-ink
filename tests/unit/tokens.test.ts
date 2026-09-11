@@ -1,12 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const stylesDir = join(dirname(fileURLToPath(import.meta.url)), "../../src/styles");
+const themesDir = join(stylesDir, "themes");
 
 const tokens = readFileSync(join(stylesDir, "tokens.css"), "utf-8");
-const dark = readFileSync(join(stylesDir, "themes/dark.css"), "utf-8");
+const dark = readFileSync(join(themesDir, "dark.css"), "utf-8");
+const themeFiles = readdirSync(themesDir).filter((f) => f.endsWith(".css"));
 
 const REQUIRED_TOKENS = [
   "--ink-bg",
@@ -51,6 +53,7 @@ const REQUIRED_TOKENS = [
   "--ink-duration-base",
   "--ink-ease",
   "--ink-focus-color",
+  "--ink-button-ghost-text",
 ];
 
 describe("tokens.css contract", () => {
@@ -68,8 +71,34 @@ describe("tokens.css contract", () => {
     expect(dark).toMatch(/\[data-theme="dark"\]\s*\{/);
   });
 
-  it("uses no !important", () => {
-    expect(tokens).not.toContain("!important");
-    expect(dark).not.toContain("!important");
+  it("uses no !important declarations", () => {
+    const declaration = /!important\s*;/;
+    expect(tokens).not.toMatch(declaration);
+    expect(dark).not.toMatch(declaration);
+    for (const file of themeFiles) {
+      const css = readFileSync(join(themesDir, file), "utf-8");
+      expect(css, `!important in ${file}`).not.toMatch(declaration);
+    }
+  });
+
+  it("every theme scopes overrides to its own data-theme selector", () => {
+    expect(themeFiles.length).toBeGreaterThanOrEqual(8);
+    for (const file of themeFiles) {
+      const name = file.replace(/\.css$/, "");
+      const css = readFileSync(join(themesDir, file), "utf-8");
+      expect(css, `${file} missing scope`).toMatch(
+        new RegExp(`\\[data-theme="${name}"\\]\\s*\\{`),
+      );
+    }
+  });
+
+  it("every theme overrides the core surface and accent tokens", () => {
+    const core = ["--ink-bg", "--ink-surface", "--ink-ink", "--ink-accent", "--ink-focus-color"];
+    for (const file of themeFiles) {
+      const css = readFileSync(join(themesDir, file), "utf-8");
+      for (const token of core) {
+        expect(css, `${file} missing ${token}`).toContain(token);
+      }
+    }
   });
 });

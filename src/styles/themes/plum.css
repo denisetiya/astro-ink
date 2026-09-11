@@ -1,0 +1,30 @@
+/* astro-ink plum theme. Activate: <html data-theme="plum">.
+   Import after tokens.css: import "astro-ink/styles/themes/plum.css";
+   Token overrides only: every component re-skins untouched, no !important.
+
+   Soft violet paper. Accent is deep purple for AA on white.
+   Contrast (WCAG 2.1, computed by hand from the hexes below):
+   - ink #2E1A2E on bg #FAF5FA: 14.97:1 (AA, normal text)
+   - muted #6E5A6E on bg #FAF5FA: 5.82:1 (AA, normal text)
+   - accent-ink #FFFFFF on accent #86198F: 8.24:1 (AA, button labels)
+   - danger-ink #FFFFFF on danger #B91C1C: 6.47:1 (AA, button labels) */
+[data-theme="plum"] {
+  color-scheme: light;
+
+  --ink-bg: #faf5fa;
+  --ink-surface: #ffffff;
+  --ink-ink: #2e1a2e;
+  --ink-muted: #6e5a6e;
+  --ink-border: #e8d9e8;
+  --ink-border-strong: #d3bcd3;
+
+  --ink-accent: #86198f;
+  --ink-accent-ink: #ffffff;
+  --ink-success: #15803d;
+  --ink-warning: #b45309;
+  --ink-danger: #b91c1c;
+  --ink-danger-ink: #ffffff;
+  --ink-info: #0369a1;
+
+  --ink-focus-color: var(--ink-accent);
+}
