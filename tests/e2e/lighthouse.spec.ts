@@ -43,18 +43,21 @@ for (const route of ROUTES) {
     test.setTimeout(240_000);
     const url = `${baseURL}${route}`;
     const outputPath = join(tmpdir(), `lighthouse-a11y-${route.replaceAll("/", "-")}.json`);
-    await runLighthouse(url, outputPath);
-    const { default: report } = (await import(outputPath, { with: { type: "json" } })) as {
-      default: {
-        categories: { accessibility: { score: number } };
-        audits: Record<string, { score: number | null; title: string }>;
+    try {
+      await runLighthouse(url, outputPath);
+      const { default: report } = (await import(outputPath, { with: { type: "json" } })) as {
+        default: {
+          categories: { accessibility: { score: number } };
+          audits: Record<string, { score: number | null; title: string }>;
+        };
       };
-    };
-    const failing = Object.entries(report.audits)
-      .filter(([, audit]) => audit.score !== null && audit.score < 1)
-      .map(([id, audit]) => `${id} (${audit.title})`);
-    expect(failing, `failing audits on ${route}`).toEqual([]);
-    expect(report.categories.accessibility.score).toBe(1);
-    await rm(outputPath, { force: true });
+      const failing = Object.entries(report.audits)
+        .filter(([, audit]) => audit.score !== null && audit.score < 1)
+        .map(([id, audit]) => `${id} (${audit.title})`);
+      expect(failing, `failing audits on ${route}`).toEqual([]);
+      expect(report.categories.accessibility.score).toBe(1);
+    } finally {
+      await rm(outputPath, { force: true });
+    }
   });
 }
