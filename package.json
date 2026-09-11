@@ -1,6 +1,6 @@
 {
   "name": "astro-ink",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Lightweight, token-driven UI components for Astro. Server-rendered, zero dependencies, fully themeable.",
   "type": "module",
   "license": "MIT",
