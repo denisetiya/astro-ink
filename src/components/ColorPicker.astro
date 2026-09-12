@@ -65,8 +65,11 @@ const describedBy = [hint && `${id}-hex-hint`, error && `${id}-hex-error`].filte
 <style>
   .ink-color {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--ink-space-2);
+    min-width: 0;
+    max-width: 100%;
   }
 
   .ink-color__native {
@@ -91,6 +94,7 @@ const describedBy = [hint && `${id}-hex-hint`, error && `${id}-hex-error`].filte
 
   .ink-color__swatches {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--ink-space-1);
   }
 

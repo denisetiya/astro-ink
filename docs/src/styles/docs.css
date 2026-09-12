@@ -1,11 +1,39 @@
-/* docs site chrome. Built on astro-ink tokens. */
+/* docs site chrome. Built on astro-ink tokens.
+   Design read: docs for technical readers, Linear-clean language,
+   dial ENERGY 2 / RHYTHM 2 / MOTION 1.
+   Reasons: one accent (ink-accent) reserved for live actions; generous
+   hero spacing to separate story from demo; card grid varies by row
+   count instead of uniform lists; motion limited to hover/focus. */
 
-.docs-header {
-  border-bottom: 1px solid var(--ink-border);
-  background: var(--ink-bg);
+/* Skip link: visible only on keyboard focus. */
+.docs-skip {
+  position: absolute;
+  inset-inline-start: var(--ink-space-4);
+  top: -4rem;
+  z-index: var(--ink-z-modal);
+  padding: var(--ink-space-2) var(--ink-space-4);
+  background: var(--ink-ink);
+  color: var(--ink-bg);
+  border-radius: var(--ink-radius-md);
+  text-decoration: none;
+  transition: top var(--ink-duration-fast) var(--ink-ease);
 }
 
-.docs-header nav {
+.docs-skip:focus-visible {
+  top: var(--ink-space-2);
+}
+
+/* Sticky header with surface blur so demo content scrolls under it. */
+.docs-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--ink-z-dropdown);
+  border-bottom: 1px solid var(--ink-border);
+  background: color-mix(in srgb, var(--ink-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.docs-nav {
   max-width: 72rem;
   margin-inline: auto;
   padding: var(--ink-space-3) var(--ink-space-4);
@@ -19,16 +47,28 @@
   font-size: var(--ink-text-lg);
   color: var(--ink-ink);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ink-space-2);
+  white-space: nowrap;
 }
 
 .docs-brand::before {
   content: "";
   display: inline-block;
-  width: 0.6em;
-  height: 0.6em;
-  margin-inline-end: var(--ink-space-2);
+  width: 0.7em;
+  height: 0.7em;
   background: var(--ink-accent);
   border-radius: var(--ink-radius-sm);
+}
+
+.docs-version {
+  font-size: var(--ink-text-xs);
+  font-weight: var(--ink-font-weight-medium);
+  color: var(--ink-muted);
+  border: 1px solid var(--ink-border);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
 }
 
 .docs-nav-links {
@@ -41,14 +81,49 @@
   color: var(--ink-muted);
   text-decoration: none;
   font-size: var(--ink-text-sm);
+  font-weight: var(--ink-font-weight-medium);
+  padding-block: var(--ink-space-1);
+  border-bottom: 2px solid transparent;
 }
 
 .docs-nav-links a:hover {
   color: var(--ink-ink);
 }
 
-.docs-theme-toggle {
+.docs-nav-links a[aria-current="page"] {
+  color: var(--ink-ink);
+  border-bottom-color: var(--ink-accent);
+}
+
+.docs-theme-controls {
   margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--ink-space-2);
+}
+
+.docs-theme-label {
+  font-size: var(--ink-text-xs);
+  color: var(--ink-muted);
+}
+
+.docs-theme-select {
+  font: inherit;
+  font-size: var(--ink-text-sm);
+  color: var(--ink-ink);
+  background: var(--ink-surface);
+  border: 1px solid var(--ink-border-strong);
+  border-radius: var(--ink-radius-md);
+  padding: var(--ink-space-1) var(--ink-space-2);
+  min-height: 2.25rem;
+  cursor: pointer;
+}
+
+.docs-theme-select:hover {
+  border-color: var(--ink-ink);
+}
+
+.docs-theme-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -58,6 +133,31 @@
   border-radius: var(--ink-radius-md);
   background: var(--ink-surface);
   color: var(--ink-ink);
+}
+
+.docs-theme-toggle:hover {
+  border-color: var(--ink-ink);
+}
+
+.docs-crumbs {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: var(--ink-space-3) var(--ink-space-4) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ink-space-2);
+  font-size: var(--ink-text-sm);
+  color: var(--ink-muted);
+}
+
+.docs-crumbs a {
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.docs-crumbs a:hover {
+  color: var(--ink-ink);
+  text-decoration: underline;
 }
 
 .docs-main {
@@ -70,12 +170,15 @@
   font-size: var(--ink-text-2xl);
   font-weight: var(--ink-font-weight-bold);
   margin-bottom: var(--ink-space-2);
+  letter-spacing: -0.01em;
 }
 
 .docs-lede {
   color: var(--ink-muted);
   margin-bottom: var(--ink-space-6);
-  max-width: 60ch;
+  max-width: 62ch;
+  font-size: var(--ink-text-lg);
+  line-height: 1.6;
 }
 
 .docs-page h2 {
@@ -95,6 +198,7 @@
   max-width: 70ch;
 }
 
+/* Demo panel: titled stage, so demos read as live specimens, not boxes. */
 .docs-example {
   border: 1px solid var(--ink-border);
   border-radius: var(--ink-radius-lg);
@@ -105,18 +209,67 @@
   gap: var(--ink-space-3);
   align-items: center;
   margin-bottom: var(--ink-space-3);
+  min-width: 0;
+  position: relative;
+}
+
+.docs-example--grid {
+  display: grid;
+  align-items: start;
+}
+
+/* Flex children need an explicit floor: without it wide controls
+   (inputs, tables, OTP boxes) overflow instead of wrapping. */
+.docs-example > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Field demos take the row so inputs render at real width. */
+.docs-example > .ink-field {
+  flex: 1 1 16rem;
+}
+
+.docs-example-label {
+  flex-basis: 100%;
+  font-size: var(--ink-text-xs);
+  font-weight: var(--ink-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
 }
 
 .docs-code {
+  position: relative;
   background: color-mix(in srgb, var(--ink-ink) 4%, var(--ink-bg));
   border: 1px solid var(--ink-border);
   border-radius: var(--ink-radius-md);
   padding: var(--ink-space-3) var(--ink-space-4);
+  padding-inline-end: 5.5rem;
   overflow-x: auto;
   font-family: var(--ink-font-mono);
   font-size: var(--ink-text-sm);
   line-height: 1.6;
   margin-bottom: var(--ink-space-4);
+}
+
+.docs-copy-btn {
+  position: absolute;
+  inset-block-start: var(--ink-space-2);
+  inset-inline-end: var(--ink-space-2);
+  font-size: var(--ink-text-xs);
+  font-weight: var(--ink-font-weight-medium);
+  padding: var(--ink-space-1) var(--ink-space-2);
+  border: 1px solid var(--ink-border-strong);
+  border-radius: var(--ink-radius-sm);
+  background: var(--ink-surface);
+  color: var(--ink-ink);
+  cursor: pointer;
+  min-height: 1.75rem;
+}
+
+.docs-copy-btn:hover {
+  border-color: var(--ink-ink);
 }
 
 .docs-table {
@@ -132,6 +285,7 @@
   text-align: left;
   padding: var(--ink-space-2) var(--ink-space-3);
   border-bottom: 1px solid var(--ink-border);
+  vertical-align: top;
 }
 
 .docs-table th {
@@ -141,6 +295,14 @@
 .docs-table code {
   font-family: var(--ink-font-mono);
   font-size: var(--ink-text-xs);
+}
+
+/* Detail affordance: prop names get a soft chip so tables scan fast. */
+.docs-table td:first-child code {
+  background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--ink-radius-sm);
+  white-space: nowrap;
 }
 
 .docs-list {
@@ -162,4 +324,254 @@
 
 .docs-preview-btn:hover {
   border-color: var(--ink-ink);
+}
+
+/* Theme swatches: color dots name the choice before the click. */
+.docs-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--ink-space-3);
+}
+
+.docs-theme-card {
+  display: grid;
+  gap: var(--ink-space-2);
+  text-align: start;
+  padding: var(--ink-space-3);
+  border: 1px solid var(--ink-border);
+  border-radius: var(--ink-radius-md);
+  background: var(--ink-surface);
+  color: var(--ink-ink);
+  cursor: pointer;
+  font: inherit;
+}
+
+.docs-theme-card:hover {
+  border-color: var(--ink-ink);
+}
+
+.docs-theme-card[aria-pressed="true"] {
+  border-color: var(--ink-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink-accent) 30%, transparent);
+}
+
+.docs-theme-swatches {
+  display: flex;
+  gap: 0;
+}
+
+.docs-theme-swatches span {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--ink-surface);
+}
+
+.docs-theme-swatches span + span {
+  margin-inline-start: -0.5rem;
+}
+
+.docs-theme-name {
+  font-weight: var(--ink-font-weight-semibold);
+  font-size: var(--ink-text-sm);
+}
+
+.docs-theme-desc {
+  font-size: var(--ink-text-xs);
+  color: var(--ink-muted);
+}
+
+/* Landing: hero sets the story, demo band proves it, index invites. */
+.docs-hero {
+  padding-block: var(--ink-space-8) var(--ink-space-6);
+  display: grid;
+  gap: var(--ink-space-4);
+  max-width: 64rem;
+}
+
+.docs-hero h1 {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: var(--ink-font-weight-bold);
+  margin: 0;
+}
+
+.docs-hero .docs-lede {
+  margin: 0;
+}
+
+.docs-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ink-space-3);
+}
+
+.docs-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ink-space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.docs-stats li {
+  border: 1px solid var(--ink-border);
+  border-radius: var(--ink-radius-md);
+  background: var(--ink-surface);
+  padding: var(--ink-space-3) var(--ink-space-4);
+  min-width: 9rem;
+}
+
+.docs-stats strong {
+  display: block;
+  font-size: var(--ink-text-xl);
+}
+
+.docs-stats span {
+  font-size: var(--ink-text-sm);
+  color: var(--ink-muted);
+}
+
+.docs-band {
+  border-block: 1px solid var(--ink-border);
+  background: color-mix(in srgb, var(--ink-ink) 2%, var(--ink-bg));
+  padding-block: var(--ink-space-6);
+  margin-block: var(--ink-space-6);
+  display: grid;
+  gap: var(--ink-space-4);
+}
+
+.docs-section-title {
+  font-size: var(--ink-text-sm);
+  font-weight: var(--ink-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+/* Component catalog: cards carry a live mini-demo, not just a name. */
+.docs-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--ink-space-4);
+}
+
+.docs-cat-card {
+  display: grid;
+  gap: var(--ink-space-2);
+  align-content: start;
+  border: 1px solid var(--ink-border);
+  border-radius: var(--ink-radius-lg);
+  background: var(--ink-surface);
+  padding: var(--ink-space-4);
+  min-width: 0;
+}
+
+.docs-cat-card > a {
+  font-weight: var(--ink-font-weight-semibold);
+  color: var(--ink-ink);
+  text-decoration: none;
+  font-size: var(--ink-text-lg);
+}
+
+.docs-cat-card > a:hover {
+  color: var(--ink-accent);
+  text-decoration: underline;
+}
+
+.docs-cat-card > p {
+  margin: 0;
+  font-size: var(--ink-text-sm);
+  color: var(--ink-muted);
+}
+
+.docs-cat-demo {
+  border: 1px dashed var(--ink-border-strong);
+  border-radius: var(--ink-radius-md);
+  padding: var(--ink-space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ink-space-2);
+  align-items: center;
+  min-height: 3.5rem;
+  min-width: 0;
+}
+
+.docs-cat-demo > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.docs-footer {
+  border-top: 1px solid var(--ink-border);
+  margin-top: var(--ink-space-8);
+}
+
+.docs-footer-inner {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: var(--ink-space-6) var(--ink-space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ink-space-5);
+  justify-content: space-between;
+  align-items: start;
+}
+
+.docs-footer-brand {
+  font-weight: var(--ink-font-weight-bold);
+  margin: 0 0 var(--ink-space-1);
+}
+
+.docs-footer-note {
+  margin: 0;
+  font-size: var(--ink-text-sm);
+  color: var(--ink-muted);
+  max-width: 40ch;
+}
+
+.docs-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ink-space-4);
+}
+
+.docs-footer nav a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  font-size: var(--ink-text-sm);
+}
+
+.docs-footer nav a:hover {
+  color: var(--ink-ink);
+  text-decoration: underline;
+}
+
+@media (max-width: 40rem) {
+  .docs-nav {
+    flex-wrap: wrap;
+    gap: var(--ink-space-3);
+  }
+
+  .docs-theme-controls {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+
+  .docs-theme-select {
+    flex: 1;
+  }
+
+  .docs-hero {
+    padding-block: var(--ink-space-6) var(--ink-space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .docs-skip {
+    transition: none;
+  }
 }

@@ -9,10 +9,11 @@ interface Props {
   error?: string;
   disabled?: boolean;
   placeholder?: string;
+  size?: "sm" | "md" | "lg";
   class?: string;
 }
 
-const { id, label, name = id, hint, error, disabled = false, placeholder = "Search", class: className, ...rest } = Astro.props;
+const { id, label, name = id, hint, error, disabled = false, placeholder = "Search", size = "md", class: className, ...rest } = Astro.props;
 ---
 <Field id={id} label={label} hint={hint} error={error} hideLabel class={className}>
   <div class="ink-search">
@@ -20,7 +21,7 @@ const { id, label, name = id, hint, error, disabled = false, placeholder = "Sear
       id={id}
       name={name}
       type="search"
-      class="ink-input"
+      class:list={["ink-input", size !== "md" && `ink-input--${size}`]}
       placeholder={placeholder}
       disabled={disabled || undefined}
       data-ink-search

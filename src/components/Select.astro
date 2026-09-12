@@ -11,12 +11,14 @@ interface Props {
   disabled?: boolean;
   multiple?: boolean;
   size?: number;
+  controlSize?: "sm" | "md" | "lg";
   class?: string;
 }
 
 const {
   id, label, name = id, hint, error, required = false,
-  disabled = false, multiple = false, size, class: className, ...rest
+  disabled = false, multiple = false, size, controlSize = "md",
+  class: className, ...rest
 } = Astro.props;
 
 const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
@@ -28,7 +30,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
     <select
       id={id}
       name={name}
-      class="ink-select"
+      class:list={["ink-select", controlSize !== "md" && `ink-select--${controlSize}`]}
       multiple={multiple || undefined}
       size={size}
       required={required || undefined}

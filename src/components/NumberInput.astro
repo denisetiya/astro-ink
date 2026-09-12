@@ -8,6 +8,7 @@ interface Props {
   min?: number;
   max?: number;
   step?: number;
+  size?: "sm" | "md" | "lg";
   hint?: string;
   error?: string;
   required?: boolean;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const {
-  id, label, name = id, min, max, step, hint, error,
+  id, label, name = id, min, max, step, size = "md", hint, error,
   required = false, disabled = false, placeholder, value, class: className, ...rest
 } = Astro.props;
 
@@ -32,7 +33,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
     name={name}
     type="number"
     inputmode="decimal"
-    class="ink-input"
+    class:list={["ink-input", size !== "md" && `ink-input--${size}`]}
     min={min}
     max={max}
     step={step}

@@ -1,13 +1,21 @@
 ---
 interface Props {
   elevation?: 0 | 1 | 2;
+  orientation?: "vertical" | "horizontal";
+  padding?: "sm" | "md" | "lg";
   class?: string;
 }
 
-const { elevation = 1, class: className, ...rest } = Astro.props;
+const { elevation = 1, orientation = "vertical", padding = "md", class: className, ...rest } = Astro.props;
 ---
 <article
-  class:list={["ink-card", `ink-card--e${elevation}`, className]}
+  class:list={[
+    "ink-card",
+    `ink-card--e${elevation}`,
+    `ink-card--${orientation}`,
+    `ink-card--pad-${padding}`,
+    className,
+  ]}
   {...rest}
 >
   <slot name="media" />
@@ -24,6 +32,8 @@ const { elevation = 1, class: className, ...rest } = Astro.props;
     border: 1px solid var(--ink-border);
     border-radius: var(--ink-radius-lg);
     overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .ink-card--e0 { box-shadow: none; }
@@ -34,6 +44,29 @@ const { elevation = 1, class: className, ...rest } = Astro.props;
     display: grid;
     gap: var(--ink-space-2);
     padding: var(--ink-space-4);
+    min-width: 0;
+  }
+
+  .ink-card--pad-sm .ink-card__body { padding: var(--ink-space-3); }
+  .ink-card--pad-lg .ink-card__body { padding: var(--ink-space-6); }
+
+  .ink-card--horizontal {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+
+  .ink-card--horizontal > :global([slot="media"]) {
+    min-height: 100%;
+  }
+
+  .ink-card--horizontal .ink-card__body {
+    align-content: start;
+  }
+
+  @media (max-width: 28rem) {
+    .ink-card--horizontal {
+      grid-template-columns: 1fr;
+    }
   }
 
   .ink-card__actions {

@@ -13,13 +13,14 @@ interface Props {
   readonly?: boolean;
   placeholder?: string;
   autosize?: boolean;
+  size?: "sm" | "md" | "lg";
   class?: string;
 }
 
 const {
   id, label, name = id, rows = 4, hint, error, required = false,
   disabled = false, readonly = false, placeholder, autosize = false,
-  class: className, ...rest
+  size = "md", class: className, ...rest
 } = Astro.props;
 
 const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
@@ -31,7 +32,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
     id={id}
     name={name}
     rows={rows}
-    class="ink-textarea"
+    class:list={["ink-textarea", size !== "md" && `ink-textarea--${size}`]}
     placeholder={placeholder}
     required={required || undefined}
     disabled={disabled || undefined}

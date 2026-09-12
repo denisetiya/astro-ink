@@ -12,9 +12,25 @@ const { class: className, ...rest } = Astro.props;
 <style>
   .ink-input-group {
     display: flex;
+    align-items: stretch;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .ink-input-group > :global(*) {
+    border-radius: 0;
+    min-width: 0;
+  }
+
+  /* TextField and friends render a Field wrapper: let it take the free
+     space and flatten the inner control's radius to match the addons. */
+  .ink-input-group > :global(.ink-field) {
+    flex: 1 1 auto;
+  }
+
+  .ink-input-group > :global(.ink-field .ink-input),
+  .ink-input-group > :global(.ink-field .ink-select),
+  .ink-input-group > :global(.ink-field .ink-textarea) {
     border-radius: 0;
   }
 
@@ -23,7 +39,21 @@ const { class: className, ...rest } = Astro.props;
     border-bottom-left-radius: var(--ink-radius-md);
   }
 
+  .ink-input-group > :global(:first-child .ink-input),
+  .ink-input-group > :global(:first-child .ink-select),
+  .ink-input-group > :global(:first-child .ink-textarea) {
+    border-top-left-radius: var(--ink-radius-md);
+    border-bottom-left-radius: var(--ink-radius-md);
+  }
+
   .ink-input-group > :global(:last-child) {
+    border-top-right-radius: var(--ink-radius-md);
+    border-bottom-right-radius: var(--ink-radius-md);
+  }
+
+  .ink-input-group > :global(:last-child .ink-input),
+  .ink-input-group > :global(:last-child .ink-select),
+  .ink-input-group > :global(:last-child .ink-textarea) {
     border-top-right-radius: var(--ink-radius-md);
     border-bottom-right-radius: var(--ink-radius-md);
   }

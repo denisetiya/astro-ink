@@ -53,6 +53,8 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
   .ink-otp {
     display: grid;
     gap: var(--ink-space-1);
+    min-width: 0;
+    max-width: 100%;
   }
 
   .ink-otp__label {
@@ -62,7 +64,10 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolea
 
   .ink-otp__boxes {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--ink-space-2);
+    min-width: 0;
+    max-width: 100%;
   }
 
   .ink-otp__box {

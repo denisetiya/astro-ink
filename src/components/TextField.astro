@@ -6,6 +6,7 @@ interface Props {
   label: string;
   name?: string;
   type?: string;
+  size?: "sm" | "md" | "lg";
   hint?: string;
   error?: string;
   required?: boolean;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const {
-  id, label, name = id, type = "text", hint, error,
+  id, label, name = id, type = "text", size = "md", hint, error,
   required = false, disabled = false, readonly = false, hideLabel = false,
   placeholder, value, class: className, ...rest
 } = Astro.props;
@@ -32,7 +33,7 @@ const describedBy = [hint && `${id}-hint`, error && `${id}-error`]
     id={id}
     name={name}
     type={type}
-    class="ink-input"
+    class:list={["ink-input", size !== "md" && `ink-input--${size}`]}
     value={value}
     placeholder={placeholder}
     required={required || undefined}
