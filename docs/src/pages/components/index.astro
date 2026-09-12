@@ -1,159 +1,195 @@
 ---
 import Base from "../../layouts/Base.astro";
+import { Alert, Avatar, Badge, Button, Chip, Progress, Spinner, TextField } from "astro-ink";
 ---
-<Base title="Components">
+<Base title="Components" description="Every astro-ink component with a live demo, snippet, props table, and accessibility notes.">
   <div class="docs-page">
     <h1>Components</h1>
     <p class="docs-lede">
-      Every catalog component, with live examples.
+      116 pages, each running the real component. Dismiss the alert below,
+      remove a chip, fill the field: nothing here is a screenshot.
     </p>
 
-    <h2>Available now</h2>
+    <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Try now · live specimens</span>
+      <Button href="/components/button">Button</Button>
+      <Badge variant="accent">Badge</Badge>
+      <Chip removable itemLabel="Demo chip">Demo chip</Chip>
+      <Spinner size="sm" label="Saving demo" />
+      <TextField id="catalog-search-hint" label="Field" placeholder="Type here" hideLabel />
+    </div>
+    <div class="docs-example docs-example--grid">
+      <span class="docs-example-label" aria-hidden="true">Alert + Progress · live</span>
+      <Alert variant="info" dismissible>Dismiss me: the close button removes this alert.</Alert>
+      <Progress label="Demo progress" value={65} showValue />
+      <Avatar fallback="IN" />
+    </div>
 
-    <h3>Foundation</h3>
-    <ul class="docs-list">
-      <li><a href="/components/alert">Alert</a></li>
-      <li><a href="/components/badge">Badge</a></li>
-      <li><a href="/components/button">Button</a></li>
-      <li><a href="/components/container">Container</a></li>
-      <li><a href="/components/visually-hidden">VisuallyHidden</a></li>
-    </ul>
+    <h2>Foundation</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/alert">Alert</a><p>Contextual feedback with info, success, warning, danger. Tint, filled, or outline; dismissible with an event.</p><div class="docs-cat-demo"><Alert variant="success">Saved.</Alert></div></div>
+      <div class="docs-cat-card"><a href="/components/badge">Badge</a><p>Small status or count label. Six semantic colors, solid or outline.</p><div class="docs-cat-demo"><Badge>Neutral</Badge><Badge variant="accent">Accent</Badge><Badge variant="danger" style="outline">Danger</Badge></div></div>
+      <div class="docs-cat-card"><a href="/components/button">Button</a><p>Action trigger. Renders button or anchor; six variants, three sizes, honest disabled state.</p><div class="docs-cat-demo"><Button>Primary</Button><Button variant="soft">Soft</Button><Button variant="outline">Outline</Button></div></div>
+      <div class="docs-cat-card"><a href="/components/container">Container</a><p>Centered content column with a max width. The quiet layout primitive.</p></div>
+      <div class="docs-cat-card"><a href="/components/visually-hidden">VisuallyHidden</a><p>Hides content visually while keeping it in the accessibility tree.</p></div>
+    </div>
 
-    <h3>Forms</h3>
-    <ul class="docs-list">
-      <li><a href="/components/autocomplete">Autocomplete</a></li>
-      <li><a href="/components/button-group">ButtonGroup</a></li>
-      <li><a href="/components/cascader">Cascader</a></li>
-      <li><a href="/components/checkbox">Checkbox</a></li>
-      <li><a href="/components/checkbox-group">CheckboxGroup</a></li>
-      <li><a href="/components/color-picker">ColorPicker</a></li>
-      <li><a href="/components/combobox">Combobox</a></li>
-      <li><a href="/components/fab">Fab</a></li>
-      <li><a href="/components/field">Field</a></li>
-      <li><a href="/components/file">File</a></li>
-      <li><a href="/components/form">Form</a></li>
-      <li><a href="/components/icon-button">IconButton</a></li>
-      <li><a href="/components/input-group">InputGroup</a></li>
-      <li><a href="/components/multi-select">MultiSelect</a></li>
-      <li><a href="/components/number-input">NumberInput</a></li>
-      <li><a href="/components/otp-input">OTPInput</a></li>
-      <li><a href="/components/password-input">PasswordInput</a></li>
-      <li><a href="/components/radio-group">RadioGroup</a></li>
-      <li><a href="/components/rating">Rating</a></li>
-      <li><a href="/components/search-input">SearchInput</a></li>
-      <li><a href="/components/segmented-control">SegmentedControl</a></li>
-      <li><a href="/components/select">Select</a></li>
-      <li><a href="/components/slider">Slider</a></li>
-      <li><a href="/components/switch">Switch</a></li>
-      <li><a href="/components/tag-input">TagInput</a></li>
-      <li><a href="/components/text-field">TextField</a></li>
-      <li><a href="/components/textarea">Textarea</a></li>
-      <li><a href="/components/toggle-button">ToggleButton</a></li>
-      <li><a href="/components/transfer-list">TransferList</a></li>
-      <li><a href="/components/tree-select">TreeSelect</a></li>
-    </ul>
+    <h2>Forms</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/autocomplete">Autocomplete</a><p>Text input with a filtered suggestion listbox and full keyboard support.</p></div>
+      <div class="docs-cat-card"><a href="/components/button-group">ButtonGroup</a><p>Row of related buttons, spaced or segmented into one joined unit.</p></div>
+      <div class="docs-cat-card"><a href="/components/cascader">Cascader</a><p>Multi-level picker: drill through nested options one column at a time.</p></div>
+      <div class="docs-cat-card"><a href="/components/checkbox">Checkbox</a><p>Single boolean with label, hint, error, and indeterminate support.</p></div>
+      <div class="docs-cat-card"><a href="/components/checkbox-group">CheckboxGroup</a><p>Many booleans under one fieldset legend with shared validation.</p></div>
+      <div class="docs-cat-card"><a href="/components/color-picker">ColorPicker</a><p>Native swatch plus hex field with validation, plus optional presets.</p></div>
+      <div class="docs-cat-card"><a href="/components/combobox">Combobox</a><p>Type-to-filter select with listbox semantics and clear button.</p></div>
+      <div class="docs-cat-card"><a href="/components/fab">Fab</a><p>Floating action button pinned to a corner; round or extended with label.</p></div>
+      <div class="docs-cat-card"><a href="/components/field">Field</a><p>Label, hint, and error wiring every input builds on. Use it for custom controls.</p></div>
+      <div class="docs-cat-card"><a href="/components/file">File</a><p>File input with dropzone mode, file list, and size/type hints.</p></div>
+      <div class="docs-cat-card"><a href="/components/form">Form</a><p>Native form with validation orchestration: blocks bad submits, focuses first error.</p></div>
+      <div class="docs-cat-card"><a href="/components/icon-button">IconButton</a><p>Square button for icon-only actions with a required accessible label.</p></div>
+      <div class="docs-cat-card"><a href="/components/input-group">InputGroup</a><p>Joins addons and controls into one unit: prefixes, suffixes, attached buttons.</p></div>
+      <div class="docs-cat-card"><a href="/components/multi-select">MultiSelect</a><p>Checkbox dropdown with chip summary and select-all.</p></div>
+      <div class="docs-cat-card"><a href="/components/number-input">NumberInput</a><p>Numeric field with native spinners, decimal mobile keyboard, sm/md/lg sizes.</p></div>
+      <div class="docs-cat-card"><a href="/components/otp-input">OTPInput</a><p>One-time-code boxes with auto-advance, backspace travel, and paste split.</p></div>
+      <div class="docs-cat-card"><a href="/components/password-input">PasswordInput</a><p>Password field with a stateful show/hide toggle button.</p></div>
+      <div class="docs-cat-card"><a href="/components/radio-group">RadioGroup</a><p>One choice of many in a real fieldset with legend.</p></div>
+      <div class="docs-cat-card"><a href="/components/rating">Rating</a><p>Star rating input with keyboard stepping and clear semantics.</p></div>
+      <div class="docs-cat-card"><a href="/components/search-input">SearchInput</a><p>Search box with a clear button that appears only when useful.</p></div>
+      <div class="docs-cat-card"><a href="/components/segmented-control">SegmentedControl</a><p>Exclusive option strip; radios under the hood, pill visuals on top.</p></div>
+      <div class="docs-cat-card"><a href="/components/select">Select</a><p>Styled native select with optgroup support and size variants.</p></div>
+      <div class="docs-cat-card"><a href="/components/slider">Slider</a><p>Single and range sliders with fill track and value readout.</p></div>
+      <div class="docs-cat-card"><a href="/components/switch">Switch</a><p>On/off toggle with label and generous hit area.</p></div>
+      <div class="docs-cat-card"><a href="/components/tag-input">TagInput</a><p>Type, Enter, done: freeform tags with dedupe, max, and remove buttons.</p></div>
+      <div class="docs-cat-card"><a href="/components/text-field">TextField</a><p>The base text input: label, hint, error, sm/md/lg sizes.</p><div class="docs-cat-demo"><TextField id="cat-text" label="Name" placeholder="Ada" hideLabel /></div></div>
+      <div class="docs-cat-card"><a href="/components/textarea">Textarea</a><p>Multi-line input with optional autosize growth.</p></div>
+      <div class="docs-cat-card"><a href="/components/toggle-button">ToggleButton</a><p>Pressed-state button, standalone or in exclusive groups.</p></div>
+      <div class="docs-cat-card"><a href="/components/transfer-list">TransferList</a><p>Move items between two columns with search and counters.</p></div>
+      <div class="docs-cat-card"><a href="/components/tree-select">TreeSelect</a><p>Hierarchical picker with expandable branches and breadcrumbs.</p></div>
+    </div>
 
-    <h3>Date &amp; time</h3>
-    <ul class="docs-list">
-      <li><a href="/components/calendar">Calendar</a></li>
-      <li><a href="/components/date-picker">DatePicker</a></li>
-      <li><a href="/components/date-range-picker">DateRangePicker</a></li>
-      <li><a href="/components/date-time-picker">DateTimePicker</a></li>
-      <li><a href="/components/time-picker">TimePicker</a></li>
-    </ul>
-    <h3>Navigation</h3>
-    <ul class="docs-list">
-      <li><a href="/components/anchor">Anchor</a></li>
-      <li><a href="/components/bottom-navigation">BottomNavigation</a></li>
-      <li><a href="/components/breadcrumbs">Breadcrumbs</a></li>
-      <li><a href="/components/command-menu">CommandMenu</a></li>
-      <li><a href="/components/context-menu">ContextMenu</a></li>
-      <li><a href="/components/drawer">Drawer</a></li>
-      <li><a href="/components/link">Link</a></li>
-      <li><a href="/components/menu">Menu</a></li>
-      <li><a href="/components/menubar">Menubar</a></li>
-      <li><a href="/components/navigation-menu">NavigationMenu</a></li>
-      <li><a href="/components/navbar">Navbar</a></li>
-      <li><a href="/components/pagination">Pagination</a></li>
-      <li><a href="/components/sheet">Sheet</a></li>
-      <li><a href="/components/sidebar">Sidebar</a></li>
-      <li><a href="/components/speed-dial">SpeedDial</a></li>
-      <li><a href="/components/stepper">Stepper</a></li>
-      <li><a href="/components/tabs">Tabs</a></li>
-      <li><a href="/components/tour">Tour</a></li>
-    </ul>
+    <h2>Date and time</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/calendar">Calendar</a><p>Month grid with single-date selection and keyboard travel.</p></div>
+      <div class="docs-cat-card"><a href="/components/date-picker">DatePicker</a><p>Calendar popup anchored to a text field with formatted output.</p></div>
+      <div class="docs-cat-card"><a href="/components/date-range-picker">DateRangePicker</a><p>Two-date selection with range highlight and presets.</p></div>
+      <div class="docs-cat-card"><a href="/components/date-time-picker">DateTimePicker</a><p>Date plus time in one control with combined validation.</p></div>
+      <div class="docs-cat-card"><a href="/components/time-picker">TimePicker</a><p>Hour/minute selection with native fallback and step control.</p></div>
+    </div>
 
-    <h3>Overlay &amp; Feedback</h3>
-    <ul class="docs-list">
-      <li><a href="/components/backdrop">Backdrop</a></li>
-      <li><a href="/components/banner">Banner</a></li>
-      <li><a href="/components/callout">Callout</a></li>
-      <li><a href="/components/confirm-dialog">ConfirmDialog</a></li>
-      <li><a href="/components/copy-button">CopyButton</a></li>
-      <li><a href="/components/dialog">Dialog</a></li>
-      <li><a href="/components/empty-state">EmptyState</a></li>
-      <li><a href="/components/hover-card">HoverCard</a></li>
-      <li><a href="/components/loading-overlay">LoadingOverlay</a></li>
-      <li><a href="/components/popover">Popover</a></li>
-      <li><a href="/components/progress">Progress</a></li>
-      <li><a href="/components/progress-ring">ProgressRing</a></li>
-      <li><a href="/components/result">Result</a></li>
-      <li><a href="/components/skip-link">SkipLink</a></li>
-      <li><a href="/components/spinner">Spinner</a></li>
-      <li><a href="/components/toast">Toast</a></li>
-    </ul>
+    <h2>Navigation</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/anchor">Anchor</a><p>Scrollspy link that tracks the visible section and marks itself current.</p></div>
+      <div class="docs-cat-card"><a href="/components/bottom-navigation">BottomNavigation</a><p>Thumb-reach tab bar for small screens with active indicator.</p></div>
+      <div class="docs-cat-card"><a href="/components/breadcrumbs">Breadcrumbs</a><p>Hierarchy trail with collapsed middle and aria-current on the page.</p></div>
+      <div class="docs-cat-card"><a href="/components/command-menu">CommandMenu</a><p>Keyboard-first palette: filter actions, run with Enter.</p></div>
+      <div class="docs-cat-card"><a href="/components/context-menu">ContextMenu</a><p>Right-click menu positioned by the Popper utility.</p></div>
+      <div class="docs-cat-card"><a href="/components/drawer">Drawer</a><p>Side panel with focus trap, Escape close, and overlay.</p></div>
+      <div class="docs-cat-card"><a href="/components/link">Link</a><p>Body link with consistent underline offset and visited tone.</p></div>
+      <div class="docs-cat-card"><a href="/components/menu">Menu</a><p>Dropdown list with roving focus and submenu support.</p></div>
+      <div class="docs-cat-card"><a href="/components/menubar">Menubar</a><p>Desktop-style menu bar with arrow-key travel across menus.</p></div>
+      <div class="docs-cat-card"><a href="/components/navigation-menu">NavigationMenu</a><p>Top nav with hover panels for grouped destinations.</p></div>
+      <div class="docs-cat-card"><a href="/components/navbar">Navbar</a><p>Site header with mobile toggle and sticky option.</p></div>
+      <div class="docs-cat-card"><a href="/components/pagination">Pagination</a><p>Page controls with ellipsis logic and first/last shortcuts.</p></div>
+      <div class="docs-cat-card"><a href="/components/sheet">Sheet</a><p>Bottom sheet that slides up on mobile, dialogs on desktop.</p></div>
+      <div class="docs-cat-card"><a href="/components/sidebar">Sidebar</a><p>App rail with collapsible groups and current-page marking.</p></div>
+      <div class="docs-cat-card"><a href="/components/speed-dial">SpeedDial</a><p>One button that blooms into related quick actions.</p></div>
+      <div class="docs-cat-card"><a href="/components/stepper">Stepper</a><p>Numbered progress through a multi-step flow with states.</p></div>
+      <div class="docs-cat-card"><a href="/components/tabs">Tabs</a><p>Underline, pill, or boxed tab lists with automatic activation.</p></div>
+      <div class="docs-cat-card"><a href="/components/tour">Tour</a><p>Guided highlights that walk a newcomer through the interface.</p></div>
+    </div>
 
-    <h3>Surfaces &amp; Layout</h3>
-    <ul class="docs-list">
-      <li><a href="/components/affix">Affix</a></li>
-      <li><a href="/components/app-shell">AppShell</a></li>
-      <li><a href="/components/aspect-ratio">AspectRatio</a></li>
-      <li><a href="/components/chip">Chip</a></li>
-      <li><a href="/components/divider">Divider</a></li>
-      <li><a href="/components/grid">Grid</a></li>
-      <li><a href="/components/kbd">Kbd</a></li>
-      <li><a href="/components/page-header">PageHeader</a></li>
-      <li><a href="/components/paper">Paper</a></li>
-      <li><a href="/components/scroll-area">ScrollArea</a></li>
-      <li><a href="/components/scroll-shadow">ScrollShadow</a></li>
-      <li><a href="/components/splitter">Splitter</a></li>
-      <li><a href="/components/stack">Stack</a></li>
-    </ul>
+    <h2>Overlay and feedback</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/backdrop">Backdrop</a><p>Dim layer behind modals; click behavior is explicit per parent.</p></div>
+      <div class="docs-cat-card"><a href="/components/banner">Banner</a><p>Full-width notice pinned to the top of a page or app.</p></div>
+      <div class="docs-cat-card"><a href="/components/callout">Callout</a><p>Semantic side note with an accent edge; tint or filled.</p></div>
+      <div class="docs-cat-card"><a href="/components/confirm-dialog">ConfirmDialog</a><p>Destructive-action guard with explicit confirm and cancel.</p></div>
+      <div class="docs-cat-card"><a href="/components/copy-button">CopyButton</a><p>Clipboard copy with copied feedback and fallback text.</p></div>
+      <div class="docs-cat-card"><a href="/components/dialog">Dialog</a><p>Modal with focus trap, Escape close, and labelled regions.</p></div>
+      <div class="docs-cat-card"><a href="/components/empty-state">EmptyState</a><p>First-run screen with icon slot, cause, and the one action that fills it.</p></div>
+      <div class="docs-cat-card"><a href="/components/hover-card">HoverCard</a><p>Rich preview on hover with pointer-safe delays.</p></div>
+      <div class="docs-cat-card"><a href="/components/loading-overlay">LoadingOverlay</a><p>Blocks a region while work runs, with spinner and message.</p></div>
+      <div class="docs-cat-card"><a href="/components/popover">Popover</a><p>Anchored floating panel with click-away and Escape handling.</p></div>
+      <div class="docs-cat-card"><a href="/components/progress">Progress</a><p>Determinate bar with tones and sizes, or indeterminate animation.</p><div class="docs-cat-demo"><Progress label="Demo" value={65} /></div></div>
+      <div class="docs-cat-card"><a href="/components/progress-ring">ProgressRing</a><p>Circular progress for compact spaces and avatars.</p></div>
+      <div class="docs-cat-card"><a href="/components/result">Result</a><p>Outcome screen: success, error, or info with next actions.</p></div>
+      <div class="docs-cat-card"><a href="/components/skip-link">SkipLink</a><p>Keyboard shortcut past navigation straight to content.</p></div>
+      <div class="docs-cat-card"><a href="/components/spinner">Spinner</a><p>Indeterminate ring for work with no finish line.</p><div class="docs-cat-demo"><Spinner size="sm" label="Loading demo" /></div></div>
+      <div class="docs-cat-card"><a href="/components/toast">Toast</a><p>Transient notification with queue, timeout, and action slot.</p></div>
+    </div>
 
-    <h3>Charts</h3>
-    <ul class="docs-list">
-      <li><a href="/components/area-chart">AreaChart</a></li>
-      <li><a href="/components/bar-chart">BarChart</a></li>
-      <li><a href="/components/gauge">Gauge</a></li>
-      <li><a href="/components/line-chart">LineChart</a></li>
-      <li><a href="/components/pie-chart">PieChart</a></li>
-      <li><a href="/components/radar-chart">RadarChart</a></li>
-      <li><a href="/components/scatter-chart">ScatterChart</a></li>
-      <li><a href="/components/sparkline">Sparkline</a></li>
-    </ul>
+    <h2>Surfaces and layout</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/affix">Affix</a><p>Pins an element while the page scrolls past it.</p></div>
+      <div class="docs-cat-card"><a href="/components/app-shell">AppShell</a><p>Header, sidebar, and main landmarks wired as one layout.</p></div>
+      <div class="docs-cat-card"><a href="/components/aspect-ratio">AspectRatio</a><p>Box that holds a ratio for media embeds.</p></div>
+      <div class="docs-cat-card"><a href="/components/chip">Chip</a><p>Compact tag for filters and selections; removable with an event.</p><div class="docs-cat-demo"><Chip>Alpha</Chip><Chip variant="accent" style="outline">Accent</Chip></div></div>
+      <div class="docs-cat-card"><a href="/components/divider">Divider</a><p>Horizontal or vertical rule with optional label.</p></div>
+      <div class="docs-cat-card"><a href="/components/grid">Grid</a><p>Twelve-column responsive grid with gap control.</p></div>
+      <div class="docs-cat-card"><a href="/components/kbd">Kbd</a><p>Keyboard shortcut glyph with correct semantics.</p></div>
+      <div class="docs-cat-card"><a href="/components/page-header">PageHeader</a><p>Title, description, and actions block for the top of a page.</p></div>
+      <div class="docs-cat-card"><a href="/components/paper">Paper</a><p>Elevated surface with padding and elevation levels.</p></div>
+      <div class="docs-cat-card"><a href="/components/scroll-area">ScrollArea</a><p>Bounded scroll region with styled bars.</p></div>
+      <div class="docs-cat-card"><a href="/components/scroll-shadow">ScrollShadow</a><p>Edge shadows that hint at more content offscreen.</p></div>
+      <div class="docs-cat-card"><a href="/components/splitter">Splitter</a><p>Draggable divider between resizable panes.</p></div>
+      <div class="docs-cat-card"><a href="/components/stack">Stack</a><p>Vertical or horizontal flow with spacing scale.</p></div>
+    </div>
 
-    <h3>Data display</h3>
+    <h2>Charts</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/area-chart">AreaChart</a><p>Filled series over time with accessible data table fallback.</p></div>
+      <div class="docs-cat-card"><a href="/components/bar-chart">BarChart</a><p>Grouped bars with value labels and keyboard-readable data.</p></div>
+      <div class="docs-cat-card"><a href="/components/gauge">Gauge</a><p>Single metric against a range with threshold zones.</p></div>
+      <div class="docs-cat-card"><a href="/components/line-chart">LineChart</a><p>Multi-series lines with points and legend.</p></div>
+      <div class="docs-cat-card"><a href="/components/pie-chart">PieChart</a><p>Parts of a whole with segment labels and donut mode.</p></div>
+      <div class="docs-cat-card"><a href="/components/radar-chart">RadarChart</a><p>Multi-axis comparison on a spider grid.</p></div>
+      <div class="docs-cat-card"><a href="/components/scatter-chart">ScatterChart</a><p>Two-variable points with axis scales.</p></div>
+      <div class="docs-cat-card"><a href="/components/sparkline">Sparkline</a><p>Word-sized trend line with no script.</p></div>
+    </div>
+
+    <h2>Data display</h2>
+    <div class="docs-cat-grid">
+      <div class="docs-cat-card"><a href="/components/accordion">Accordion</a><p>Stacked collapsible sections, independent or exclusive.</p></div>
+      <div class="docs-cat-card"><a href="/components/avatar">Avatar</a><p>Photo or initials in four sizes, sm through xl.</p><div class="docs-cat-demo"><Avatar fallback="AL" /><Avatar fallback="GK" size="sm" /></div></div>
+      <div class="docs-cat-card"><a href="/components/avatar-group">AvatarGroup</a><p>Overlapping member stack with overflow counter and sizes.</p></div>
+      <div class="docs-cat-card"><a href="/components/blockquote">Blockquote</a><p>Quoted passage with citation support.</p></div>
+      <div class="docs-cat-card"><a href="/components/card">Card</a><p>Content tile with media, header, body, actions; vertical or horizontal.</p></div>
+      <div class="docs-cat-card"><a href="/components/carousel">Carousel</a><p>Slide region with arrows, dots, and autoplay that respects reduced motion.</p></div>
+      <div class="docs-cat-card"><a href="/components/code-block">CodeBlock</a><p>Preformatted code with language label and copy support.</p></div>
+      <div class="docs-cat-card"><a href="/components/data-grid">DataGrid</a><p>Sortable, filterable, selectable table with pagination.</p></div>
+      <div class="docs-cat-card"><a href="/components/descriptions">Descriptions</a><p>Term-definition pairs for detail pages.</p></div>
+      <div class="docs-cat-card"><a href="/components/highlight">Highlight</a><p>Marks search matches inside a passage.</p></div>
+      <div class="docs-cat-card"><a href="/components/image-list">ImageList</a><p>Uniform image grid with captions and loading states.</p></div>
+      <div class="docs-cat-card"><a href="/components/list">List</a><p>Linked or text rows with selected and disabled states.</p></div>
+      <div class="docs-cat-card"><a href="/components/skeleton">Skeleton</a><p>Loading placeholder in text, rect, or circular shape.</p></div>
+      <div class="docs-cat-card"><a href="/components/spoiler">Spoiler</a><p>Hidden content revealed on explicit user action.</p></div>
+      <div class="docs-cat-card"><a href="/components/statistic">Statistic</a><p>Labeled number with delta and trend direction.</p></div>
+      <div class="docs-cat-card"><a href="/components/table">Table</a><p>Semantic table with sticky headers, stripes, and scroll wrapper.</p></div>
+      <div class="docs-cat-card"><a href="/components/timeline">Timeline</a><p>Ordered events with real dates on a left rail.</p></div>
+      <div class="docs-cat-card"><a href="/components/tooltip">Tooltip</a><p>Hover and focus hint anchored to any element.</p></div>
+      <div class="docs-cat-card"><a href="/components/tree-view">TreeView</a><p>Nested tree with full arrow-key travel and roving tabindex.</p></div>
+      <div class="docs-cat-card"><a href="/components/typography">Typography</a><p>Scale, prose measure, and heading rhythm in one place.</p></div>
+    </div>
+
+    <h2>Subparts</h2>
+    <p>
+      These ship with their parents and are documented there:
+      <code>AccordionItem</code> (Accordion), <code>ListItem</code> (List),
+      <code>Radio</code> (RadioGroup), <code>TableHead</code>,
+      <code>TableBody</code>, <code>TableRow</code>, <code>TableCell</code>
+      (Table), <code>TimelineItem</code> (Timeline), <code>TreeItem</code>
+      (TreeView).
+    </p>
+
+    <h2>Utilities (script guidance, no pages)</h2>
     <ul class="docs-list">
-      <li><a href="/components/accordion">Accordion</a></li>
-      <li><a href="/components/avatar">Avatar</a></li>
-      <li><a href="/components/avatar-group">AvatarGroup</a></li>
-      <li><a href="/components/blockquote">Blockquote</a></li>
-      <li><a href="/components/card">Card</a></li>
-      <li><a href="/components/carousel">Carousel</a></li>
-      <li><a href="/components/code-block">CodeBlock</a></li>
-      <li><a href="/components/data-grid">DataGrid</a></li>
-      <li><a href="/components/descriptions">Descriptions</a></li>
-      <li><a href="/components/highlight">Highlight</a></li>
-      <li><a href="/components/image-list">ImageList</a></li>
-      <li><a href="/components/list">List</a></li>
-      <li><a href="/components/skeleton">Skeleton</a></li>
-      <li><a href="/components/spoiler">Spoiler</a></li>
-      <li><a href="/components/statistic">Statistic</a></li>
-      <li><a href="/components/table">Table</a></li>
-      <li><a href="/components/timeline">Timeline</a></li>
-      <li><a href="/components/tooltip">Tooltip</a></li>
-      <li><a href="/components/tree-view">TreeView</a></li>
-      <li><a href="/components/typography">Typography</a></li>
+      <li><code>Portal</code>: <code>src/scripts/portal.ts</code>, reparent a node into another root.</li>
+      <li><code>Popper</code>: <code>src/scripts/popper.ts</code>, position a floating panel near an anchor.</li>
+      <li><code>ClickAwayListener</code>: <code>src/scripts/clickaway.ts</code>, close on outside pointer or Escape.</li>
+      <li><code>FocusTrap</code>: <code>src/scripts/focus-trap.ts</code>, keep Tab inside a modal.</li>
+      <li><code>Icon</code>: inline SVG in slots such as <code>EmptyState slot="icon"</code>.</li>
+      <li><code>CSS Baseline</code>: <code>src/styles/base.css</code>, light reset plus focus and motion defaults.</li>
     </ul>
   </div>
 </Base>

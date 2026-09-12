@@ -116,9 +116,12 @@ import "astro-ink/styles/themes/dark.css";</code></pre>
 
     <h2>Presets</h2>
     <p>
-      Three preset themes ship with the library: the default Paper and Ink
+      Eight preset themes ship with the library: the default Paper and Ink
       light theme, the <code>dark</code> theme, plus <code>midnight</code>
-      (dark-first electric) and <code>brutal</code> (neo-brutalist light).
+      (dark-first electric), <code>brutal</code> (neo-brutalist light),
+      <code>forest</code> (green-tinted light), <code>ocean</code> (deep-sea
+      dark), <code>ember</code> (warm hearth dark), <code>plum</code> (violet
+      light), and <code>slate</code> (graphite dark with amber accent).
       Each preset is one import of token overrides, one theme per page:
     </p>
     <pre class="docs-code"><code>import "astro-ink/styles/tokens.css";
@@ -126,24 +129,45 @@ import "astro-ink/styles/base.css";
 // pick one preset (or none for the default light theme):
 import "astro-ink/styles/themes/dark.css";
 import "astro-ink/styles/themes/midnight.css";
-import "astro-ink/styles/themes/brutal.css";</code></pre>
+import "astro-ink/styles/themes/brutal.css";
+import "astro-ink/styles/themes/forest.css";
+import "astro-ink/styles/themes/ocean.css";
+import "astro-ink/styles/themes/ember.css";
+import "astro-ink/styles/themes/plum.css";
+import "astro-ink/styles/themes/slate.css";</code></pre>
     <pre class="docs-code"><code>document.documentElement.dataset.theme = "midnight";
-// or: "light", "dark", "brutal"</code></pre>
-    <p>Try them on this page (demo only, persisted like the header toggle):</p>
-    <div class="docs-example">
-      <button type="button" class="docs-preview-btn" data-preview-theme="light">Preview light</button>
-      <button type="button" class="docs-preview-btn" data-preview-theme="midnight">Preview midnight</button>
-      <button type="button" class="docs-preview-btn" data-preview-theme="brutal">Preview brutal</button>
+// or: "light", "dark", "brutal", "forest", "ocean", "ember", "plum", "slate"</code></pre>
+    <p>Try them on this page (demo only, persisted like the header toggle). Each card applies its theme on click:</p>
+    <div class="docs-theme-grid">
+      <button type="button" class="docs-theme-card" data-preview-theme="light" aria-label="Preview light"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #faf7f2;"></span><span style="background: #ffffff;"></span><span style="background: #c2410c;"></span></span><span class="docs-theme-name">Light</span><span class="docs-theme-desc">Paper and Ink, the default</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="dark" aria-label="Preview dark"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #171412;"></span><span style="background: #201c19;"></span><span style="background: #ea580c;"></span></span><span class="docs-theme-name">Dark</span><span class="docs-theme-desc">Warm charcoal</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="midnight" aria-label="Preview midnight"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #0b0f1a;"></span><span style="background: #131a2b;"></span><span style="background: #38bdf8;"></span></span><span class="docs-theme-name">Midnight</span><span class="docs-theme-desc">Dark-first electric</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="brutal" aria-label="Preview brutal"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #ffffff;"></span><span style="background: #ffffff;"></span><span style="background: #c22e00;"></span></span><span class="docs-theme-name">Brutal</span><span class="docs-theme-desc">Neo-brutalist squares</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="forest" aria-label="Preview forest"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #f4f7f2;"></span><span style="background: #ffffff;"></span><span style="background: #166534;"></span></span><span class="docs-theme-name">Forest</span><span class="docs-theme-desc">Green-tinted paper</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="ocean" aria-label="Preview ocean"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #0a1628;"></span><span style="background: #10233d;"></span><span style="background: #38bdf8;"></span></span><span class="docs-theme-name">Ocean</span><span class="docs-theme-desc">Deep-sea dark</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="ember" aria-label="Preview ember"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #1c1410;"></span><span style="background: #2b211a;"></span><span style="background: #fb923c;"></span></span><span class="docs-theme-name">Ember</span><span class="docs-theme-desc">Warm hearth dark</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="plum" aria-label="Preview plum"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #faf5fa;"></span><span style="background: #ffffff;"></span><span style="background: #86198f;"></span></span><span class="docs-theme-name">Plum</span><span class="docs-theme-desc">Soft violet paper</span></button>
+      <button type="button" class="docs-theme-card" data-preview-theme="slate" aria-label="Preview slate"><span class="docs-theme-swatches" aria-hidden="true"><span style="background: #0f172a;"></span><span style="background: #1e293b;"></span><span style="background: #fbbf24;"></span></span><span class="docs-theme-name">Slate</span><span class="docs-theme-desc">Graphite with amber</span></button>
     </div>
   </div>
 </Base>
 
 <script>
+  const syncThemeCards = () => {
+    const current = document.documentElement.dataset.theme ?? "light";
+    document.querySelectorAll("[data-preview-theme]").forEach((btn) => {
+      if (btn instanceof HTMLButtonElement) {
+        btn.setAttribute("aria-pressed", String(btn.getAttribute("data-preview-theme") === current));
+      }
+    });
+  };
   document.querySelectorAll("[data-preview-theme]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const theme = btn.getAttribute("data-preview-theme") ?? "light";
       document.documentElement.dataset.theme = theme;
       localStorage.setItem("ink-theme", theme);
+      syncThemeCards();
     });
   });
+  syncThemeCards();
 </script>

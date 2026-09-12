@@ -1,51 +1,70 @@
 ---
 import Base from "../layouts/Base.astro";
-import { Button, Alert, Sparkline } from "astro-ink";
+import { Alert, Badge, Button, Card, TextField } from "astro-ink";
 
 const signups = [8, 12, 10, 16, 14, 22, 19, 26, 24, 30, 36, 42];
 ---
 <Base title="Home">
   <div class="docs-page">
-    <h1>astro-ink</h1>
-    <p class="docs-lede">
-      Lightweight, token-driven UI components for Astro. Server-rendered, zero
-      dependencies, fully themeable through CSS custom properties. Components
-      only ship the CSS and script they need.
-    </p>
-    <p>
-      120 catalog components. <a href="/components">Browse the full index</a>.
-    </p>
+    <section class="docs-hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">UI for Astro that stays light.</h1>
+      <p class="docs-lede">
+        astro-ink ships 120 token-driven components. Server-rendered, zero
+        dependencies. Each page on this site runs the real component, not a
+        screenshot: dismiss the alert, toggle the theme, sort the grid.
+      </p>
+      <div class="docs-hero-actions">
+        <Button href="/components">Browse all components</Button>
+        <Button href="/guides/theming" variant="secondary">Read the theming guide</Button>
+        <Button href="/components/button" variant="ghost">Start with Button</Button>
+      </div>
+      <ul class="docs-stats" aria-label="Library facts">
+        <li><strong>120</strong><span>catalog components</span></li>
+        <li><strong>9</strong><span>preset themes</span></li>
+        <li><strong>0</strong><span>runtime dependencies</span></li>
+        <li><strong>100</strong><span>Lighthouse a11y gate</span></li>
+      </ul>
+    </section>
 
-    <h2>Try them here</h2>
-    <p>
-      Everything below is a real component running on this page, not a
-      screenshot. The dismiss button removes the alert. The buttons go to
-      real pages. The chart below draws from sample data.
-    </p>
+    <section class="docs-band" aria-labelledby="live-title">
+      <h2 id="live-title" class="docs-section-title">Live on this page</h2>
+      <div class="docs-example docs-example--grid">
+        <span class="docs-example-label" aria-hidden="true">Alert · dismissible</span>
+        <Alert variant="success" dismissible>
+          <strong>Saved.</strong> Use the close button: the alert removes itself and fires <code>ink:alert:dismiss</code>.
+        </Alert>
+      </div>
+      <div class="docs-example">
+        <span class="docs-example-label" aria-hidden="true">Badge · form control · card action</span>
+        <Badge variant="accent">v1.0</Badge>
+        <TextField id="hero-email" label="Email" type="email" placeholder="you@example.com" />
+        <Button href="/components/text-field" variant="secondary">See TextField</Button>
+      </div>
+      <div class="docs-example docs-example--grid">
+        <span class="docs-example-label" aria-hidden="true">Card · horizontal</span>
+        <Card orientation="horizontal">
+          <div slot="media" style="width: 8rem; min-height: 100%; display: grid; place-content: center; background: color-mix(in srgb, var(--ink-accent) 15%, var(--ink-surface)); color: var(--ink-muted); font-size: var(--ink-text-sm);">Cover</div>
+          <h3 slot="header">Field guide</h3>
+          <p style="font-size: var(--ink-text-sm); color: var(--ink-muted);">Twelve chapters on interfaces that earn trust. Media docks left, stacks on narrow screens.</p>
+          <Button slot="actions" href="/components/card">Read the Card page</Button>
+        </Card>
+      </div>
+      <p style="font-size: var(--ink-text-sm); color: var(--ink-muted); max-width: 70ch;">
+        Sample chart data below is static and labeled as such; component counts come from
+        <code>scripts/spec-coverage.py</code> (120/120 at release).
+      </p>
+    </section>
 
-    <h3>Buttons</h3>
-    <div class="docs-example">
-      <Button href="/components">Browse components</Button>
-      <Button href="/guides/theming" variant="secondary">Read the theming guide</Button>
-      <Button href="/components/alert" variant="ghost">See the alert page</Button>
-    </div>
-
-    <h3>Alert</h3>
-    <div class="docs-example" style="display: grid;">
-      <Alert variant="success" dismissible>
-        <strong>Saved.</strong> Use the close button to dismiss this alert.
-      </Alert>
-    </div>
-
-    <h3>Chart</h3>
-    <div class="docs-example">
-      <Sparkline data={signups} label="Sample signups per week" width={200} height={48} />
-    </div>
-    <p>Sample data, drawn as a static SVG with no script.</p>
-
-    <h2>Guides</h2>
-    <ul class="docs-list">
-      <li><a href="/guides/theming">Theming</a></li>
-    </ul>
+    <section aria-labelledby="start-title">
+      <h2 id="start-title">Start in two imports</h2>
+      <pre class="docs-code"><code>import "astro-ink/styles/tokens.css";
+import "astro-ink/styles/base.css";
+import &#123; Button, Alert &#125; from "astro-ink";</code></pre>
+      <h2>Guides</h2>
+      <ul class="docs-list">
+        <li><a href="/guides/theming">Theming</a>: tokens, presets, and a custom theme template.</li>
+        <li><a href="/components">Components</a>: every catalog item with a live demo, snippet, props, and access notes.</li>
+      </ul>
+    </section>
   </div>
 </Base>

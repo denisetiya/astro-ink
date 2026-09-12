@@ -4,6 +4,11 @@ import "astro-ink/styles/base.css";
 import "astro-ink/styles/themes/dark.css";
 import "astro-ink/styles/themes/midnight.css";
 import "astro-ink/styles/themes/brutal.css";
+import "astro-ink/styles/themes/forest.css";
+import "astro-ink/styles/themes/ocean.css";
+import "astro-ink/styles/themes/ember.css";
+import "astro-ink/styles/themes/plum.css";
+import "astro-ink/styles/themes/slate.css";
 import "../styles/docs.css";
 
 interface Props {
@@ -12,6 +17,10 @@ interface Props {
 }
 
 const { title, description = "astro-ink: lightweight, token-driven UI components for Astro" } = Astro.props;
+const path = Astro.url.pathname;
+const isComponentPage = path.startsWith("/components/") && path !== "/components" && path !== "/components/";
+const isGuidePage = path.startsWith("/guides/");
+const showCrumbs = isComponentPage || isGuidePage;
 ---
 <!doctype html>
 <html lang="en">
@@ -22,43 +31,122 @@ const { title, description = "astro-ink: lightweight, token-driven UI components
     <meta name="description" content={description} />
     <script is:inline>
       const stored = localStorage.getItem("ink-theme");
-      const theme = stored === "dark" || stored === "light" || stored === "midnight" || stored === "brutal"
+      const valid = ["light", "dark", "midnight", "brutal", "forest", "ocean", "ember", "plum", "slate"];
+      const theme = valid.includes(stored)
         ? stored
         : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
       document.documentElement.dataset.theme = theme;
     </script>
   </head>
   <body>
+    <a class="docs-skip" href="#main">Skip to content</a>
     <header class="docs-header">
-      <nav aria-label="Main">
-        <a href="/" class="docs-brand">astro-ink</a>
+      <nav class="docs-nav" aria-label="Main">
+        <a href="/" class="docs-brand">astro-ink <span class="docs-version">v1.0</span></a>
         <div class="docs-nav-links">
-          <a href="/components">Components</a>
-          <a href="/components/button">Button</a>
-          <a href="/components/badge">Badge</a>
-          <a href="/components/alert">Alert</a>
-          <a href="/guides/theming">Theming</a>
+          <a href="/components" aria-current={path.startsWith("/components") ? "page" : undefined}>Components</a>
+          <a href="/guides/theming" aria-current={path.startsWith("/guides") ? "page" : undefined}>Theming</a>
         </div>
-        <button id="theme-toggle" type="button" class="docs-theme-toggle" aria-label="Toggle dark mode">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-            <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
-          </svg>
-        </button>
+        <div class="docs-theme-controls">
+          <label class="docs-theme-label" for="theme-picker">Theme</label>
+          <select id="theme-picker" class="docs-theme-select" aria-label="Color theme">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="midnight">Midnight</option>
+            <option value="brutal">Brutal</option>
+            <option value="forest">Forest</option>
+            <option value="ocean">Ocean</option>
+            <option value="ember">Ember</option>
+            <option value="plum">Plum</option>
+            <option value="slate">Slate</option>
+          </select>
+          <button id="theme-toggle" type="button" class="docs-theme-toggle" aria-label="Toggle dark mode">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </button>
+        </div>
       </nav>
     </header>
-    <main class="docs-main">
+    {showCrumbs && (
+      <nav class="docs-crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        {isComponentPage && (
+          <>
+            <a href="/components">Components</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{title}</span>
+          </>
+        )}
+        {isGuidePage && <span aria-current="page">{title}</span>}
+      </nav>
+    )}
+    <main id="main" class="docs-main" tabindex="-1">
       <slot />
     </main>
+    <footer class="docs-footer">
+      <div class="docs-footer-inner">
+        <div>
+          <p class="docs-footer-brand">astro-ink</p>
+          <p class="docs-footer-note">Token-driven UI for Astro. MIT license. No dependencies, no tracking.</p>
+        </div>
+        <nav aria-label="Footer">
+          <a href="/components">All components</a>
+          <a href="/components/button">Button</a>
+          <a href="/components/card">Card</a>
+          <a href="/guides/theming">Theming guide</a>
+        </nav>
+      </div>
+    </footer>
   </body>
 </html>
 
 <script>
+  const picker = document.getElementById("theme-picker");
+  const syncPicker = () => {
+    if (picker instanceof HTMLSelectElement) {
+      picker.value = document.documentElement.dataset.theme ?? "light";
+    }
+  };
+  syncPicker();
+  picker?.addEventListener("change", () => {
+    if (picker instanceof HTMLSelectElement) {
+      document.documentElement.dataset.theme = picker.value;
+      localStorage.setItem("ink-theme", picker.value);
+    }
+  });
+
   const toggle = document.getElementById("theme-toggle");
   toggle?.addEventListener("click", () => {
     const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
     const next = current === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     localStorage.setItem("ink-theme", next);
+    syncPicker();
+  });
+
+  // Copy buttons for every snippet: real clipboard write with visible feedback.
+  document.querySelectorAll("pre.docs-code").forEach((pre) => {
+    if (!(pre instanceof HTMLElement) || pre.querySelector("[data-docs-copy]")) return;
+    pre.classList.add("docs-code--copyable");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "docs-copy-btn";
+    btn.dataset.docsCopy = "";
+    btn.textContent = "Copy";
+    btn.setAttribute("aria-label", "Copy code snippet");
+    btn.addEventListener("click", async () => {
+      const code = pre.querySelector("code")?.innerText ?? pre.innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.textContent = "Copied";
+      } catch {
+        btn.textContent = "Select and copy";
+      }
+      window.setTimeout(() => { btn.textContent = "Copy"; }, 1600);
+    });
+    pre.appendChild(btn);
   });
 </script>
