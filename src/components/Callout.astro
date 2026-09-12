@@ -1,14 +1,15 @@
 ---
 interface Props {
   variant?: "info" | "success" | "warning" | "danger";
+  style?: "tint" | "filled";
   title?: string;
   class?: string;
 }
 
-const { variant = "info", title, class: className, ...rest } = Astro.props;
+const { variant = "info", style = "tint", title, class: className, ...rest } = Astro.props;
 ---
 <section
-  class:list={["ink-callout", `ink-callout--${variant}`, className]}
+  class:list={["ink-callout", `ink-callout--${variant}`, `ink-callout--${style}`, className]}
   aria-label={title}
   {...rest}
 >
@@ -34,4 +35,10 @@ const { variant = "info", title, class: className, ...rest } = Astro.props;
   .ink-callout--success { border-inline-start-color: var(--ink-success); }
   .ink-callout--warning { border-inline-start-color: var(--ink-warning); }
   .ink-callout--danger { border-inline-start-color: var(--ink-danger); }
+
+  .ink-callout--filled.ink-callout--info { background: var(--ink-info); border-inline-start-color: var(--ink-info); }
+  .ink-callout--filled.ink-callout--success { background: var(--ink-success); border-inline-start-color: var(--ink-success); }
+  .ink-callout--filled.ink-callout--warning { background: var(--ink-warning); border-inline-start-color: var(--ink-warning); }
+  .ink-callout--filled.ink-callout--danger { background: var(--ink-danger); border-inline-start-color: var(--ink-danger); }
+  .ink-callout--filled, .ink-callout--filled .ink-callout__title, .ink-callout--filled .ink-callout__body { color: #ffffff; }
 </style>

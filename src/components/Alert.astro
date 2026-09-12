@@ -1,6 +1,7 @@
 ---
 interface Props {
   variant?: "info" | "success" | "warning" | "danger";
+  style?: "tint" | "filled" | "outline";
   dismissible?: boolean;
   role?: string;
   class?: string;
@@ -8,6 +9,7 @@ interface Props {
 
 const {
   variant = "info",
+  style = "tint",
   dismissible = false,
   role = "alert",
   class: className,
@@ -15,7 +17,7 @@ const {
 } = Astro.props;
 ---
 <div
-  class:list={["ink-alert", `ink-alert--${variant}`, className]}
+  class:list={["ink-alert", `ink-alert--${variant}`, `ink-alert--${style}`, className]}
   role={role}
   data-ink-alert
   {...rest}
@@ -86,6 +88,19 @@ const {
     background: color-mix(in srgb, var(--ink-danger) 8%, var(--ink-surface));
     border-color: color-mix(in srgb, var(--ink-danger) 30%, transparent);
   }
+
+  .ink-alert--filled.ink-alert--info { background: var(--ink-info); border-color: var(--ink-info); }
+  .ink-alert--filled.ink-alert--success { background: var(--ink-success); border-color: var(--ink-success); }
+  .ink-alert--filled.ink-alert--warning { background: var(--ink-warning); border-color: var(--ink-warning); }
+  .ink-alert--filled.ink-alert--danger { background: var(--ink-danger); border-color: var(--ink-danger); }
+  .ink-alert--filled .ink-alert__body { color: #ffffff; }
+  .ink-alert--filled .ink-alert__close { color: #ffffff; }
+
+  .ink-alert--outline { background: transparent; }
+  .ink-alert--outline.ink-alert--info { border-color: var(--ink-info); }
+  .ink-alert--outline.ink-alert--success { border-color: var(--ink-success); }
+  .ink-alert--outline.ink-alert--warning { border-color: var(--ink-warning); }
+  .ink-alert--outline.ink-alert--danger { border-color: var(--ink-danger); }
 </style>
 
 <script>

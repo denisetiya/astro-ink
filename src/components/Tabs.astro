@@ -3,13 +3,14 @@ interface Props {
   tabs: Array<{ id: string; label: string }>;
   active?: string;
   tablistLabel?: string;
+  variant?: "underline" | "pill" | "boxed";
   class?: string;
 }
 
-const { tabs, active, tablistLabel = "Tabs", class: className, ...rest } = Astro.props;
+const { tabs, active, tablistLabel = "Tabs", variant = "underline", class: className, ...rest } = Astro.props;
 const current = active ?? tabs[0]!.id;
 ---
-<div class:list={["ink-tabs", className]} data-ink-tabs data-active={current} {...rest}>
+<div class:list={["ink-tabs", `ink-tabs--${variant}`, className]} data-ink-tabs data-active={current} {...rest}>
   <div class="ink-tabs__list" role="tablist" aria-label={tablistLabel}>
     {tabs.map((t) => (
       <button
@@ -63,8 +64,35 @@ const current = active ?? tabs[0]!.id;
     outline-offset: 2px;
   }
 
-  .ink-tabs__panels {
-    padding-top: var(--ink-space-4);
+  .ink-tabs--pill .ink-tabs__list {
+    border-bottom: none;
+    background: color-mix(in srgb, var(--ink-ink) 5%, var(--ink-bg));
+    border-radius: 999px;
+    padding: var(--ink-space-1);
+    gap: 0;
+  }
+
+  .ink-tabs--pill .ink-tabs__tab {
+    border-bottom: none;
+    margin-bottom: 0;
+    border-radius: 999px;
+  }
+
+  .ink-tabs--pill .ink-tabs__tab[aria-selected="true"] {
+    background: var(--ink-surface);
+    border-bottom-color: transparent;
+    box-shadow: var(--ink-shadow-1);
+  }
+
+  .ink-tabs--boxed .ink-tabs__list {
+    border: 1px solid var(--ink-border);
+    border-bottom: none;
+    border-radius: var(--ink-radius-md) var(--ink-radius-md) 0 0;
+    background: var(--ink-surface);
+  }
+
+  .ink-tabs--boxed .ink-tabs__tab[aria-selected="true"] {
+    background: color-mix(in srgb, var(--ink-accent) 10%, transparent);
   }
 
   .ink-tabs__panels > :global([data-tab-panel][hidden]) {

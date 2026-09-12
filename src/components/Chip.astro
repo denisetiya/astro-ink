@@ -1,6 +1,7 @@
 ---
 interface Props {
   variant?: "neutral" | "accent" | "success" | "warning" | "danger" | "info";
+  style?: "solid" | "outline" | "soft";
   size?: "sm" | "md";
   href?: string;
   removable?: boolean;
@@ -10,14 +11,14 @@ interface Props {
 }
 
 const {
-  variant = "neutral", size = "md", href, removable = false,
+  variant = "neutral", style = "solid", size = "md", href, removable = false,
   removeLabel = "Remove", itemLabel, class: className, ...rest
 } = Astro.props;
 
 const Tag = href ? "a" : "span";
 ---
 <Tag
-  class:list={["ink-chip", `ink-chip--${variant}`, `ink-chip--${size}`, className]}
+  class:list={["ink-chip", `ink-chip--${variant}`, `ink-chip--${size}`, `ink-chip--${style}`, className]}
   href={href}
   data-ink-chip
   {...rest}
@@ -56,6 +57,17 @@ const Tag = href ? "a" : "span";
   .ink-chip--sm { font-size: var(--ink-text-xs); }
 
   a.ink-chip:hover { border-color: var(--ink-border-strong); }
+
+  .ink-chip--outline {
+    background: transparent;
+    border-color: var(--ink-border-strong);
+  }
+
+  .ink-chip--outline.ink-chip--accent { border-color: var(--ink-accent); color: var(--ink-accent); }
+  .ink-chip--outline.ink-chip--success { border-color: var(--ink-success); color: var(--ink-success); }
+  .ink-chip--outline.ink-chip--warning { border-color: var(--ink-warning); color: var(--ink-warning); }
+  .ink-chip--outline.ink-chip--danger { border-color: var(--ink-danger); color: var(--ink-danger); }
+  .ink-chip--outline.ink-chip--info { border-color: var(--ink-info); color: var(--ink-info); }
 
   .ink-chip--accent {
     background: var(--ink-accent);

@@ -1,13 +1,14 @@
 ---
 interface Props {
   variant?: "neutral" | "accent" | "success" | "warning" | "danger" | "info";
+  style?: "solid" | "outline" | "soft";
   size?: "sm" | "md";
   class?: string;
 }
 
-const { variant = "neutral", size = "md", class: className, ...rest } = Astro.props;
+const { variant = "neutral", style = "solid", size = "md", class: className, ...rest } = Astro.props;
 ---
-<span class:list={["ink-badge", `ink-badge--${variant}`, `ink-badge--${size}`, className]} {...rest}>
+<span class:list={["ink-badge", `ink-badge--${variant}`, `ink-badge--${size}`, `ink-badge--${style}`, className]} {...rest}>
   <slot />
 </span>
 
@@ -20,6 +21,7 @@ const { variant = "neutral", size = "md", class: className, ...rest } = Astro.pr
     line-height: 1;
     border-radius: var(--ink-badge-radius, var(--ink-radius-sm));
     white-space: nowrap;
+    border: 1px solid transparent;
   }
 
   .ink-badge--sm {
@@ -61,4 +63,12 @@ const { variant = "neutral", size = "md", class: className, ...rest } = Astro.pr
     background: color-mix(in srgb, var(--ink-info) 14%, transparent);
     color: var(--ink-info-text, var(--ink-info));
   }
+
+  .ink-badge--outline { background: transparent; }
+  .ink-badge--outline.ink-badge--neutral { border-color: var(--ink-border-strong); }
+  .ink-badge--outline.ink-badge--accent { border-color: var(--ink-accent); color: var(--ink-accent); }
+  .ink-badge--outline.ink-badge--success { border-color: var(--ink-success); color: var(--ink-success); }
+  .ink-badge--outline.ink-badge--warning { border-color: var(--ink-warning); color: var(--ink-warning); }
+  .ink-badge--outline.ink-badge--danger { border-color: var(--ink-danger); color: var(--ink-danger); }
+  .ink-badge--outline.ink-badge--info { border-color: var(--ink-info); color: var(--ink-info); }
 </style>

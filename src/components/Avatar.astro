@@ -3,7 +3,7 @@ interface Props {
   src?: string;
   alt?: string;
   fallback?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   color?: string;
   class?: string;
 }
@@ -44,6 +44,7 @@ const { src, alt = "", fallback = "?", size = "md", color, class: className, ...
   .ink-avatar--sm { width: 1.75rem; height: 1.75rem; font-size: var(--ink-text-xs); }
   .ink-avatar--md { width: 2.5rem; height: 2.5rem; font-size: var(--ink-text-sm); }
   .ink-avatar--lg { width: 3.5rem; height: 3.5rem; font-size: var(--ink-text-lg); }
+  .ink-avatar--xl { width: 5rem; height: 5rem; font-size: var(--ink-text-2xl); }
 
   img.ink-avatar { object-fit: cover; }
 </style>

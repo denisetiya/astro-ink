@@ -3,14 +3,15 @@ interface Props {
   max?: number;
   total?: number;
   label?: string;
+  size?: "sm" | "md" | "lg";
   class?: string;
 }
 
-const { max, total, label = "Members", class: className, ...rest } = Astro.props;
+const { max, total, label = "Members", size = "md", class: className, ...rest } = Astro.props;
 const overflow = max !== undefined && total !== undefined && total > max ? total - max : 0;
 ---
 <div
-  class:list={["ink-agroup", className]}
+  class:list={["ink-agroup", `ink-agroup--${size}`, className]}
   role="group"
   aria-label={total !== undefined ? `${label}: ${total}` : label}
   {...rest}
@@ -48,4 +49,10 @@ const overflow = max !== undefined && total !== undefined && total > max ? total
     font-size: var(--ink-text-xs);
     font-weight: var(--ink-font-weight-medium);
   }
+
+  .ink-agroup--sm > :global(* + *) { margin-inline-start: -0.4rem; }
+  .ink-agroup--sm .ink-agroup__more { min-width: 1.75rem; height: 1.75rem; margin-inline-start: -0.4rem; }
+
+  .ink-agroup--lg > :global(* + *) { margin-inline-start: -0.8rem; }
+  .ink-agroup--lg .ink-agroup__more { min-width: 3.5rem; height: 3.5rem; margin-inline-start: -0.8rem; }
 </style>
