@@ -1,7 +1,62 @@
 # astro-ink
 
+[![npm version](https://img.shields.io/npm/v/astro-ink)](https://www.npmjs.com/package/astro-ink)
+[![CI](https://github.com/denisetiya/astro-ink/actions/workflows/ci.yml/badge.svg)](https://github.com/denisetiya/astro-ink/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 Lightweight, token-driven UI components for Astro. Server-rendered, zero
 dependencies, fully themeable through CSS custom properties.
+
+## Install
+
+Requires Astro 7 in your project (`astro-ink` lists it as a peer
+dependency, so your app owns the version):
+
+```sh
+npm install astro-ink
+```
+
+That is the only step. No extra setup, no config plugin, no client
+framework. Styles ship as plain CSS files you import once; components
+ship their own scoped CSS and a tiny script only when interactive.
+
+## Quick start
+
+Import the styles once in your base layout:
+
+```astro
+---
+import "astro-ink/styles/tokens.css";
+import "astro-ink/styles/base.css";
+// optional dark theme:
+import "astro-ink/styles/themes/dark.css";
+---
+```
+
+Use components in any Astro page:
+
+```astro
+---
+import { Button, Badge, Alert } from "astro-ink";
+---
+
+<Alert variant="success" dismissible>
+  <strong>Saved.</strong> Your changes are live.
+</Alert>
+<Button href="/start">Start building</Button>
+<Badge variant="accent">v1.0</Badge>
+```
+
+Pick any of the 9 preset themes with one import (default Paper and Ink
+light needs none): `dark`, `midnight`, `brutal`, `forest`, `ocean`,
+`ember`, `plum`, `slate`. Set it with an attribute:
+
+```js
+document.documentElement.dataset.theme = "midnight";
+```
+
+See [Theming](#theming) below and the full guide in the docs site for
+the token reference and a custom theme template.
 
 ## Why
 
@@ -13,33 +68,8 @@ dependencies, fully themeable through CSS custom properties.
   a CSS custom property. Change `--ink-accent` once and the whole library
   follows. Component-level tokens (`--ink-button-radius`) override globally
   (`--ink-radius-md`).
-- **Accessible by default.** WCAG AA contrast in light and dark mode, full
+- **Accessible by default.** WCAG AA contrast in every preset theme, full
   keyboard operation, visible focus rings.
-
-## Quick start
-
-    npm install astro-ink
-
-Import the styles once in your base layout:
-
-    ---
-    import "astro-ink/styles/tokens.css";
-    import "astro-ink/styles/base.css";
-    // optional dark theme:
-    import "astro-ink/styles/themes/dark.css";
-    ---
-
-Use components in any Astro page:
-
-    ---
-    import { Button, Badge, Alert } from "astro-ink";
-    ---
-
-    <Alert variant="success" dismissible>
-      <strong>Saved.</strong> Your changes are live.
-    </Alert>
-    <Button href="/start">Start building</Button>
-    <Badge variant="accent">v0.1</Badge>
 
 ## Theming
 
