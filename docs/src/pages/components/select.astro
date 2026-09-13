@@ -12,6 +12,7 @@ import { Select } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <Select id="country" label="Country" hint="Used for tax purposes.">
         <option value="" disabled selected>Choose a country</option>
         <option value="id">Indonesia</option>
@@ -28,6 +29,7 @@ import { Select } from "astro-ink";
 
     <h2>With groups</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">With groups</span>
       <Select id="tz" label="Time zone">
         <optgroup label="Asia">
           <option value="jakarta">Asia/Jakarta</option>
@@ -52,6 +54,7 @@ import { Select } from "astro-ink";
       <tbody>
         <tr><td><code>multiple</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Multi-select list.</td></tr>
         <tr><td><code>size</code></td><td><code>number</code></td><td>-</td><td>Visible rows for multi.</td></tr>
+        <tr><td><code>controlSize</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Control height and font size.</td></tr>
         <tr><td colspan="4">Plus the Field API (label, hint, error, required, disabled).</td></tr>
       </tbody>
     </table>

@@ -12,15 +12,26 @@ import { Textarea } from "astro-ink";
 
     <h2>Autosize</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Autosize</span>
       <Textarea id="bio" label="Bio" autosize placeholder="Type a few lines..." />
     </div>
     <pre class="docs-code"><code>&lt;Textarea id="bio" label="Bio" autosize /&gt;</code></pre>
 
     <h2>Fixed height</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Fixed height</span>
       <Textarea id="msg" label="Message" rows={5} placeholder="Your message..." />
     </div>
     <pre class="docs-code"><code>&lt;Textarea id="msg" label="Message" rows="5" /&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Sizes</span>
+      <Textarea id="note-sm" label="Small" size="sm" placeholder="Small" />
+      <Textarea id="note-lg" label="Large" size="lg" placeholder="Large" />
+    </div>
+    <pre class="docs-code"><code>&lt;Textarea id="note-sm" label="Small" size="sm" /&gt;
+&lt;Textarea id="note-lg" label="Large" size="lg" /&gt;</code></pre>
 
     <h2>Props</h2>
     <table class="docs-table">

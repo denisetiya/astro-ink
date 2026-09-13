@@ -14,6 +14,7 @@ const adaSvg = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://ww
 
     <h2>Example</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <Avatar src={adaSvg} alt="Ada Lovelace" />
       <Avatar fallback="GK" />
       <Avatar fallback="RS" color="var(--ink-info)" />
@@ -23,11 +24,14 @@ const adaSvg = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://ww
 
     <h2>Sizes</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Sizes</span>
       <Avatar size="sm" fallback="S" />
       <Avatar size="md" fallback="M" />
       <Avatar size="lg" fallback="L" />
+      <Avatar size="xl" fallback="XL" />
     </div>
-    <pre class="docs-code"><code>&lt;Avatar size="sm" fallback="S" /&gt;</code></pre>
+    <pre class="docs-code"><code>&lt;Avatar size="sm" fallback="S" /&gt;
+&lt;Avatar size="xl" fallback="XL" /&gt;</code></pre>
 
     <h2>Props</h2>
     <table class="docs-table">
@@ -37,7 +41,7 @@ const adaSvg = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://ww
       <tbody>
         <tr><td><code>src / alt</code></td><td><code>string</code></td><td>-</td><td>Photo; meaningful alt for real people.</td></tr>
         <tr><td><code>fallback</code></td><td><code>string</code></td><td><code>?</code></td><td>Initials when there is no photo.</td></tr>
-        <tr><td><code>size</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Diameter.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md | lg | xl</code></td><td><code>md</code></td><td>Diameter.</td></tr>
         <tr><td><code>color</code></td><td><code>string</code></td><td>-</td><td>Background tint.</td></tr>
       </tbody>
     </table>

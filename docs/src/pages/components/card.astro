@@ -12,6 +12,7 @@ import { Button, Card } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <Card>
         <div slot="media" style="height: 6rem; display: grid; place-content: center; background: color-mix(in srgb, var(--ink-accent) 15%, var(--ink-surface)); color: var(--ink-muted); font-size: var(--ink-text-sm);">Cover art</div>
         <h3 slot="header">Field guide</h3>
@@ -26,6 +27,21 @@ import { Button, Card } from "astro-ink";
   &lt;Button slot="actions" href="/guides/theming"&gt;Read chapter&lt;/Button&gt;
 &lt;/Card&gt;</code></pre>
 
+    <h2>Orientation</h2>
+    <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Orientation</span>
+      <Card orientation="horizontal">
+        <div slot="media" style="width: 8rem; min-height: 100%; display: grid; place-content: center; background: color-mix(in srgb, var(--ink-accent) 15%, var(--ink-surface)); color: var(--ink-muted); font-size: var(--ink-text-sm);">Cover</div>
+        <h3 slot="header">Side by side</h3>
+        <p style="font-size: var(--ink-text-sm); color: var(--ink-muted);">Media docks left on desktop, stacks on narrow screens.</p>
+        <Button slot="actions" href="/guides/theming">Read chapter</Button>
+      </Card>
+    </div>
+    <pre class="docs-code"><code>&lt;Card orientation="horizontal"&gt;
+  &lt;div slot="media"&gt;...&lt;/div&gt;
+  &lt;h3 slot="header"&gt;Side by side&lt;/h3&gt;
+&lt;/Card&gt;</code></pre>
+
     <h2>Props</h2>
     <table class="docs-table">
       <thead>
@@ -33,6 +49,8 @@ import { Button, Card } from "astro-ink";
       </thead>
       <tbody>
         <tr><td><code>elevation</code></td><td><code>0 | 1 | 2</code></td><td><code>1</code></td><td>Shadow level.</td></tr>
+        <tr><td><code>orientation</code></td><td><code>vertical | horizontal</code></td><td><code>vertical</code></td><td>Media placement. Horizontal stacks under 28rem.</td></tr>
+        <tr><td><code>padding</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Body density.</td></tr>
       </tbody>
     </table>
 

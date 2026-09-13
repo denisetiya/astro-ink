@@ -12,9 +12,19 @@ import { NumberInput } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <NumberInput id="seats" label="Seats" min={1} max={99} step={1} value="5" hint="1 to 99 seats." />
     </div>
     <pre class="docs-code"><code>&lt;NumberInput id="seats" label="Seats" min="1" max="99" step="1" value="5" /&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Sizes</span>
+      <NumberInput id="seats-sm" label="Small" size="sm" value="1" />
+      <NumberInput id="seats-lg" label="Large" size="lg" value="99" />
+    </div>
+    <pre class="docs-code"><code>&lt;NumberInput id="seats-sm" label="Small" size="sm" /&gt;
+&lt;NumberInput id="seats-lg" label="Large" size="lg" /&gt;</code></pre>
 
     <h2>Props</h2>
     <table class="docs-table">

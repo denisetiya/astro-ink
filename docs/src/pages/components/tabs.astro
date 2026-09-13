@@ -18,6 +18,7 @@ const items = [
 
     <h2>Example</h2>
     <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <Tabs tabs={items}>
         <div data-tab-panel="overview" role="tabpanel" id="ink-panel-overview" aria-labelledby="ink-tab-overview" aria-label="Overview">
           <p>Usage numbers and recent activity live here.</p>
@@ -45,6 +46,23 @@ const items = [
       <code>id="ink-panel-[id]"</code>, and <code>aria-labelledby="ink-tab-[id]"</code>.
     </p>
 
+    <h2>Pill and boxed</h2>
+    <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Pill and boxed</span>
+      <Tabs tabs={items} variant="pill">
+        <div data-tab-panel="overview" role="tabpanel" aria-label="Overview"><p>Pill treatment for toolbars.</p></div>
+        <div data-tab-panel="billing" role="tabpanel" aria-label="Billing"><p>Invoices live here.</p></div>
+        <div data-tab-panel="team" role="tabpanel" aria-label="Team"><p>Members live here.</p></div>
+      </Tabs>
+      <Tabs tabs={items} variant="boxed">
+        <div data-tab-panel="overview" role="tabpanel" aria-label="Overview"><p>Boxed treatment for cards.</p></div>
+        <div data-tab-panel="billing" role="tabpanel" aria-label="Billing"><p>Invoices live here.</p></div>
+        <div data-tab-panel="team" role="tabpanel" aria-label="Team"><p>Members live here.</p></div>
+      </Tabs>
+    </div>
+    <pre class="docs-code"><code>&lt;Tabs tabs=&#123;items&#125; variant="pill"&gt;...&lt;/Tabs&gt;
+&lt;Tabs tabs=&#123;items&#125; variant="boxed"&gt;...&lt;/Tabs&gt;</code></pre>
+
     <h2>Props</h2>
     <table class="docs-table">
       <thead>
@@ -54,6 +72,7 @@ const items = [
         <tr><td><code>tabs</code></td><td><code>Array&lt;&#123; id, label &#125;&gt;</code></td><td>-</td><td>Tabs in order.</td></tr>
         <tr><td><code>active</code></td><td><code>string</code></td><td>first tab</td><td>Initial tab id.</td></tr>
         <tr><td><code>tablistLabel</code></td><td><code>string</code></td><td><code>Tabs</code></td><td>Landmark name.</td></tr>
+        <tr><td><code>variant</code></td><td><code>underline | pill | boxed</code></td><td><code>underline</code></td><td>Tab list treatment.</td></tr>
       </tbody>
     </table>
 

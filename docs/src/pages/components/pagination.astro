@@ -12,12 +12,14 @@ import { Pagination } from "astro-ink";
 
     <h2>Middle of many</h2>
     <div class="docs-example" id="demo-current" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Middle of many</span>
       <Pagination page={2} total={12} href={(n) => `/components/pagination?page=${n}`} />
     </div>
     <pre class="docs-code"><code>&lt;Pagination page=&#123;2&#125; total=&#123;12&#125; href=&#123;(n) =&gt; `/components/pagination?page=$&#123;n&#125;`&#125; /&gt;</code></pre>
 
     <h2>First page</h2>
     <div class="docs-example" id="demo-first" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">First page</span>
       <Pagination page={1} total={12} href={(n) => `/components/pagination?page=${n}`} />
     </div>
     <pre class="docs-code"><code>&lt;Pagination page=&#123;1&#125; total=&#123;12&#125; href=&#123;(n) =&gt; `/components/pagination?page=$&#123;n&#125;`&#125; /&gt;</code></pre>

@@ -12,12 +12,14 @@ import { Rating } from "astro-ink";
 
     <h2>Editable</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Editable</span>
       <Rating name="quality" label="Quality" />
     </div>
     <pre class="docs-code"><code>&lt;Rating name="quality" label="Quality" /&gt;</code></pre>
 
     <h2>Readonly</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Readonly</span>
       <Rating name="quality-readonly" label="Quality" value={4} readOnly />
     </div>
     <pre class="docs-code"><code>&lt;Rating name="quality-readonly" label="Quality" value=&#123;4&#125; readOnly /&gt;</code></pre>

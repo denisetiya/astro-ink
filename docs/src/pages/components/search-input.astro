@@ -12,9 +12,19 @@ import { SearchInput } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <SearchInput id="docs-search" label="Search docs" placeholder="Search docs" />
     </div>
     <pre class="docs-code"><code>&lt;SearchInput id="docs-search" label="Search docs" /&gt;</code></pre>
+
+    <h2>Sizes</h2>
+    <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Sizes</span>
+      <SearchInput id="search-sm" label="Small" size="sm" placeholder="Small" />
+      <SearchInput id="search-lg" label="Large" size="lg" placeholder="Large" />
+    </div>
+    <pre class="docs-code"><code>&lt;SearchInput id="search-sm" label="Small" size="sm" /&gt;
+&lt;SearchInput id="search-lg" label="Large" size="lg" /&gt;</code></pre>
 
     <h2>Props</h2>
     <table class="docs-table">

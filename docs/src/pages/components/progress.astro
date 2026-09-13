@@ -12,15 +12,29 @@ import { Progress } from "astro-ink";
 
     <h2>Determinate</h2>
     <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Determinate</span>
       <Progress label="Upload" value={40} max={100} showValue />
     </div>
     <pre class="docs-code"><code>&lt;Progress label="Upload" value=&#123;40&#125; max=&#123;100&#125; showValue /&gt;</code></pre>
 
     <h2>Indeterminate</h2>
     <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Indeterminate</span>
       <Progress label="Waiting for the server" />
     </div>
     <pre class="docs-code"><code>&lt;Progress label="Waiting for the server" /&gt;</code></pre>
+
+    <h2>Sizes and tones</h2>
+    <div class="docs-example" style="display: grid;">
+      <span class="docs-example-label" aria-hidden="true">Sizes and tones</span>
+      <Progress label="Small" value={60} size="sm" />
+      <Progress label="Large" value={60} size="lg" />
+      <Progress label="Success" value={80} tone="success" showValue />
+      <Progress label="Warning" value={55} tone="warning" showValue />
+      <Progress label="Danger" value={30} tone="danger" showValue />
+    </div>
+    <pre class="docs-code"><code>&lt;Progress label="Small" value=&#123;60&#125; size="sm" /&gt;
+&lt;Progress label="Success" value=&#123;80&#125; tone="success" /&gt;</code></pre>
 
     <h2>Props</h2>
     <table class="docs-table">
@@ -32,6 +46,8 @@ import { Progress } from "astro-ink";
         <tr><td><code>max</code></td><td><code>number</code></td><td><code>100</code></td><td>Finish line.</td></tr>
         <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Accessible name (required).</td></tr>
         <tr><td><code>showValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Visible percentage.</td></tr>
+        <tr><td><code>size</code></td><td><code>sm | md | lg</code></td><td><code>md</code></td><td>Bar height.</td></tr>
+        <tr><td><code>tone</code></td><td><code>accent | success | warning | danger</code></td><td><code>accent</code></td><td>Fill color; pair with the label word, never color alone.</td></tr>
       </tbody>
     </table>
 

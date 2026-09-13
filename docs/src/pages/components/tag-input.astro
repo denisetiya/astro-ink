@@ -14,6 +14,7 @@ import { TagInput } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <TagInput id="skills" label="Skills" name="skills" values={["HTML", "CSS"]} hint="Press Enter or comma to add a tag." />
     </div>
     <pre class="docs-code"><code>&lt;TagInput
@@ -26,6 +27,7 @@ import { TagInput } from "astro-ink";
 
     <h2>Max tags</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Max tags</span>
       <TagInput id="topics" label="Topics" name="topics" values={["Vite"]} max={3} placeholder="Up to 3 topics" />
     </div>
     <pre class="docs-code"><code>&lt;TagInput
@@ -39,6 +41,7 @@ import { TagInput } from "astro-ink";
 
     <h2>Error state</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Error state</span>
       <TagInput id="labels" label="Labels" name="labels" values={["draft"]} error="Pick at least one published label." />
     </div>
     <pre class="docs-code"><code>&lt;TagInput

@@ -13,6 +13,7 @@ import { OtpInput } from "astro-ink";
 
     <h2>Example</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Example</span>
       <OtpInput id="code" label="Verification code" name="code" length={6} hint="Enter the 6-digit code we sent you." />
     </div>
     <pre class="docs-code"><code>&lt;OtpInput
@@ -25,6 +26,7 @@ import { OtpInput } from "astro-ink";
 
     <h2>Error state</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Error state</span>
       <OtpInput id="pin" label="PIN" name="pin" length={4} error="That code has expired." />
     </div>
     <pre class="docs-code"><code>&lt;OtpInput

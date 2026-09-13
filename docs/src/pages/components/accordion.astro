@@ -12,6 +12,7 @@ import { Accordion, AccordionItem } from "astro-ink";
 
     <h2>Multiple open</h2>
     <div class="docs-example" style="display: grid;" id="demo-multi">
+      <span class="docs-example-label" aria-hidden="true">Multiple open</span>
       <Accordion>
         <AccordionItem id="acc-faq-1" title="How does theming work?">
           <p>Every visual decision reads a CSS custom property.</p>
@@ -24,6 +25,7 @@ import { Accordion, AccordionItem } from "astro-ink";
 
     <h2>Exclusive</h2>
     <div class="docs-example" style="display: grid;" id="demo-exclusive">
+      <span class="docs-example-label" aria-hidden="true">Exclusive</span>
       <Accordion exclusive>
         <AccordionItem id="acc-ship" title="Shipping options">
           <p>Standard (3 days), express (1 day), or pickup.</p>

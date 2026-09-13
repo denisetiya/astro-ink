@@ -12,6 +12,7 @@ import { Chip } from "astro-ink";
 
     <h2>Variants</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Variants</span>
       <Chip>Alpha</Chip>
       <Chip variant="accent">Accent</Chip>
       <Chip variant="success">Success</Chip>
@@ -24,10 +25,22 @@ import { Chip } from "astro-ink";
 
     <h2>Removable</h2>
     <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Removable</span>
       <Chip removable itemLabel="Beta">Beta</Chip>
       <Chip removable itemLabel="Gamma">Gamma</Chip>
     </div>
     <pre class="docs-code"><code>&lt;Chip removable itemLabel="Beta"&gt;Beta&lt;/Chip&gt;</code></pre>
+
+    <h2>Outline style</h2>
+    <div class="docs-example">
+      <span class="docs-example-label" aria-hidden="true">Outline style</span>
+      <Chip style="outline">Alpha</Chip>
+      <Chip variant="accent" style="outline">Accent</Chip>
+      <Chip variant="success" style="outline">Success</Chip>
+      <Chip variant="danger" style="outline">Danger</Chip>
+    </div>
+    <pre class="docs-code"><code>&lt;Chip style="outline"&gt;Alpha&lt;/Chip&gt;
+&lt;Chip variant="accent" style="outline"&gt;Accent&lt;/Chip&gt;</code></pre>
 
     <h2>Events</h2>
     <pre class="docs-code"><code>document.addEventListener("ink:chip:remove", (event) =&gt; &#123;
@@ -41,6 +54,7 @@ import { Chip } from "astro-ink";
       </thead>
       <tbody>
         <tr><td><code>variant / size</code></td><td><code>6 variants / sm | md</code></td><td><code>neutral / md</code></td><td>Look and size.</td></tr>
+        <tr><td><code>style</code></td><td><code>solid | outline | soft</code></td><td><code>solid</code></td><td>Fill treatment (soft inherits the tint).</td></tr>
         <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Renders a link chip.</td></tr>
         <tr><td><code>removable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the × button.</td></tr>
         <tr><td><code>itemLabel</code></td><td><code>string</code></td><td>-</td><td>Names the item in the remove button label.</td></tr>
