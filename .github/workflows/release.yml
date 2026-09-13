@@ -24,6 +24,5 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run docs:build
+      - run: npm run e2e
       - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
