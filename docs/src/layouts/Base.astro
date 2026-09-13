@@ -18,6 +18,7 @@ interface Props {
 
 const { title, description = "astro-ink: lightweight, token-driven UI components for Astro" } = Astro.props;
 const path = Astro.url.pathname;
+const canonicalUrl = `https://astro-ink.denisetiya.site${path}`;
 const isComponentPage = path.startsWith("/components/") && path !== "/components" && path !== "/components/";
 const isGuidePage = path.startsWith("/guides/");
 const showCrumbs = isComponentPage || isGuidePage;
@@ -29,6 +30,12 @@ const showCrumbs = isComponentPage || isGuidePage;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} · astro-ink</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="astro-ink" />
+    <meta property="og:title" content={`${title} · astro-ink`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
     <script is:inline>
       const stored = localStorage.getItem("ink-theme");
       const valid = ["light", "dark", "midnight", "brutal", "forest", "ocean", "ember", "plum", "slate"];

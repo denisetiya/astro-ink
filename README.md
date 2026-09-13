@@ -7,6 +7,8 @@
 Lightweight, token-driven UI components for Astro. Server-rendered, zero
 dependencies, fully themeable through CSS custom properties.
 
+Live docs: https://astro-ink.denisetiya.site
+
 ## Install
 
 Requires Astro 7 in your project (`astro-ink` lists it as a peer
@@ -55,7 +57,7 @@ light needs none): `dark`, `midnight`, `brutal`, `forest`, `ocean`,
 document.documentElement.dataset.theme = "midnight";
 ```
 
-See [Theming](#theming) below and the full guide in the docs site for
+See [Theming](#theming) below and the [live theming guide](https://astro-ink.denisetiya.site/guides/theming) for
 the token reference and a custom theme template.
 
 ## Why
@@ -80,8 +82,8 @@ Override tokens on `:root` or any container:
       --ink-button-radius: 999px;
     }
 
-See the full guide in the docs site (run `npm run docs:dev` in this repo,
-then open the Theming page) for the token reference, the preset themes,
+See the [live theming guide](https://astro-ink.denisetiya.site/guides/theming) for
+the token reference, the preset themes,
 and a custom theme template.
 
 Preset themes ship with the library: the default Paper and Ink light theme,
@@ -110,7 +112,8 @@ Set the theme with an attribute (the toggle logic belongs to your app):
 
 ## Docs
 
-The docs site lives in `docs/`. Run it locally with `npm run docs:dev`.
+Live at https://astro-ink.denisetiya.site. The source lives in `docs/`;
+run it locally with `npm run docs:dev`.
 Every catalog component with a renderable UI has a live docs page with a
 live demo, a copy-paste snippet, a props table, and accessibility notes.
 Six catalog items are covered by guidance instead of pages: Portal, Popper,
