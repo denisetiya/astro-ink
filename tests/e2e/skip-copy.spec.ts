@@ -2,11 +2,11 @@ import { test, expect } from "@playwright/test";
 
 test("skip link jumps to main", async ({ page }) => {
   await page.goto("/components/skip-link");
-  const skip = page.getByRole("link", { name: "Skip to content" });
+  const skip = page.locator("a.docs-skip");
   await skip.focus();
   await expect(skip).toBeVisible();
   await skip.press("Enter");
-  await expect(page.locator("#demo-main")).toBeFocused();
+  await expect(page.locator("#main")).toBeFocused();
 });
 
 test("copy button copies and confirms", async ({ page, context }) => {

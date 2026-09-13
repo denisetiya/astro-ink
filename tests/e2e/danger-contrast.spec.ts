@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const THEMES = ["light", "dark", "midnight", "brutal"] as const;
+const THEMES = ["light", "dark", "midnight", "brutal", "forest", "ocean", "ember", "plum", "slate"] as const;
 
 function luminance(rgb: [number, number, number]): number {
   const linear = rgb.map((channel) => {

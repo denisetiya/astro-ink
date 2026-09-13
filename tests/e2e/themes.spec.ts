@@ -14,3 +14,19 @@ test("brutal preset zeroes radius", async ({ page }) => {
   const radius = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--ink-radius-md").trim());
   expect(radius).toBe("0");
 });
+
+const NEW_THEMES = [
+  { name: "forest", button: "Preview forest" },
+  { name: "ocean", button: "Preview ocean" },
+  { name: "ember", button: "Preview ember" },
+  { name: "plum", button: "Preview plum" },
+  { name: "slate", button: "Preview slate" },
+] as const;
+
+for (const { name, button } of NEW_THEMES) {
+  test(`${name} preset re-skins via data-theme`, async ({ page }) => {
+    await page.goto("/guides/theming");
+    await page.getByRole("button", { name: button }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", name);
+  });
+}

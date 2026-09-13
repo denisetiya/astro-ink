@@ -45,3 +45,20 @@ test("dark mode restyles the page background", async ({ page }) => {
 
   expect(darkBg).not.toBe(lightBg);
 });
+
+test("theme picker applies all nine presets", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.reload();
+  const picker = page.getByLabel("Color theme");
+  for (const theme of ["light", "dark", "midnight", "brutal", "forest", "ocean", "ember", "plum", "slate"]) {
+    await picker.selectOption(theme);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+  }
+});
+
+test("skip link jumps to content", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.reload();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+});

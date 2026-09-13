@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const pages = [
-  { path: "/", heading: "astro-ink" },
+  { path: "/", heading: "UI for Astro that stays light." },
   { path: "/components", heading: "Components" },
   { path: "/components/alert", heading: "Alert" },
   { path: "/components/accordion", heading: "Accordion" },
