@@ -6,7 +6,3 @@ dist/
 # test artifacts
 playwright-report/
 test-results/
-
-# re-include superpowers design docs (ignored globally, but they are
-# first-class deliverables in this repo)
-!docs/superpowers/

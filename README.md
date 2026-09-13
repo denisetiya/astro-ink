@@ -88,8 +88,7 @@ ClickAwayListener, FocusTrap, Icon, and CSS Baseline.
 
 ## Status
 
-120 catalog items per spec §7
-(`docs/superpowers/specs/2026-08-12-astro-ink-design.md`), verified by
+120 catalog items, verified by
 `scripts/spec-coverage.py`: 120/120 fully covered, plus 10 subpart/extra
 exports. Full list: Button, Badge, Alert, Container,
 VisuallyHidden, Field, TextField, NumberInput, PasswordInput, SearchInput,
