@@ -26,19 +26,22 @@ entry, and add a docs page under `docs/src/pages/components/`.
 
 Publishing is automatic. Push a version tag and the `Release` workflow
 runs the full gate (spec coverage, `astro check`, unit tests, docs
-build, E2E) then `npm publish --provenance`:
+build, E2E) then `npm publish`:
 
 ```sh
 npm version patch   # or minor / major
 git push origin main --tags
 ```
 
-First-time setup only (one per package, on npmjs.com):
+One-time setup (repo Settings, Secrets and variables, Actions,
+New repository secret):
 
-1. Create the `astro-ink` package entry (or rename in `package.json`).
-2. Enable trusted publishing: package Settings, Trusted Publisher,
-   GitHub Actions, this repo, workflow `release.yml`.
-3. No tokens needed: the workflow uses OIDC (`id-token: write`).
+- Name: `NPM_TOKEN`
+- Value: your npm access token (npmjs.com, Access Tokens, Granular
+  token scoped to `astro-ink` with read and write, or Classic
+  Automation token).
+
+No trusted publisher needed: the workflow authenticates with the token.
 
 To verify locally what ships:
 
